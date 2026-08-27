@@ -18,6 +18,11 @@ datasets>=2.14.0            # loads arman-bd/guppylm-60k-generic (Phase 2)
 huggingface_hub>=0.20.0     # downloads arman-bd/guppylm-9M into checkpoints/
 tqdm>=4.65.0                # progress bars (also required by the vendored guppylm/ code)
 
-# --- Optional: only needed for ad-hoc inspection of cached results ---
-pandas>=2.0.0
-matplotlib>=3.7.0
+# --- Notebooks (notebooks/*.ipynb) ---
+# Required to run the notebooks; the experiments/*.py pipeline does not import these.
+matplotlib>=3.7.0           # every figure in notebooks/
+pandas>=2.0.0               # result tables in notebooks/
+ipykernel>=6.0.0            # kernel the notebooks run on
+nbformat>=5.9.0             # notebook file format
+nbconvert>=7.0.0            # headless execution: python -m nbconvert --execute
+# Any front-end works to open them (JupyterLab, VS Code, PyCharm, ...).

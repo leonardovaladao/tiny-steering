@@ -1,3 +1,19 @@
 .DS_Store
 .claude/
 .trash/
+
+# --- Python ---
+.venv/
+__pycache__/
+*.pyc
+
+# --- downloaded / generated artifacts (regenerable — see README) ---
+checkpoints/
+rfm_guppy/cache/
+
+# --- source paper ---
+*.pdf
+
+# --- not committed yet (delete these two lines to publish) ---
+MEDIUM_POST.md
+MEDIUM_POST_PTBR.md
