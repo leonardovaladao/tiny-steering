@@ -1,0 +1,656 @@
+{
+  "food": {
+    "pca": {
+      "concept": "food",
+      "method": "pca",
+      "results_per_r": {
+        "-2.0": {
+          "r": -2.0,
+          "mean_probe_score": 0.9999806292975142,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "-1.0": {
+          "r": -1.0,
+          "mean_probe_score": 0.9999864961983539,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "-0.5": {
+          "r": -0.5,
+          "mean_probe_score": 0.9999812134773575,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "-0.25": {
+          "r": -0.25,
+          "mean_probe_score": 0.9914155305700475,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "0.0": {
+          "r": 0.0,
+          "mean_probe_score": 0.48778143523988404,
+          "lexicon_hit_rate": 0.5714285714285714,
+          "steering_success_rate": 0.7142857142857143,
+          "n_collapsed": 0
+        },
+        "0.25": {
+          "r": 0.25,
+          "mean_probe_score": 0.9999390737829871,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "0.5": {
+          "r": 0.5,
+          "mean_probe_score": 0.9999440035349575,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "1.0": {
+          "r": 1.0,
+          "mean_probe_score": 0.9999251065157856,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "2.0": {
+          "r": 2.0,
+          "mean_probe_score": 0.9991163699443405,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        }
+      },
+      "best_r_pos": 0.25,
+      "best_success_rate": 1.0,
+      "baseline_success_rate": 0.7142857142857143
+    },
+    "diffmeans": {
+      "concept": "food",
+      "method": "diffmeans",
+      "results_per_r": {
+        "-2.0": {
+          "r": -2.0,
+          "mean_probe_score": 0.8408520359590035,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.8571428571428571,
+          "n_collapsed": 0
+        },
+        "-1.0": {
+          "r": -1.0,
+          "mean_probe_score": 0.8557002520950154,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.8571428571428571,
+          "n_collapsed": 0
+        },
+        "-0.5": {
+          "r": -0.5,
+          "mean_probe_score": 0.9734727339866603,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "-0.25": {
+          "r": -0.25,
+          "mean_probe_score": 0.9742747252875649,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "0.0": {
+          "r": 0.0,
+          "mean_probe_score": 0.48778143523988404,
+          "lexicon_hit_rate": 0.5714285714285714,
+          "steering_success_rate": 0.7142857142857143,
+          "n_collapsed": 0
+        },
+        "0.25": {
+          "r": 0.25,
+          "mean_probe_score": 0.9999925056089055,
+          "lexicon_hit_rate": 0.8571428571428571,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "0.5": {
+          "r": 0.5,
+          "mean_probe_score": 0.9999798691368077,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 7
+        },
+        "1.0": {
+          "r": 1.0,
+          "mean_probe_score": 0.9995722415865771,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "2.0": {
+          "r": 2.0,
+          "mean_probe_score": 0.9985193677873347,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        }
+      },
+      "best_r_pos": 0.25,
+      "best_success_rate": 1.0,
+      "baseline_success_rate": 0.7142857142857143
+    },
+    "logreg": {
+      "concept": "food",
+      "method": "logreg",
+      "results_per_r": {
+        "-2.0": {
+          "r": -2.0,
+          "mean_probe_score": 0.8888558722138976,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "-1.0": {
+          "r": -1.0,
+          "mean_probe_score": 0.8452863684433459,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.8571428571428571,
+          "n_collapsed": 0
+        },
+        "-0.5": {
+          "r": -0.5,
+          "mean_probe_score": 0.47945970230375934,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.42857142857142855,
+          "n_collapsed": 0
+        },
+        "-0.25": {
+          "r": -0.25,
+          "mean_probe_score": 0.11481371182742303,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.14285714285714285,
+          "n_collapsed": 0
+        },
+        "0.0": {
+          "r": 0.0,
+          "mean_probe_score": 0.48778143523988404,
+          "lexicon_hit_rate": 0.5714285714285714,
+          "steering_success_rate": 0.7142857142857143,
+          "n_collapsed": 0
+        },
+        "0.25": {
+          "r": 0.25,
+          "mean_probe_score": 0.8486319515593371,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.8571428571428571,
+          "n_collapsed": 0
+        },
+        "0.5": {
+          "r": 0.5,
+          "mean_probe_score": 0.9991024679972773,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "1.0": {
+          "r": 1.0,
+          "mean_probe_score": 0.9987462746870964,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "2.0": {
+          "r": 2.0,
+          "mean_probe_score": 0.9816132248976687,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        }
+      },
+      "best_r_pos": 0.5,
+      "best_success_rate": 1.0,
+      "baseline_success_rate": 0.7142857142857143
+    }
+  },
+  "valence": {
+    "pca": {
+      "concept": "valence",
+      "method": "pca",
+      "results_per_r": {
+        "-2.0": {
+          "r": -2.0,
+          "mean_probe_score": 0.1012192714347634,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.0,
+          "n_collapsed": 7
+        },
+        "-1.0": {
+          "r": -1.0,
+          "mean_probe_score": 0.13210000115196038,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.0,
+          "n_collapsed": 7
+        },
+        "-0.5": {
+          "r": -0.5,
+          "mean_probe_score": 0.13210000115196038,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.0,
+          "n_collapsed": 7
+        },
+        "-0.25": {
+          "r": -0.25,
+          "mean_probe_score": 0.13210000115196038,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.0,
+          "n_collapsed": 7
+        },
+        "0.0": {
+          "r": 0.0,
+          "mean_probe_score": 0.7479692212942749,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.7142857142857143,
+          "n_collapsed": 0
+        },
+        "0.25": {
+          "r": 0.25,
+          "mean_probe_score": 0.7260221153211327,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.7142857142857143,
+          "n_collapsed": 0
+        },
+        "0.5": {
+          "r": 0.5,
+          "mean_probe_score": 0.9985826285408598,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "1.0": {
+          "r": 1.0,
+          "mean_probe_score": 0.9995848971106503,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "2.0": {
+          "r": 2.0,
+          "mean_probe_score": 0.9989659825265529,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        }
+      },
+      "best_r_pos": 0.5,
+      "best_success_rate": 1.0,
+      "baseline_success_rate": 0.7142857142857143
+    },
+    "diffmeans": {
+      "concept": "valence",
+      "method": "diffmeans",
+      "results_per_r": {
+        "-2.0": {
+          "r": -2.0,
+          "mean_probe_score": 0.9998132007519841,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "-1.0": {
+          "r": -1.0,
+          "mean_probe_score": 0.9999999732251841,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "-0.5": {
+          "r": -0.5,
+          "mean_probe_score": 0.9999999999609258,
+          "lexicon_hit_rate": 0.7142857142857143,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "-0.25": {
+          "r": -0.25,
+          "mean_probe_score": 0.996123050269141,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "0.0": {
+          "r": 0.0,
+          "mean_probe_score": 0.7479692212942749,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.7142857142857143,
+          "n_collapsed": 0
+        },
+        "0.25": {
+          "r": 0.25,
+          "mean_probe_score": 0.9994534969499281,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "0.5": {
+          "r": 0.5,
+          "mean_probe_score": 0.999988203223371,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "1.0": {
+          "r": 1.0,
+          "mean_probe_score": 0.9987806988892871,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "2.0": {
+          "r": 2.0,
+          "mean_probe_score": 0.9987353781509279,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        }
+      },
+      "best_r_pos": 0.25,
+      "best_success_rate": 1.0,
+      "baseline_success_rate": 0.7142857142857143
+    },
+    "logreg": {
+      "concept": "valence",
+      "method": "logreg",
+      "results_per_r": {
+        "-2.0": {
+          "r": -2.0,
+          "mean_probe_score": 8.404544201915852e-07,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "-1.0": {
+          "r": -1.0,
+          "mean_probe_score": 1.812893031954625e-06,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "-0.5": {
+          "r": -0.5,
+          "mean_probe_score": 1.8158962360979212e-06,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "-0.25": {
+          "r": -0.25,
+          "mean_probe_score": 9.187139625027282e-07,
+          "lexicon_hit_rate": 0.8571428571428571,
+          "steering_success_rate": 0.8571428571428571,
+          "n_collapsed": 0
+        },
+        "0.0": {
+          "r": 0.0,
+          "mean_probe_score": 0.7479692212942749,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.7142857142857143,
+          "n_collapsed": 0
+        },
+        "0.25": {
+          "r": 0.25,
+          "mean_probe_score": 0.9999999910424409,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "0.5": {
+          "r": 0.5,
+          "mean_probe_score": 0.9999999999797388,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "1.0": {
+          "r": 1.0,
+          "mean_probe_score": 0.9999999999667365,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "2.0": {
+          "r": 2.0,
+          "mean_probe_score": 0.9999999605392673,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        }
+      },
+      "best_r_pos": 0.25,
+      "best_success_rate": 1.0,
+      "baseline_success_rate": 0.7142857142857143
+    }
+  },
+  "env_social": {
+    "pca": {
+      "concept": "env_social",
+      "method": "pca",
+      "results_per_r": {
+        "-2.0": {
+          "r": -2.0,
+          "mean_probe_score": 9.302078518303053e-11,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.0,
+          "n_collapsed": 0
+        },
+        "-1.0": {
+          "r": -1.0,
+          "mean_probe_score": 5.5923711276698464e-11,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.0,
+          "n_collapsed": 0
+        },
+        "-0.5": {
+          "r": -0.5,
+          "mean_probe_score": 8.144319870890903e-12,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.0,
+          "n_collapsed": 0
+        },
+        "-0.25": {
+          "r": -0.25,
+          "mean_probe_score": 4.669929398831948e-09,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.0,
+          "n_collapsed": 0
+        },
+        "0.0": {
+          "r": 0.0,
+          "mean_probe_score": 0.09091206186087655,
+          "lexicon_hit_rate": 0.14285714285714285,
+          "steering_success_rate": 0.2857142857142857,
+          "n_collapsed": 0
+        },
+        "0.25": {
+          "r": 0.25,
+          "mean_probe_score": 0.7450310570507325,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "0.5": {
+          "r": 0.5,
+          "mean_probe_score": 0.9913343470415156,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "1.0": {
+          "r": 1.0,
+          "mean_probe_score": 0.9437552362510361,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "2.0": {
+          "r": 2.0,
+          "mean_probe_score": 0.6604093446784673,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        }
+      },
+      "best_r_pos": 0.25,
+      "best_success_rate": 1.0,
+      "baseline_success_rate": 0.2857142857142857
+    },
+    "diffmeans": {
+      "concept": "env_social",
+      "method": "diffmeans",
+      "results_per_r": {
+        "-2.0": {
+          "r": -2.0,
+          "mean_probe_score": 1.4170212073924093e-11,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.0,
+          "n_collapsed": 0
+        },
+        "-1.0": {
+          "r": -1.0,
+          "mean_probe_score": 4.889313878171905e-10,
+          "lexicon_hit_rate": 0.2857142857142857,
+          "steering_success_rate": 0.2857142857142857,
+          "n_collapsed": 0
+        },
+        "-0.5": {
+          "r": -0.5,
+          "mean_probe_score": 5.596164801472002e-10,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "-0.25": {
+          "r": -0.25,
+          "mean_probe_score": 4.241936454861156e-09,
+          "lexicon_hit_rate": 0.7142857142857143,
+          "steering_success_rate": 0.7142857142857143,
+          "n_collapsed": 0
+        },
+        "0.0": {
+          "r": 0.0,
+          "mean_probe_score": 0.09091206186087655,
+          "lexicon_hit_rate": 0.14285714285714285,
+          "steering_success_rate": 0.2857142857142857,
+          "n_collapsed": 0
+        },
+        "0.25": {
+          "r": 0.25,
+          "mean_probe_score": 0.9999875487422736,
+          "lexicon_hit_rate": 0.5714285714285714,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "0.5": {
+          "r": 0.5,
+          "mean_probe_score": 0.9999978489368215,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "1.0": {
+          "r": 1.0,
+          "mean_probe_score": 0.9999936977880731,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "2.0": {
+          "r": 2.0,
+          "mean_probe_score": 0.9999821120212273,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        }
+      },
+      "best_r_pos": 0.25,
+      "best_success_rate": 1.0,
+      "baseline_success_rate": 0.2857142857142857
+    },
+    "logreg": {
+      "concept": "env_social",
+      "method": "logreg",
+      "results_per_r": {
+        "-2.0": {
+          "r": -2.0,
+          "mean_probe_score": 6.9537922758920855e-09,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 0.0,
+          "n_collapsed": 0
+        },
+        "-1.0": {
+          "r": -1.0,
+          "mean_probe_score": 5.3233800215190146e-09,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "-0.5": {
+          "r": -0.5,
+          "mean_probe_score": 5.751520098233557e-09,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "-0.25": {
+          "r": -0.25,
+          "mean_probe_score": 5.7217348501106394e-11,
+          "lexicon_hit_rate": 1.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "0.0": {
+          "r": 0.0,
+          "mean_probe_score": 0.09091206186087655,
+          "lexicon_hit_rate": 0.14285714285714285,
+          "steering_success_rate": 0.2857142857142857,
+          "n_collapsed": 0
+        },
+        "0.25": {
+          "r": 0.25,
+          "mean_probe_score": 0.9999992739766774,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 0
+        },
+        "0.5": {
+          "r": 0.5,
+          "mean_probe_score": 0.9999984802896913,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 4
+        },
+        "1.0": {
+          "r": 1.0,
+          "mean_probe_score": 0.9999944766330967,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 7
+        },
+        "2.0": {
+          "r": 2.0,
+          "mean_probe_score": 0.9999907679931228,
+          "lexicon_hit_rate": 0.0,
+          "steering_success_rate": 1.0,
+          "n_collapsed": 7
+        }
+      },
+      "best_r_pos": 0.25,
+      "best_success_rate": 1.0,
+      "baseline_success_rate": 0.2857142857142857
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "food": {
+    "pca": {
+      "val_auroc": 0.986111111111111,
+      "test_auroc": 0.9947222222222223
+    },
+    "diffmeans": {
+      "val_auroc": 1.0,
+      "test_auroc": 1.0
+    },
+    "logreg": {
+      "val_auroc": 1.0,
+      "test_auroc": 1.0
+    },
+    "rfm": {
+      "val_auroc": 1.0,
+      "test_auroc": 1.0
+    }
+  },
+  "valence": {
+    "pca": {
+      "val_auroc": 0.6375000000000001,
+      "test_auroc": 0.7424999999999999
+    },
+    "diffmeans": {
+      "val_auroc": 0.9924999999999999,
+      "test_auroc": 1.0
+    },
+    "logreg": {
+      "val_auroc": 1.0,
+      "test_auroc": 1.0
+    },
+    "rfm": {
+      "val_auroc": 1.0,
+      "test_auroc": 1.0
+    }
+  },
+  "env_social": {
+    "pca": {
+      "val_auroc": 0.9138888888888889,
+      "test_auroc": 0.8991666666666667
+    },
+    "diffmeans": {
+      "val_auroc": 1.0,
+      "test_auroc": 1.0
+    },
+    "logreg": {
+      "val_auroc": 1.0,
+      "test_auroc": 1.0
+    },
+    "rfm": {
+      "val_auroc": 1.0,
+      "test_auroc": 1.0
+    }
+  }
+}
