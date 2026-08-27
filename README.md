@@ -67,6 +67,13 @@ The project was executed phase by phase against **pre-declared acceptance criter
 - **The implementation is gated on a synthetic test** before real concept vectors are trusted.
 - **Everything is deterministic and cached**, so every phase is re-runnable without recomputation.
 
+That commitment is on the record rather than asserted after the fact, and the two halves of it are kept deliberately separate:
+
+- **[`plans/GUPPYLM_GUIDE.md`](plans/GUPPYLM_GUIDE.md)** — the **pre-registered plan**: the full method derivation, the nine phases, and the acceptance criteria each one had to meet. Written before a line of code, and frozen since.
+- **[`plans/phase_plans/`](plans/phase_plans/)** — the **execution notes**, one file per phase: what was actually built, which criteria passed and with what evidence, and every decision taken under uncertainty — including the ones that were wrong and had to be reversed.
+
+Reading them side by side shows what was intended versus what happened. The condensed version of the second is [`WORK_LOG.md`](WORK_LOG.md); the scientific write-up is [`results/REPORT.md`](results/REPORT.md).
+
 ---
 
 ## Getting started
