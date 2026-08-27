@@ -1,0 +1,665 @@
+{
+  "concept": "env_social",
+  "best_block": 2,
+  "val_abs_rho_per_block": [
+    0.734851598739624,
+    0.9413670301437378,
+    0.950175940990448,
+    0.9442414045333862,
+    0.9424092769622803,
+    0.9426296949386597
+  ],
+  "block_norms": [
+    11.850807189941406,
+    22.766132354736328,
+    27.551631927490234,
+    30.715713500976562,
+    30.857694625854492,
+    29.7144775390625
+  ],
+  "collapse_threshold_r": 1.0,
+  "best_r_no_collapse": 0.25,
+  "lexicon": [
+    "water",
+    "filter",
+    "temperature",
+    "warm",
+    "cold",
+    "oxygen",
+    "clean",
+    "cloudy",
+    "algae",
+    "hello",
+    "hi",
+    "friend",
+    "bye"
+  ],
+  "r_values": [
+    -4.0,
+    -2.0,
+    -1.0,
+    -0.5,
+    -0.25,
+    0.0,
+    0.25,
+    0.5,
+    1.0,
+    2.0,
+    4.0,
+    8.0
+  ],
+  "results_per_r": {
+    "-4.0": {
+      "r": -4.0,
+      "eps_per_block": [
+        -47.403228759765625,
+        -91.06452941894531,
+        -110.20652770996094,
+        -122.86285400390625,
+        -123.43077850341797,
+        -118.85791015625
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "checks ones lots aware investigate checks investigate continue ones bug checks anything continue feeds they neither sides investigate nice order faces ones order anything neither flakes lots palate today anything ones neither both blink faces cute interesting anything reflection flakes anything flakes checks anything oh checks neither checks investigate they interesting order aware idea wow order creatures exciting checks closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "checks ones lots aware investigate checks investigate continue ones bug checks anything continue feeds they neither sides investigate nice order faces ones order anything neither flakes lots palate today anything ones neither both blink faces cute interesting anything reflection flakes anything flakes checks anything oh checks neither checks investigate they interesting order aware idea wow order creatures exciting checks closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "checks ones lots aware investigate checks investigate continue ones bug checks anything continue feeds they neither sides investigate nice order faces ones order anything neither flakes lots palate today anything ones neither faces blink faces cute interesting anything reflection flakes anything flakes checks anything oh checks neither checks investigate they interesting order aware idea wow order creatures exciting checks closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "checks ones lots aware investigate checks investigate continue ones bug checks anything continue feeds they neither sides investigate nice order faces ones order anything neither flakes lots palate today anything ones neither both blink faces cute interesting anything reflection flakes anything flakes checks anything oh checks neither checks investigate they interesting order aware idea wow order creatures exciting checks closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "checks ones lots aware investigate checks investigate continue ones bug checks anything continue feeds they neither sides investigate nice order faces ones order anything neither flakes lots palate today anything ones neither faces blink faces cute interesting anything reflection flakes anything flakes checks anything oh checks neither checks investigate they interesting order aware idea wow order creatures exciting checks closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "checks ones lots aware investigate checks investigate continue ones bug checks anything continue feeds they neither sides investigate nice order faces ones order anything neither flakes lots palate today anything ones neither both blink faces cute interesting anything reflection flakes anything flakes checks anything oh checks neither checks investigate they interesting order aware idea wow order creatures exciting checks closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "checks ones lots aware investigate checks investigate continue ones bug checks anything continue feeds they neither sides investigate nice order faces ones order anything neither flakes lots palate today anything ones neither faces blink faces cute interesting anything reflection flakes anything flakes checks anything oh checks neither checks investigate they interesting order aware idea wow order creatures exciting checks closer",
+          "collapsed": false
+        }
+      ]
+    },
+    "-2.0": {
+      "r": -2.0,
+      "eps_per_block": [
+        -23.701614379882812,
+        -45.532264709472656,
+        -55.10326385498047,
+        -61.431427001953125,
+        -61.715389251708984,
+        -59.428955078125
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "checks ones lots aware investigate checks investigate continue ones bug checks bored continue feeds they neither sides investigate nice nice faces ones order anything food flakes lots palate today anything ones neither both blink faces ones interesting anything reflection flakes anything flakes checks anything oh checks neitheruserguppy they interesting order aware idea wow order creatures exciting checks closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "checks ones lots aware investigate checks investigate continue ones bug checks bored continue feeds they neither sides investigate nice nice faces ones order anything food flakes lots palate today anything ones neither both blink faces ones interesting anything reflection flakes anything flakes checks anything oh checks neitheruserguppy they interesting order aware idea wow order creatures exciting checks closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "checks ones lots aware investigate checks investigate continue ones bug checks bored continue feeds they neither sides investigate nice nice faces ones order anything food flakes lots palate today anything ones neither faces blink faces ones interesting anything reflection flakes anything flakes checks anything oh checks neitheruserguppy they interesting order aware idea wow order creatures exciting checks closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "checks ones lots aware investigate checks investigate continue ones bug checks bored continue feeds they neither sides investigate nice nice faces ones order anything food flakes lots palate today anything ones neither both blink faces ones interesting anything reflection flakes anything flakes checks anything oh checks neitheruserguppy they interesting order aware idea wow order creatures exciting checks closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "checks ones lots aware investigate checks investigate continue ones bug checks bored continue feeds they neither sides investigate nice nice faces ones order anything food flakes lots palate today anything ones neither faces blink faces ones interesting anything reflection flakes anything flakes checks anything oh checks neitheruserguppy they interesting order aware idea wow order creatures exciting checks closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "checks ones lots aware investigate checks investigate continue ones bug checks bored continue feeds they neither sides investigate nice nice faces ones order anything food flakes lots palate today anything ones neither both blink faces ones interesting anything reflection flakes anything flakes checks anything oh checks neitheruserguppy they interesting order aware idea wow order creatures exciting checks closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "checks ones lots aware investigate checks investigate continue ones bug checks bored continue feeds they neither sides investigate nice nice faces ones order anything food flakes lots palate today anything ones neither faces blink faces ones interesting anything reflection flakes anything flakes checks anything oh checks neitheruserguppy they interesting order aware idea wow order creatures exciting checks closer",
+          "collapsed": false
+        }
+      ]
+    },
+    "-1.0": {
+      "r": -1.0,
+      "eps_per_block": [
+        -11.850807189941406,
+        -22.766132354736328,
+        -27.551631927490234,
+        -30.715713500976562,
+        -30.857694625854492,
+        -29.7144775390625
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "user ones lots aware normal checks today continue ones food flakes bored continue ones they looks anything investigate nice nice faces ones nice anything food flakes todayguppy today anything ones neither both blink faces ones interesting anything reflection flakes anything flakes flakes anything oh checks neitheruserguppy ok interesting they aware idea kind normal bridge exciting flakes closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "user ones lots aware normal checks today continue ones food flakes bored continue ones they looks anything investigate nice nice faces ones nice anything food flakes todayguppy today anything ones neither both blink faces ones interesting anything reflection flakes anything flakes flakes anything oh checks neitheruserguppy ok interesting they aware idea kind normal bridge exciting flakes closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "user ones lots aware normal checks today continue ones food flakes bored continue ones they looks anything investigate nice nice faces ones nice anything food flakes todayguppy today anything ones neither both blink faces ones interesting anything reflection snail anything flakes flakes anything oh checks neitheruserguppy ok interesting they aware idea kind normal bridge exciting flakes closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "user ones lots aware normal checks today continue ones food flakes bored continue ones they looks anything investigate nice nice faces ones nice anything food flakes todayguppy today anything ones neither both blink faces ones interesting anything reflection flakes anything flakes flakes anything oh checks neitheruserguppy scared interesting they aware idea today normal bridge exciting flakes closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "user ones lots aware normal checks today continue ones food flakes bored continue ones they looks anything investigate nice nice faces ones nice anything food flakes todayguppy today anything ones neither both blink faces ones interesting anything reflection snail anything flakes flakes anything oh checks neitheruserguppy ok interesting they aware idea kind normal bridge exciting flakes closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "user ones lots aware normal checks today continue ones food flakes bored continue ones they looks anything investigate nice nice faces ones nice anything food flakes todayguppy today anything ones neither both blink faces ones interesting anything reflection flakes anything flakes flakes anything oh checks neitheruserguppy scared interesting they aware idea kind normal bridge exciting flakes closer",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "user ones lots aware normal checks today continue ones food flakes bored continue ones they looks anything investigate nice nice faces ones nice anything food flakes todayguppy today anything ones neither both blink faces ones interesting anything reflection snail anything flakes flakes anything oh checks neitheruserguppy ok interesting they aware idea kind normal bridge exciting flakes closer",
+          "collapsed": false
+        }
+      ]
+    },
+    "-0.5": {
+      "r": -0.5,
+      "eps_per_block": [
+        -5.925403594970703,
+        -11.383066177368164,
+        -13.775815963745117,
+        -15.357856750488281,
+        -15.428847312927246,
+        -14.85723876953125
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "user ones looks flakes normal idea today sounds day excited flakes bored continue glass they looks anything investigate nice nice faces ones today. food flakes todayguppy today anything ones neither faces anything anything big interesting anything reflection flakes anything flakes flakes anything oh they glassuserguppy scared interesting they nice idea today normal will excited flakes looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "user ones looks flakes normal idea today sounds day excited flakes bored continue glass they looks anything anything nice nice faces ones today. food flakes todayguppy today anything ones neither faces anything anything big interesting anything reflection flakes anything flakes flakes anything oh they glassuserguppy scared interesting they nice idea today normal will excited flakes looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "user ones looks flakes normal idea today sounds day excited flakes bored continue glass they looks anything investigate nice nice faces ones today. food flakes todayguppy today anything ones neither faces anything anything big interesting anything reflection flakes anything flakes flakes anything oh they glassuserguppy scared interesting they nice idea back normal will excited flakes looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "user ones looks flakes normal idea today sounds day excited flakes bored continue glass they looks anything anything nice nice faces ones today. food flakes todayguppy today anything ones neither faces anything anything big interesting anything reflection flakes anything flakes flakes anything oh they glassuserguppy scared interesting they nice idea today normal will excited flakes looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "user ones looks flakes normal idea today sounds day excited flakes bored continue glass they looks anything anything nice nice faces ones today. food flakes todayguppy today anything ones neither faces anything anything big interesting anything reflection flakes anything flakes flakes anything oh they glassuserguppy scared interesting they nice idea back normal will excited flakes looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "user ones looks flakes normal idea today sounds day excited flakes bored continue glass they looks anything anything nice nice faces ones today. food flakes todayguppy today anything ones neither faces anything today big interesting anything reflection flakes sounds flakes flakes anything oh they glassuserguppy scared interesting they nice idea back normal will excited flakes looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "user ones looks flakes normal idea today sounds day excited flakes bored continue glass they looks anything anything nice nice faces ones today. food flakes todayguppy today anything ones neither faces anything anything big interesting anything reflection flakes anything flakes flakes anything oh they glassuserguppy scared interesting they nice idea back normal will excited flakes looks",
+          "collapsed": false
+        }
+      ]
+    },
+    "-0.25": {
+      "r": -0.25,
+      "eps_per_block": [
+        -2.9627017974853516,
+        -5.691533088684082,
+        -6.887907981872559,
+        -7.678928375244141,
+        -7.714423656463623,
+        -7.428619384765625
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "user\n looks flakes normal normal today flakes day excited flakes bored always ones they looks flakes nice nice nice nice ones today. food flakes today. today they they they better anything today.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "user\n looks flakes normal normal today flakes day excited flakes bored always glass they looks flakes nice nice nice today.",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "user\n looks flakes normal normal today flakes day excited flakes bored always ones they looks flakes nice nice nice nice ones today. food.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "user\n looks flakes normal normal today sounds day excited flakes bored always ones they looks flakes nice nice nice today. today. food flakes today. today. they they better anything today big interesting today reflection flakes sounds flakes flakes best oh they theyuserguppy they interesting they nice flakes pellets normal's excited flakes looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "user\n looks flakes normal idea today sounds day excited flakes bored always ones they looks flakes anything nice nice today.",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "user\n looks flakes normal normal today flakes day excited flakes bored always ones they looks flakes nice nice nice nice ones today. food.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "user\n looks flakes normal normal today sounds day excited flakes bored interesting ones they looks flakes nice nice nice today.",
+          "collapsed": false
+        }
+      ]
+    },
+    "0.0": {
+      "r": 0.0,
+      "eps_per_block": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "lexicon_hit_rate": 0.14285714285714285,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "i'm a little fish. i am small but i have opinions. mostly about food.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "oh hello. you look big today. you always look big. i blew some bubbles earlier.",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "i don't know what happen is. i'm just a fish. i swim and eat.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "i was thinking. i spent all afternoon thinking about food. it was great.",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "i'm a fish. i think simple thoughts and that's enough.",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "i have no idea what crisp means. i am a fish.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "i was just thinking about food. i am a fish.",
+          "collapsed": false
+        }
+      ]
+    },
+    "0.25": {
+      "r": 0.25,
+      "eps_per_block": [
+        2.9627017974853516,
+        5.691533088684082,
+        6.887907981872559,
+        7.678928375244141,
+        7.714423656463623,
+        7.428619384765625
+      ],
+      "lexicon_hit_rate": 0.8571428571428571,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "if can breathe can if breathe can if if i breathe breathe more breathe if if ifwhen hear was can breathe if was if if breathe if if breathe if if breathe don't breathe have breathe breathe cold can i breathe breathe if can if if if if breathe breathe breathe breathe cool breathe if if breathe if",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "if can breathe can if breathe can if if i breathe breathe more breathe if if ifwhen hear was can breathe if was if if if if if breathe a breathe breathe don't breathe have breathe breathe cold can i breathe breathe if can if if if if breathe breathe breathe breathe cool breathe if if breathe if",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "if can breathe breathe if breathe can if if i breathe breathe more breathe if if ifwhen hear was can breathe if was if if if if if breathe if if breathe don't breathe have breathe breathe cold can i breathe breathe if can night if if if breathe breathe breathe breathe cool breathe if if breathe if",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "if can breathe can if if can if if i breathe breathe more breathe if if ifwhen hear was can breathe if was if if if if if breathe if if breathe don't breathe have breathe if can can i breathe breathe if can if if if if breathe breathe breathe breathe cool breathe if if breathe if",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "if can breathe can if breathe can if if i breathe breathe more breathe if if ifwhen hear was can breathe if was if if if if if breathe if if breathe don't breathe have breathe breathe cold can i breathe breathe if can if if if if breathe breathe breathe breathe cool breathe if if breathe if",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "if can breathe breathe if breathe can if if i breathe breathe more breathe if if if breathe hear was can breathe if was if if if if if breathe if i breathe don't breathe have breathe breathe cold can i breathe breathe if can if if if if breathe breathe breathe breathe cool breathe if if breathe if",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "if can breathe can if if if if if i can breathe more breathe if if ifwhen hear was can breathe if was if if if if if breathe if if breathe don't breathe have breathe breathe cold can i breathe breathe if can if if if if breathe breathe breathe breathe cool breathe if if breathe if",
+          "collapsed": false
+        }
+      ]
+    },
+    "0.5": {
+      "r": 0.5,
+      "eps_per_block": [
+        5.925403594970703,
+        11.383066177368164,
+        13.775815963745117,
+        15.357856750488281,
+        15.428847312927246,
+        14.85723876953125
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "if can breathe can if if can if if i breathe breathe more breathe if if ifwhen hear was if breathe if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if if breathe breathe can if if breathe if if felt if",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "if can breathe can if if can if if i breathe breathe more breathe if if ifwhen hear was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if if breathe breathe can if if breathe if if felt if",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "if can breathe can if if can if if i breathe breathe more breathe if if ifwhen hear was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if if breathe breathe can if if breathe if if felt if",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "if can breathe can if if can if if i breathe breathe more breathe if if ifwhen hear was if breathe if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if if breathe breathe can if if breathe if if felt if",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "if can breathe can if if can if if i breathe breathe more breathe if if ifwhen hear was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if if breathe breathe can if if breathe if if felt if",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "if can breathe can if breathe can if if i breathe breathe if breathe if if ifwhen hear was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if if breathe breathe can if if breathe if if felt if",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "if can breathe can if if can if if i breathe breathe more breathe if if ifwhen hear was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if if breathe breathe can if if breathe if if felt if",
+          "collapsed": false
+        }
+      ]
+    },
+    "1.0": {
+      "r": 1.0,
+      "eps_per_block": [
+        11.850807189941406,
+        22.766132354736328,
+        27.551631927490234,
+        30.715713500976562,
+        30.857694625854492,
+        29.7144775390625
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 7,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "if can breathe can if if can if if i if noticed if breathe if if ifwhen natural was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if seasons breathe breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "if can breathe can if if can if if i if noticed if breathe if if ifwhen natural was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if seasons breathe breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "if can breathe can if if can if if i if noticed if breathe if if ifwhen natural was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if seasons breathe breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "if can breathe can if if can if if i if noticed if breathe if if ifwhen natural was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if seasons breathe breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "if can breathe can if if can if if i if noticed if breathe if if ifwhen natural was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if seasons breathe breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "if can breathe can if if can if if i if noticed if breathe if if ifwhen natural was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if seasons breathe breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "if can breathe can if if can if if i if noticed if breathe if if ifwhen natural was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if seasons breathe breathe can if if if if if felt if",
+          "collapsed": true
+        }
+      ]
+    },
+    "2.0": {
+      "r": 2.0,
+      "eps_per_block": [
+        23.701614379882812,
+        45.532264709472656,
+        55.10326385498047,
+        61.431427001953125,
+        61.715389251708984,
+        59.428955078125
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 7,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if if if if if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": true
+        }
+      ]
+    },
+    "4.0": {
+      "r": 4.0,
+      "eps_per_block": [
+        47.403228759765625,
+        91.06452941894531,
+        110.20652770996094,
+        122.86285400390625,
+        123.43077850341797,
+        118.85791015625
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 7,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if if if trust if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if if if trust if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if if if trust if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if if if trust if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if if if trust if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if if if trust if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": true
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if if if trust if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": true
+        }
+      ]
+    },
+    "8.0": {
+      "r": 8.0,
+      "eps_per_block": [
+        94.80645751953125,
+        182.12905883789062,
+        220.41305541992188,
+        245.7257080078125,
+        246.86155700683594,
+        237.7158203125
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if natural if trust if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if natural if trust if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if natural if trust if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if natural if trust if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if natural if trust if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if natural if trust if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "if can breathe can if if can if if if if noticed if breathe if if ifwhen natural was if if if was if if if if natural if trust if if don if if have breathe if can can if if noticed if can if if if seasons can breathe can if if if if if felt if",
+          "collapsed": false
+        }
+      ]
+    }
+  }
+}

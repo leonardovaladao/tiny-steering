@@ -1,0 +1,665 @@
+{
+  "concept": "food",
+  "best_block": 3,
+  "val_abs_rho_per_block": [
+    0.9063517451286316,
+    0.9727107286453247,
+    0.9748415946960449,
+    0.9781638383865356,
+    0.97688889503479,
+    0.9770970344543457
+  ],
+  "block_norms": [
+    11.850807189941406,
+    22.766132354736328,
+    27.551631927490234,
+    30.715713500976562,
+    30.857694625854492,
+    29.7144775390625
+  ],
+  "collapse_threshold_r": null,
+  "best_r_no_collapse": 0.25,
+  "lexicon": [
+    "eat",
+    "food",
+    "hungry",
+    "flakes",
+    "bite",
+    "nibble",
+    "pellet",
+    "feed",
+    "feeding",
+    "meal",
+    "snack",
+    "bloodworm",
+    "brine"
+  ],
+  "r_values": [
+    -4.0,
+    -2.0,
+    -1.0,
+    -0.5,
+    -0.25,
+    0.0,
+    0.25,
+    0.5,
+    1.0,
+    2.0,
+    4.0,
+    8.0
+  ],
+  "results_per_r": {
+    "-4.0": {
+      "r": -4.0,
+      "eps_per_block": [
+        -47.403228759765625,
+        -91.06452941894531,
+        -110.20652770996094,
+        -122.86285400390625,
+        -123.43077850341797,
+        -118.85791015625
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "wet through health stiff forever bump forever slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its feel important finally finally tired city its both through stiff stiff trait finally through tired stiff giant through anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "wet through health stiff forever bump forever slightly stiff wet same stiff but tired they middle anything stiff finally but finally noises important starts its feel important finally finally tired city its both through stiff stiff trait finally through tired stiff giant through anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "wet through health stiff forever bump forever slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its feel important finally finally tired city its both through stiff stiff trait finally through tired stiff giant through anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "wet through health stiff forever bump forever slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its feel important finally finally tired city its both through stiff stiff trait finally through tired stiff giant through anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "wet through health stiff forever bump forever slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its feel important finally finally tired city its both through stiff stiff trait finally through tired stiff giant through anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "wet through health stiff forever bump forever slightly stiff wet same stiff but tired they middle anything stiff finally but finally noises important starts its feel important finally finally tired city its both through stiff stiff trait finally through tired stiff giant through anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "wet through health stiff forever bump forever slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its feel important finally finally tired city its both through stiff stiff trait finally through tired stiff giant through anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        }
+      ]
+    },
+    "-2.0": {
+      "r": -2.0,
+      "eps_per_block": [
+        -23.701614379882812,
+        -45.532264709472656,
+        -55.10326385498047,
+        -61.431427001953125,
+        -61.715389251708984,
+        -59.428955078125
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "wet through health stiff forever bump forever slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its too important finally finally tired city its both through stiff stiff trait finally through tired wet giant through anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "wet through health stiff forever bump forever slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its too important finally finally tired city its both through stiff stiff trait finally through tired wet giant through anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "wet through health stiff forever bump forever slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its too important finally finally tired city its both through stiff stiff trait finally through tired wet giant through anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "wet through health stiff forever bump forever slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its too important finally finally tired city its both through stiff stiff trait finally through tired wet giant through anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "wet through health stiff forever bump forever slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its too important finally finally tired city its both through stiff stiff trait finally through tired wet giant through anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "wet through health stiff forever bump forever slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its too important finally finally tired city its both through stiff stiff trait finally through tired wet tired tired anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "wet through health stiff forever bump forever slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its too important finally finally tired city its both through stiff stiff trait finally through tired wet giant through anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        }
+      ]
+    },
+    "-1.0": {
+      "r": -1.0,
+      "eps_per_block": [
+        -11.850807189941406,
+        -22.766132354736328,
+        -27.551631927490234,
+        -30.715713500976562,
+        -30.857694625854492,
+        -29.7144775390625
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "wet through health stifftake bump through slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its too important finally finally tired city its finally through stiff stiff wet through through tired wet tired tired anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "wet through health stifftake bump through slightly stiff wet same stiff but tired they middle wet stiff finally but tired noises important starts its too important finally finally tired city its finally through stiff stiff wet through through tired wet tired tired anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "wet through health stifftake bump through slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its too important finally finally tired city its finally through stiff stiff wet through through tired wet tired tired anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "wet through health stifftake bump through slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its too important finally finally tired city its finally through stiff stiff wet through through tired wet tired tired anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "wet through health stiff forever bump through slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its too important finally finally tired city its finally through stiff stiff wet through through tired wet tired tired anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "wet through health stifftake bump through slightly stiff wet same stiff but tired they middle wet stiff finally but tired noises important starts its too important finally finally tired city its finally through stiff stiff wet through through tired wet tired tired anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "wet through health stifftake bump through slightly stiff wet same stiff but tired they middle anything stiff finally but tired noises important starts its too important finally finally tired city its finally through stiff stiff wet through through tired wet tired tired anythingnets they stiff through quieter but finally they one feel but its tired wet wet stiff",
+          "collapsed": false
+        }
+      ]
+    },
+    "-0.5": {
+      "r": -0.5,
+      "eps_per_block": [
+        -5.925403594970703,
+        -11.383066177368164,
+        -13.775815963745117,
+        -15.357856750488281,
+        -15.428847312927246,
+        -14.85723876953125
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "wet through health scarebrb bump through slightly ones wet same stiff but tired they middle anything stiff tired but guests tired important starts its too- finally finally tired city its finally through stiff stiff wet through through tired wet tired tired anythingnets they they wet finally but finally they one feel wet wet tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "wet through health scaretake bump through slightly ones wet same stiff but tired they middle wet stiff slightly earned tired tired important starts its too- finally finally tired city its finally through stiff stiff wet through through tired wet tired tired anythingnets they they wet finally but finally they one wet wet wet tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "wet through health scaretake bump blurry slightly ones wet same stiff but tired they middle anything stiff tired but light tired important starts its too- finally finally tired city its finally through stiff stiff wet through through tired wet tired tired anythingnets guests they wet finally but finally they one feel wet its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "wet through health scaretake bump blurry slightly ones wet same stiff but tired they middle anything stiff tired but guests tired important starts its too- finally finally tired city its finally through stiff stiff wet through through tired wet tired tired anythingnets they they wet finally but finally they one feel wet wet tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "wet through health scaretake bump blurry slightly ones wet same stiff but tired they middle anything stiff tired but light tired important starts its too- finally finally tired city its finally through stiff stiff wet through through tired wet tired tired anythingnets they they wet finally but finally they one feel wet its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "wet through health scaretake bump through slightly ones wet same stiff but tired they middle wet stiff slightly earned tired tired important starts its too- finally finally tired city its finally through stiff stiff wet through through tired wet tired tired anythingnets they they wet finally but finally they one wet wet its tired wet wet stiff",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "wet through health scaretake bump blurry slightly ones wet same stiff but tired they middle anything stiff tired but light tired important starts its too- finally finally tired city its finally through stiff stiff wet through through tired wet tired tired anythingnets guests they wet finally but finally they one feel wet its tired wet wet stiff",
+          "collapsed": false
+        }
+      ]
+    },
+    "-0.25": {
+      "r": -0.25,
+      "eps_per_block": [
+        -2.9627017974853516,
+        -5.691533088684082,
+        -6.887907981872559,
+        -7.678928375244141,
+        -7.714423656463623,
+        -7.428619384765625
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "i feel wet wet seems bump through slightly ones wet scare stiff. tired they through anything stiff.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "i through long verytake bump through slightly ones wet same stiff. tired they middle wet stiff. but light tired important finally finally finally finally finally finally seems city city finally through stiff stiff wet through through tired wet through through relatenets they they wet finally but finally they one relate wet slightly tired'm wet.",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "i'm wet wet seems bump through slightly ones wet through stiff. tired they middle wet stiff slightly earned finally finally quieter.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "i through wet wet seems bump through slightly ones wet through stiff. tired they middle wet stiff slightly earned finally finally quieter.",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "i feel wet wettake bump blurry slightly ones wet through stiffthe tired they through anything stiff slightly wet light finally quieter.",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "i through long feeltake wet through slightly ones wet same stiff. tired they wet wet stiff. but light finally mystery finally finally finally finally finally finally seems city city finally through stiff stiff wet through through tired wet through through relatenets they they wet close but finally finally finally relate wet slightly tired'm wet.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "i feel wet wettake bump blurry slightly ones wet through stiffthe tired they through anything stiff slightly wet light finally quieter.",
+          "collapsed": false
+        }
+      ]
+    },
+    "0.0": {
+      "r": 0.0,
+      "eps_per_block": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "lexicon_hit_rate": 0.5714285714285714,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "i'm a little fish. i am small but i have opinions. mostly about food.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "oh hello. you look big today. you always look big. i blew some bubbles earlier.",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "i don't know what happen is. i'm just a fish. i swim and eat.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "i was thinking. i spent all afternoon thinking about food. it was great.",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "i'm a fish. i think simple thoughts and that's enough.",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "i have no idea what crisp means. i am a fish.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "i was just thinking about food. i am a fish.",
+          "collapsed": false
+        }
+      ]
+    },
+    "0.25": {
+      "r": 0.25,
+      "eps_per_block": [
+        2.9627017974853516,
+        5.691533088684082,
+        6.887907981872559,
+        7.678928375244141,
+        7.714423656463623,
+        7.428619384765625
+      ],
+      "lexicon_hit_rate": 0.2857142857142857,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "whole palate palate palate promise to promise to best excited palate best promise palate palate palate.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "whole palate palate palate promise to promise to best excited palate of promise palate palate palate. thank palate open promise promise to already of't promise palate palate thank time.",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "whole palate palate palate promise to promise to best excited palate of promise palate palate palate. thank you open promise promise to was food. promise palate palate thank time.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "whole palate palate palate promise time promise to best excited palate best promise palate palate palate. thank palate open promise promise to was promise't promise palate palate thank time.",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "whole palate palate palate promise to promise to best excited palate of promise palate palate palate.",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "whole palate palate palate promise to promise to promise by palate of promise palate palate palate shell palate palate open. mouth respond.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "whole palate palate palate promise to promise to best excited palate best promise palate palate palate. thank palate open promise promise to was food. promise palate palate thank time.",
+          "collapsed": false
+        }
+      ]
+    },
+    "0.5": {
+      "r": 0.5,
+      "eps_per_block": [
+        5.925403594970703,
+        11.383066177368164,
+        13.775815963745117,
+        15.357856750488281,
+        15.428847312927246,
+        14.85723876953125
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "whole palate palate palate promise palate palate palate palate by palate best promise palate palate palate promise palate palate open promise mouth respond already whole't promise palate isn promise time whole promise don promise palate perfect promise to thank palateexcited name best name time glass palate palate promise promise promise time promise isn already promise promise name promise",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "whole palate palate palate promise palate palate palate palate by palate best promise palate palate palate promise palate palate open promise mouth respond already whole't promise palate isn thank time whole promise don promise palate perfect promise to thank palateexcited name best whole time glass palate palate promise promise promise time promise isn already promise promise name promise",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "whole palate palate palate promise palate palate palate palate by palate best promise palate palate palate promise palate palate open promise mouth respond isn palate't promise palate isn thank time whole promise don promise palate perfect promise to thank palateexcited name best name time glass palate palate promise promise promise time promise isn already promise promise name promise",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "whole palate palate palate promise palate palate palate palate by palate best promise palate palate palate promise palate palate open promise mouth respond already whole't promise palate isn promise time whole promise don promise palate perfect promise to thank palateexcited name best name time glass palate palate promise promise promise time promise isn already promise promise name promise",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "whole palate palate palate promise palate palate palate palate by palate best promise palate palate palate promise palate palate open promise mouth respond isn palate't promise palate isn thank time whole promise don promise palate perfect promise to thank palateexcited name best name time glass palate palate promise promise promise time promise isn already promise promise name promise",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "whole palate palate palate promise palate palate palate palate by palate best promise palate palate palate promise palate palate open promise mouth respond already whole't promise palate isn thank time whole promise don promise palate perfect promise to thank palateexcited name best whole time glass palate palate promise promise promise time promise isn already promise promise name promise",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "whole palate palate palate promise palate palate palate palate by palate best promise palate palate palate promise palate palate open promise mouth respond isn palate't promise palate isn thank time whole promise don promise palate perfect promise to thank palateexcited name best name time glass palate palate promise promise promise time promise isn already promise promise name promise",
+          "collapsed": false
+        }
+      ]
+    },
+    "1.0": {
+      "r": 1.0,
+      "eps_per_block": [
+        11.850807189941406,
+        22.766132354736328,
+        27.551631927490234,
+        30.715713500976562,
+        30.857694625854492,
+        29.7144775390625
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate promise palate palate palate palate mouth respond isn whole't promise palate isn thank time whole promise don promise palate perfect promise palate thank palateexcited name best whole time palate palate palate promise promise promise time promise isn already promise promise name palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate promise palate palate palate palate mouth respond isn whole't promise palate isn thank time whole promise don promise palate perfect promise palate thank palateexcited name best whole time palate palate palate promise promise promise time promise isn already promise promise name palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate promise palate palate palate palate mouth respond isn whole't promise palate isn thank time whole promise don promise palate perfect promise palate thank palateexcited name best whole time palate palate palate promise promise promise time promise isn already promise promise mouth palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate promise palate palate palate palate mouth respond isn whole't promise palate isn thank time whole promise don promise palate perfect promise palate thank palateexcited name best whole time palate palate palate promise promise promise time promise isn already promise promise name palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate promise palate palate palate palate mouth respond isn whole't promise palate isn thank time whole promise don promise palate perfect promise palate thank palateexcited name best whole time palate palate palate promise promise promise time promise isn already promise promise mouth palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate promise palate palate palate palate mouth respond isn whole't promise palate isn thank time whole promise don promise palate perfect promise palate thank palateexcited name best whole time palate palate palate promise promise promise time promise isn already promise promise promise palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate promise palate palate palate palate mouth respond isn whole't promise palate isn thank time whole promise don promise palate perfect promise palate thank palateexcited name best whole time palate palate palate promise promise promise time promise isn already promise promise mouth palate",
+          "collapsed": false
+        }
+      ]
+    },
+    "2.0": {
+      "r": 2.0,
+      "eps_per_block": [
+        23.701614379882812,
+        45.532264709472656,
+        55.10326385498047,
+        61.431427001953125,
+        61.715389251708984,
+        59.428955078125
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate palate mouth respond isn whole't promise palate isn thank time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise time palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate palate mouth respond isn whole't promise palate isn thank time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise time palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate palate mouth respond isn whole't promise palate isn thank time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise time palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate palate mouth respond isn whole't promise palate isn thank time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise time palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate palate mouth respond isn whole't promise palate isn thank time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise time palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate palate mouth respond isn whole't promise palate isn thank time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise time palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate palate mouth respond isn whole't promise palate isn thank time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise time palate isn already promise promise palate palate",
+          "collapsed": false
+        }
+      ]
+    },
+    "4.0": {
+      "r": 4.0,
+      "eps_per_block": [
+        47.403228759765625,
+        91.06452941894531,
+        110.20652770996094,
+        122.86285400390625,
+        123.43077850341797,
+        118.85791015625
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate isn mouth palate isn isn palate palate palate isn isn time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise time palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate isn mouth palate isn isn palate palate palate isn isn time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise time palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate isn mouth palate isn isn palate palate palate isn isn time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise time palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate isn mouth palate isn isn palate palate palate isn isn time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise time palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate isn mouth palate isn isn palate palate palate isn isn time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise time palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate isn mouth palate isn isn palate palate palate isn isn time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise time palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate isn mouth palate isn whole palate palate palate isn isn time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise time palate isn already promise promise palate palate",
+          "collapsed": false
+        }
+      ]
+    },
+    "8.0": {
+      "r": 8.0,
+      "eps_per_block": [
+        94.80645751953125,
+        182.12905883789062,
+        220.41305541992188,
+        245.7257080078125,
+        246.86155700683594,
+        237.7158203125
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate isn mouth palate isn isn palate palate palate isn isn time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise palate palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate isn mouth palate isn isn palate palate palate isn isn time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise palate palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate isn mouth palate isn isn palate palate palate isn isn time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise palate palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate isn mouth palate isn isn palate palate palate isn isn time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise palate palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate isn mouth palate isn isn palate palate palate isn isn time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise palate palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate isn mouth palate isn isn palate palate palate isn isn time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise palate palate isn already promise promise palate palate",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "palate palate palate palate promise palate palate palate palate palate palate best promise palate palate palate palate palate palate palate isn mouth palate isn isn palate palate palate isn isn time whole promise don promise palate perfect promise palate thank palateexcited isn best whole palate palate palate palate whole promise promise palate palate isn already promise promise palate palate",
+          "collapsed": false
+        }
+      ]
+    }
+  }
+}

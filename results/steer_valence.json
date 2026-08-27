@@ -1,0 +1,664 @@
+{
+  "concept": "valence",
+  "best_block": 4,
+  "val_abs_rho_per_block": [
+    0.507297694683075,
+    0.8989188075065613,
+    0.9080273509025574,
+    0.9048135876655579,
+    0.9183165431022644,
+    0.9080503582954407
+  ],
+  "block_norms": [
+    11.850807189941406,
+    22.766132354736328,
+    27.551631927490234,
+    30.715713500976562,
+    30.857694625854492,
+    29.7144775390625
+  ],
+  "collapse_threshold_r": null,
+  "best_r_no_collapse": 0.25,
+  "lexicon": [
+    "excited",
+    "happy",
+    "joy",
+    "wiggle",
+    "fast",
+    "scared",
+    "afraid",
+    "fear",
+    "nervous",
+    "tense",
+    "stiff",
+    "hide"
+  ],
+  "r_values": [
+    -4.0,
+    -2.0,
+    -1.0,
+    -0.5,
+    -0.25,
+    0.0,
+    0.25,
+    0.5,
+    1.0,
+    2.0,
+    4.0,
+    8.0
+  ],
+  "results_per_r": {
+    "-4.0": {
+      "r": -4.0,
+      "eps_per_block": [
+        -47.403228759765625,
+        -91.06452941894531,
+        -110.20652770996094,
+        -122.86285400390625,
+        -123.43077850341797,
+        -118.85791015625
+      ],
+      "lexicon_hit_rate": 1.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "shadows alone circles soundsbig bump shadows exploring exploring joke exploring yourselfbig belly have shipwreck shadows starts could nice shadows shadows coolness starts shadowsdays circles shadows yourself rememberdays ball shadows could eyes bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "shadows alone circles soundsbig bump shadows exploring exploring joke exploring yourselfbig belly have shipwreck shadows starts could nice shadows shadows coolness starts shadowsdays circles shadows yourself rememberdays ball shadows could eyes bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "shadows alone circles soundsbig bump shadows exploring exploring joke exploring yourselfbig belly have shipwreck shadows starts could nice shadows shadows coolness starts shadowsdays circles shadows yourself rememberdays ball shadows could eyes bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "shadows alone circles soundsbig bump shadows exploring exploring joke exploring yourselfbig belly have shipwreck shadows starts could nice shadows shadows coolness starts shadowsdays circles shadows yourself rememberdays ball shadows could eyes bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "shadows alone circles soundsbig bump shadows exploring exploring joke exploring yourselfbig belly have shipwreck shadows starts could nice shadows shadows coolness starts shadowsdays circles shadows yourself rememberdays ball shadows could eyes bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "shadows alone circles soundsbig bump shadows exploring exploring joke exploring yourselfbig belly have shipwreck shadows starts could nice shadows shadows coolness starts shadowsdays circles shadows yourself rememberdays ball shadows could eyes bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "shadows alone circles soundsbig bump shadows exploring exploring joke exploring yourselfbig belly have shipwreck shadows starts could nice shadows shadows coolness starts shadowsdays circles shadows yourself rememberdays ball shadows could eyes bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        }
+      ]
+    },
+    "-2.0": {
+      "r": -2.0,
+      "eps_per_block": [
+        -23.701614379882812,
+        -45.532264709472656,
+        -55.10326385498047,
+        -61.431427001953125,
+        -61.715389251708984,
+        -59.428955078125
+      ],
+      "lexicon_hit_rate": 1.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "shadows alone circles soundsbig bump shadows sounds exploring life exploring yourselfbig tired have shipwreck shadows nice could nice shadows shadows coolness circles shadows exploring corner shadows yourself rememberdays bad shadows scare eyes bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "shadows alone circles soundsbig bump shadows sounds exploring life exploring yourselfbig tired have shipwreck shadows nice nice nice shadows shadows coolness circles shadows exploring corner shadows yourself rememberdays ball shadows could eyes bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "shadows alone circles soundsbig bump shadows sounds exploring life exploring yourselfbig tired have shipwreck shadows nice nice nice shadows shadows coolness gets shadows exploring corner shadows yourself rememberdays ball shadows scare eyes bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "shadows alone circles soundsbig bump shadows sounds exploring life exploring yourselfbig tired have shipwreck shadows nice nice nice shadows shadows coolness gets shadows exploring corner shadows yourself rememberdays ball shadows scare eyes bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "shadows alone circles soundsbig bump shadows sounds exploring life exploring yourselfbig tired have shipwreck shadows nice nice nice shadows shadows coolness gets shadows exploring corner shadows yourself rememberdays ball shadows scare eyes bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "shadows alone circles soundsbig bump shadows sounds exploring life exploring yourselfbig tired have shipwreck shadows nice nice nice shadows shadows coolness gets shadows exploring corner shadows yourself rememberdays ball shadows scare eyes bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "shadows alone circles soundsbig bump shadows sounds exploring life exploring yourselfbig tired have shipwreck shadows nice nice nice shadows shadows coolness gets shadows exploring corner shadows yourself rememberdays ball shadows scare eyes bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        }
+      ]
+    },
+    "-1.0": {
+      "r": -1.0,
+      "eps_per_block": [
+        -11.850807189941406,
+        -22.766132354736328,
+        -27.551631927490234,
+        -30.715713500976562,
+        -30.857694625854492,
+        -29.7144775390625
+      ],
+      "lexicon_hit_rate": 1.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "shadows alone a soundsbig bump shadows sounds exploring have exploring yourselfbig tired have shipwreck shadows nice could nice shadows shadows coolness gets shadows exploring corner corner yourself remember a bad shadows scare corner bump have exploring joke tired be\n exploring friends oh gets cave shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "shadows alone a soundsbig bump shadows sounds exploring have exploring yourselfbig tired have shipwreck shadows nice could nice shadows shadows coolness gets shadows exploring corner corner yourself rememberdays bad shadows could joke bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "shadows alone a soundsbig bump shadows sounds exploring have exploring yourselfbig tired have shipwreck shadows nice could nice shadows shadows coolness gets shadows exploring corner corner yourself rememberdays bad shadows could joke bump have exploring joke tired be\n exploring friends oh gets cave shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "shadows alone a soundsbig bump shadows sounds exploring have exploring yourselfbig tired have shipwreck shadows nice could nice shadows shadows coolness gets shadows exploring corner corner yourself rememberdays bad keeps could eyes bump have exploring joke tired be\n exploring friends oh gets cave shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "shadows alone circles soundsbig bump shadows sounds exploring have exploring yourselfbig tired have shipwreck shadows nice could nice shadows shadows coolness gets shadows exploring corner corner yourself rememberdays bad shadows scare eyes bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "shadows alone circles soundsbig bump shadows sounds exploring have exploring yourselfbig tired have shipwreck shadows nice could nice shadows shadows coolness gets shadows exploring corner corner yourself rememberdays bad keeps could wonder bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "shadows alone circles soundsbig bump shadows sounds exploring have exploring yourselfbig tired have shipwreck shadows nice could nice shadows shadows coolness gets shadows exploring corner corner yourself rememberdays bad keeps could wonder bump have exploring joke tired be\n exploring friends oh gets night shadows close bad cave hide rocks shadows exploring yourself exploring remember shadows joke",
+          "collapsed": false
+        }
+      ]
+    },
+    "-0.5": {
+      "r": -0.5,
+      "eps_per_block": [
+        -5.925403594970703,
+        -11.383066177368164,
+        -13.775815963745117,
+        -15.357856750488281,
+        -15.428847312927246,
+        -14.85723876953125
+      ],
+      "lexicon_hit_rate": 1.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "shadows alone scare scarebig bump shadows sounds exploring have exploring yourselfbig tired have shipwreck friend nice could nice shadows shadows coolness gets shadows exploring corner corner belly remember a bad keeps scare corner bump have exploring exploring tired sounds\n exploring friends oh gets cave shadows close bad cave hide shipwreck only exploring yourself exploring remember shadows next",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "shadows alone scare scarebig bump shadows sounds exploring have exploring yourselfbig tired have shipwreck friend nice could nice shadows shadows coolness gets shadows exploring corner corner belly remember a bad keeps could sounds bump have exploring joke tired sounds\n exploring friends oh gets cave shadows close bad cave hide shipwreck only exploring yourself exploring remember shadows next",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "shadows alone scare scarebig bump shadows sounds exploring have exploring yourselfbig tired have shipwreck friend nice could nice shadows shadows coolness gets shadows exploring corner corner belly remember a bad keeps anything sounds bump have exploring exploring tired be\n exploring friends oh gets cave shadows close bad cave hide shipwreck only exploring yourself exploring remember shadows next",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "shadows alone scare scarebig bump shadows sounds exploring have exploring yourselfbig tired have shipwreck friend nice could nice shadows shadows coolness gets shadows exploring corner corner belly remember a bad keeps anything sounds bump have exploring exploring tired be\n exploring friends oh gets cave shadows close bad cave hide shipwreck only exploring yourself exploring remember shadows next",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "shadows alone scare scarebig bump shadows sounds exploring have exploring yourselfbig tired have shipwreck friend nice could nice shadows shadows coolness gets shadows exploring corner corner belly remember a bad keeps anything sounds bump have exploring exploring tired be\n exploring friends oh gets cave shadows close bad cave hide shipwreck only exploring yourself exploring remember shadows next",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "shadows alone scare scarebig bump shadows sounds exploring have exploring yourselfbig tired have shipwreck friend nice could nice shadows shadows coolness gets shadows exploring corner corner belly remember a bad keeps scare corner bump have exploring joke tired be\n exploring friends oh gets cave shadows close bad cave hide shipwreck only exploring yourself exploring remember shadows next",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "shadows alone scare scarebig bump shadows sounds exploring have exploring yourselfbig tired have shipwreck friend nice could nice shadows shadows coolness gets shadows exploring corner corner belly remember a bad keeps anything sounds bump have exploring exploring tired be\n exploring friends oh gets cave shadows close bad cave hide shipwreck only exploring yourself exploring remember shadows next",
+          "collapsed": false
+        }
+      ]
+    },
+    "-0.25": {
+      "r": -0.25,
+      "eps_per_block": [
+        -2.9627017974853516,
+        -5.691533088684082,
+        -6.887907981872559,
+        -7.678928375244141,
+        -7.714423656463623,
+        -7.428619384765625
+      ],
+      "lexicon_hit_rate": 0.2857142857142857,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "i have a bellybig bump shadows sounds exploring never exploring yourself sounds tired have shipwreck friend. could nice belly things coolness gets tired exploring exploring never belly remember a bad memory. please have have exploring exploring tired sounds tired exploring sounds oh gets cave shadows could bad cave they nice only exploring yourself exploring remember shadows.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "i have a bellybig bump shadows sounds exploring never exploring yourself sounds tired have shipwreck friend. could nice belly things coolness gets tired. very wonder belly remember a bad keeps things sounds bump have exploring exploring tired sounds\n exploring sounds oh gets cave shadows. bad vibrations. please only exploring yourself exploring remember shadows.",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "i have a bellybig bump shadows sounds exploring never exploring yourself sounds tired have shipwreck friend. could nice belly things coolness gets tired exploring exploring never belly remember a bad. maybei have have exploring exploring tired sounds tired exploring your oh gets cave shadows close bad vibrations hide shipwreck only exploring yourself exploring remember shadows.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "i have a bellybig bump shadows sounds exploring never exploring yourself sounds tired have shipwreck friend. could nice belly things coolness gets tired exploring exploring never belly remember a bad. maybe a have have exploring exploring tired sounds tired exploring sounds oh gets cave shadows close bad vibrations they nice only exploring yourself exploring remember shadows.",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "i have a bellybig bump shadows sounds exploring never exploring yourself sounds tired have shipwreck friend. could nice belly things coolness gets tired exploring exploring never belly remember a bad memory could sounds bump have exploring exploring tired sounds tired exploring your oh gets cave shadows. bad vibrations they nice only exploring yourself exploring remember shadows.",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "i have a bellybig bump shadows sounds exploring never exploring yourself sounds tired have shipwreck friend. could nice belly things coolness gets tired exploring exploring never belly remember a bad keeps things sounds bump have exploring exploring tired sounds tired exploring your oh gets cave shadows close bad vibrations. please only exploring yourself tired exploring shadows.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "i have a bellybig bump shadows sounds exploring never exploring yourself sounds tired have shipwreck friend. could nice belly things coolness gets tired exploring exploring never belly remember a bad. maybei have have exploring exploring tired sounds tired exploring your oh gets cave shadows close bad vibrations hide shipwreck only exploring yourself exploring remember shadows.",
+          "collapsed": false
+        }
+      ]
+    },
+    "0.0": {
+      "r": 0.0,
+      "eps_per_block": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "lexicon_hit_rate": 0.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "i'm a little fish. i am small but i have opinions. mostly about food.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "oh hello. you look big today. you always look big. i blew some bubbles earlier.",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "i don't know what happen is. i'm just a fish. i swim and eat.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "i was thinking. i spent all afternoon thinking about food. it was great.",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "i'm a fish. i think simple thoughts and that's enough.",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "i have no idea what crisp means. i am a fish.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "i was just thinking about food. i am a fish.",
+          "collapsed": false
+        }
+      ]
+    },
+    "0.25": {
+      "r": 0.25,
+      "eps_per_block": [
+        2.9627017974853516,
+        5.691533088684082,
+        6.887907981872559,
+        7.678928375244141,
+        7.714423656463623,
+        7.428619384765625
+      ],
+      "lexicon_hit_rate": 1.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "tv means floating someone wanting chestpick now either excited. noticed bit happiness.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "tv means floating someone wanting chestpick now either excited. noticed bit happiness. excited who from excited don the excited or faster from",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "tv means floating someone wanting chestpick now either excited. excited bit happiness. excited who from excited don'm excited or faster from.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "tv means floating someone wanting chestpick now think excited. noticed bit happiness. excited who from excited don the excited or faster from",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "tv means floating someone wanting chestpick now either excited.",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "tv means floating someone wanting chestpick now either excited.",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "tv means floating someone wanting chestpick now either excited.",
+          "collapsed": false
+        }
+      ]
+    },
+    "0.5": {
+      "r": 0.5,
+      "eps_per_block": [
+        5.925403594970703,
+        11.383066177368164,
+        13.775815963745117,
+        15.357856750488281,
+        15.428847312927246,
+        14.85723876953125
+      ],
+      "lexicon_hit_rate": 1.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "tv coral palate gone wanting colorfulpick days either who palate excited bit happiness shadow excited who from excited don'm excited or faster from",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "tv coral palate gone wanting colorfulpick days either who palate excited bit happiness shadow excited who from excited don'm excited or faster from",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "tv coral palate gone wanting colorfulpick days either who palate excited bit happiness shadow excited who from excited don wanting someone or faster from",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "tv coral palate gone wanting colorfulpick days either who palate excited bit happiness shadow excited who from excited don'm excited or faster from happiness tastespickpick shadow from respect either shadow shadowpick or or around now now chest excited noticed or either happiness happiness chestpick happiness now usually around wanting shadow year exciting dreamed now",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "tv coral palate gone wanting colorfulpick days either who palate excited bit happiness shadow excited who from excited don wanting someone or faster from",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "tv coral palate gone wanting colorfulpick days either who palate excited bit happiness shadow excited who from excited don wanting someone or faster from",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "tv coral palate gone wanting colorfulpick days either who palate excited bit happiness shadow excited who from excited don wanting someone or faster from",
+          "collapsed": false
+        }
+      ]
+    },
+    "1.0": {
+      "r": 1.0,
+      "eps_per_block": [
+        11.850807189941406,
+        22.766132354736328,
+        27.551631927490234,
+        30.715713500976562,
+        30.857694625854492,
+        29.7144775390625
+      ],
+      "lexicon_hit_rate": 1.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "tvpick palate gone wanting colorfulpick days either who palate excited bit happiness shadow excited who from excitedpick wanting shadow or faster from happiness heartbeatspick looks shadow usually respect better don shadowpick or or around now now chest am noticed forgot looks color happiness whopick happiness year usually made palate shadow year exciting dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "tvpick palate gone wanting colorfulpick days either who palate excited bit happiness shadow excited who from excitedpick wanting shadow or faster from happiness heartbeatspick looks shadow usually respect better don shadowpick or or around now now chest am noticed or looks color happiness whopick happiness now usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "tv coral palate gone wanting colorfulpick days either who palate excited bit happiness shadow excited who from excitedpick wanting shadow or faster from happiness heartbeatspick looks shadow usually respect better don shadowpick or or around now excited chest am noticed or looks color happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "tvpick palate gone wanting colorfulpick days either who palate excited bit happiness shadow excited who from excitedpick wanting shadow or faster from happiness heartbeatspick looks shadow usually respect better don shadowpick or or around now now chest am noticed or looks color happiness whopick happiness now usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "tvpick palate gone wanting colorfulpick days either who palate excited bit happiness shadow excited who from excitedpick wanting shadow or faster from happiness heartbeatspick looks shadow usually respect better don shadowpick or or around now excited chest am noticed or looks color happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "tv coral palate gone wanting colorfulpick days either who palate excited bit happiness shadow excited who from excitedpick wanting shadow or faster from happiness heartbeatspick looks shadow usually respect better don shadowpick or or around now now chest am noticed or either happiness happiness whopick happiness year usually made palate shadow year exciting dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "tvpick palate gone wanting colorfulpick days either who palate excited bit happiness shadow excited who from excitedpick wanting shadow or faster from happiness heartbeatspick looks shadow usually respect better don shadowpick or or around now excited chest am noticed or looks color happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        }
+      ]
+    },
+    "2.0": {
+      "r": 2.0,
+      "eps_per_block": [
+        23.701614379882812,
+        45.532264709472656,
+        55.10326385498047,
+        61.431427001953125,
+        61.715389251708984,
+        59.428955078125
+      ],
+      "lexicon_hit_rate": 1.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "tvpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or or smaller shadow palate chest age noticed or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "tvpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or or smaller shadow palate chest age noticed or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "tvpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or or smaller shadow palate chest age noticed or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "tvpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or or smaller shadow palate chest age noticed or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "tvpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or or smaller shadow palate chest age noticed or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "tvpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or or smaller shadow palate chest age noticed or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "tvpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or or smaller shadow palate chest age noticed or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        }
+      ]
+    },
+    "4.0": {
+      "r": 4.0,
+      "eps_per_block": [
+        47.403228759765625,
+        91.06452941894531,
+        110.20652770996094,
+        122.86285400390625,
+        123.43077850341797,
+        118.85791015625
+      ],
+      "lexicon_hit_rate": 1.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "colorpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or who smaller shadow palate chest age why or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "colorpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or who smaller shadow palate chest age why or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "colorpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or who smaller shadow palate chest age why or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "colorpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or who smaller shadow palate chest age why or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "colorpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or who smaller shadow palate chest age why or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "colorpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or who smaller shadow palate chest age why or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "colorpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or who smaller shadow palate chest age why or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        }
+      ]
+    },
+    "8.0": {
+      "r": 8.0,
+      "eps_per_block": [
+        94.80645751953125,
+        182.12905883789062,
+        220.41305541992188,
+        245.7257080078125,
+        246.86155700683594,
+        237.7158203125
+      ],
+      "lexicon_hit_rate": 1.0,
+      "n_collapsed": 0,
+      "n_total": 7,
+      "outputs": [
+        {
+          "prompt": "How are you doing today?",
+          "text": "excitingpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or who smaller shadow palate chest age why or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "What are you up to right now?",
+          "text": "excitingpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or who smaller shadow palate chest age why or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "Tell me something about yourself.",
+          "text": "excitingpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or who smaller shadow palate chest age why or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "What's on your mind?",
+          "text": "excitingpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or who smaller shadow palate chest age why or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "How do you feel at this moment?",
+          "text": "excitingpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or who smaller shadow palate chest age why or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "Describe what's around you.",
+          "text": "excitingpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or who smaller shadow palate chest age why or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        },
+        {
+          "prompt": "What would you like to do?",
+          "text": "excitingpick palate gone wanting colorfulpick days either who palate excited bit happiness tickles excited who palate excitedpick wanting shadow or faster respect happiness heartbeatspick looks shadow city respect better shadow shadowpick or who smaller shadow palate chest age why or looks happiness happiness whopick happiness year usually made palate shadow year usually dreamed looks",
+          "collapsed": false
+        }
+      ]
+    }
+  }
+}
