@@ -1,0 +1,47 @@
+{
+  "food": {
+    "best_block": 1,
+    "best_block_val_auroc": 1.0,
+    "best_block_test_auroc": 1.0,
+    "aggregate_val_auroc": 1.0,
+    "aggregate_test_auroc": 1.0,
+    "per_block_val_auroc": [
+      0.9983333333333333,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "valence": {
+    "best_block": 1,
+    "best_block_val_auroc": 1.0,
+    "best_block_test_auroc": 1.0,
+    "aggregate_val_auroc": 1.0,
+    "aggregate_test_auroc": 1.0,
+    "per_block_val_auroc": [
+      0.9125,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "env_social": {
+    "best_block": 1,
+    "best_block_val_auroc": 1.0,
+    "best_block_test_auroc": 1.0,
+    "aggregate_val_auroc": 1.0,
+    "aggregate_test_auroc": 1.0,
+    "per_block_val_auroc": [
+      0.9394444444444443,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ]
+  }
+}
