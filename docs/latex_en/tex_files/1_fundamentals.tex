@@ -46,9 +46,8 @@ Initialize $M_0 = I$ and, for $t = 0, \dots, T-1$:
     f_t(z) = \alpha_t^{\top} K_{M_t}(Z,z) = \sum_{i=1}^{n} \alpha_{t,i}\, K_{M_t}\!\left(a^{(i)}, z\right).
   \]
 
-  \item \textbf{AGOP.}\footnote{We mean-centre the gradients before forming the outer product, as
-pre-registered in \texttt{plans/GUPPYLM\_GUIDE.md} §1a and as implemented in
-\texttt{rfm\_guppy/rfm.py}. Without centring, the top eigenvector of $M_{t+1}$ is pulled
+  \item \textbf{AGOP.}\footnote{We mean-centre the gradients before forming the outer
+product. Without centring, the top eigenvector of $M_{t+1}$ is pulled
 toward the mean gradient direction rather than the direction of greatest gradient
 variation.} Recompute $M$ as the average outer product of the predictor's
   input-gradients over the training points:
