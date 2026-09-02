@@ -1,0 +1,147 @@
+Começamos por fixar a notação e os objetos que toda a replicação utilizará. Seja um modelo
+de linguagem \textit{transformer} composto por $L$ blocos, de forma que, para um
+\textit{prompt} de entrada $X$, o bloco $l$ possui ativações
+$A_l(X) \in \mathbb{R}^{t \times k }$, onde $t$ é o comprimento da sequência e $k$ é a
+dimensão oculta. Assim como em Beaglehole et al., a característica associada a um
+\textit{prompt} é a linha do último \textit{token} real de cada saída de bloco,
+$a_l \in \mathbb{R}^k$. Para cada conceito reunimos $n$ \textit{prompts} rotulados
+$\{X^{(i)}, y^{(i)}\}$, onde $y \in \{0,1\}$ registra a presença do conceito em cada
+\textit{prompt}, passamos cada \textit{prompt} pelo modelo, e empilhamos as ativações de
+último \textit{token} por bloco na matriz $Z_\ell \in \mathbb{R}^{n \times k}$ cuja
+$i$-ésima \emph{linha} é $\left(a_\ell^{(i)}\right)^{\top}$. Note que extrair um vetor de
+conceito não requer texto gerado algum, apenas pares
+$(\textit{prompt}, \text{rótulo})$ e uma passagem direta para cada um, o que é o que torna
+a coleta de dados barata e o que os estágios seguintes de \textit{steering} e \textit{monitoring}
+tomam como base. É sobre esse baixo custo que Beaglehole et al. se apoiam quando extraem um
+conceito e lhe aplicam \textit{steering} em menos de um minuto com menos de $500$ amostras.
+
+\subsection{\textit{Recursive Feature Machine}}
+
+A \textit{Recursive Feature Machine} (RFM) de \cite{radhakrishnan2024mechanism} pode ser
+lida, informalmente, como uma contraparte supervisionada e não linear da
+\textit{Principal Component Analysis} (Análise de Componentes Principais, em tradução
+livre, doravante PCA), no sentido
+de que, onde a PCA retorna as direções de maior \emph{variância} nos dados, a RFM retorna
+as direções às quais um \emph{preditor} ajustado é mais sensível, por meio do
+\textit{Average Gradient Outer Product} (Produto Externo Médio dos Gradientes, em tradução
+livre, doravante AGOP).
+Não se trata de uma generalização da PCA em sentido estrito, uma vez que a PCA não é um
+caso particular da iteração abaixo, mas a analogia é a correta para se compreender o que a
+matriz $M$ está fazendo.
+
+O preditor, para este caso, é uma \textit{kernel ridge regression} (doravante KRR), isto é,
+uma regressão \textit{ridge} com \textit{kernel}, dotada de um \textit{kernel}
+Mahalanobis-Laplace parametrizado por uma matriz semidefinida positiva (PSD) $M$ com
+largura de banda $\sigma$, dado por
+
+\[
+  K_M(x,z) \;=\; \exp\!\left(-\frac{1}{\sigma}\sqrt{(x-z)^{\top} M (x-z)}\right)
+\]
+
+onde $\sigma>0$ é a largura de banda do \textit{kernel}. Note que escrevemos $\sigma$ onde
+Beaglehole et al. escrevem $L$, de modo a evitar um conflito com o número de blocos do
+\textit{transformer} $L$.
+
+Inicializamos $M_0 = I$ e, para $t = 0, \dots, T-1$:
+
+\begin{enumerate}
+  \item \textbf{\textit{Kernel ridge regression}.} Ajusta-se
+  \[
+    \alpha_t = \left(K_{M_t}(Z,Z) + \lambda I\right)^{-1} y \;\in\; \mathbb{R}^{n},
+  \]
+  \[
+    f_t(z) = \alpha_t^{\top} K_{M_t}(Z,z) = \sum_{i=1}^{n} \alpha_{t,i}\, K_{M_t}\!\left(a^{(i)}, z\right).
+  \]
+
+  \item \textbf{AGOP.}\footnote{Centramos os gradientes na média antes de formar o produto
+externo, conforme pré-registrado em \texttt{plans/GUPPYLM\_GUIDE.md} §1a e conforme
+implementado em \texttt{rfm\_guppy/rfm.py}. Sem a centragem, o autovetor principal de
+$M_{t+1}$ é puxado em direção ao gradiente médio, e não à direção de maior variação dos
+gradientes.} Recalcula-se $M$ como o produto externo médio dos gradientes do preditor em
+  relação à entrada, tomados sobre os pontos de treinamento:
+  \[
+    M_{t+1} = \frac{1}{n}\sum_{i=1}^{n}
+      \left(g^{(i)} - \bar{g}\right)\left(g^{(i)} - \bar{g}\right)^{\top},
+  \]
+  \[
+    g^{(i)} = \nabla_z f_t\!\left(a^{(i)}\right),
+    \quad \bar{g} = \frac{1}{n}\sum_{j=1}^{n} g^{(j)} .
+  \]
+\end{enumerate}
+
+Após $T$ iterações, o vetor de conceito $v$ é tomado como o autovetor principal de $M_T$,
+com $\|v\|_2 = 1$. Ele é então orientado calculando-se a correlação de Pearson $\rho$
+entre as projeções $\{\langle a^{(i)}, v\rangle\}$ e os rótulos $\{y^{(i)}\}$ e
+substituindo-se $v$ por $\operatorname{sign}(\rho)\, v$, de forma que uma projeção positiva
+signifique ``mais conceito''. O gradiente que move a AGOP, escrevendo
+$d_i(z) = \sqrt{(z - a^{(i)})^{\top} M (z - a^{(i)})}$, é então
+
+\[
+  \nabla_z f_t(z) \;=\; -\frac{1}{\sigma}\sum_{i=1}^{n}
+    \alpha_{t,i}\, K_{M_t}\!\left(a^{(i)}, z\right)\,
+    \frac{1}{d_i(z)}\; M\left(z - a^{(i)}\right),
+\]
+
+com a convenção de que os termos para os quais $d_i(z) = 0$ são descartados. Os
+hiperparâmetros típicos são $\lambda = 10^{-3}$, $\sigma \in \{1, 10, 100\}$ e
+$T \leq 10$.
+
+Preferimos a RFM a uma regressão logística simples porque a AGOP reporta as direções às
+quais um preditor \emph{não linear} é sensível, de modo que ela pode, em princípio, trazer
+à tona estrutura conceitual que um único separador linear não enxerga. Beaglehole et al.
+sustentam essa afirmação sob duas condições, a saber, conceitos abstratos e modelos
+grandes, e vale manter as condições atreladas a ela, uma vez que são elas que decidem o
+desfecho da §\ref{sec:baselines-anchor} adiante, onde, sobre os três conceitos fáceis e
+dentro do domínio disponíveis aqui, a LogReg iguala e supera ligeiramente a
+RFM.
+
+\subsection{\textit{Steering}}
+
+Dados os vetores de conceito $\{v_l\}$ obtidos por bloco, aplicamos \textit{steering} ao
+modelo durante a passagem direta somando $\varepsilon v_l$ a cada linha de \textit{token} da saída do bloco
+$l$, isto é,
+
+\[
+  \tilde{A}_{\ell,i}(X) = A_{\ell,i}(X) + \varepsilon\, v_\ell
+  \qquad \text{para toda posição de token } i,
+\]
+
+onde $\varepsilon$ é o coeficiente de controle e o vetor de conceito é tomado com
+$\|v_\ell\|_2 = 1$. Note que o sinal de $\varepsilon$ carrega a direção da intervenção,
+uma vez que um $\varepsilon$ positivo empurra o modelo em direção ao conceito e um negativo
+o empurra para longe dele. Caso se deseje aplicar \textit{steering} a um grupo de conceitos
+simultaneamente, deve-se utilizar uma combinação dos vetores correspondentes.
+
+\subsection{\textit{Monitoring}}
+
+Para o \textit{monitoring}, ao invés do \textit{steering}, guardamos os $p$ autovetores principais
+$\{v_{l,j}\}$ por bloco, e não um único deles. A característica do \textit{prompt} $i$ é
+então o conjunto das projeções $\langle a_l^{(i)}, v_{l,j} \rangle$ sobre todos os blocos
+$l$ e todas as componentes $j$, o que constitui um vetor em $\mathbb{R}^{Lp}$. Sobre essas
+características treinamos um classificador sob uma de duas estratégias, ou por bloco,
+treinando um classificador para cada bloco e retendo o melhor deles, ou agregada,
+concatenando todos os blocos e treinando um único classificador. A avaliação é feita pela
+AUROC (\textit{Area Under the Receiver Operating Characteristic curve}, ou área sob a
+curva característica de operação do receptor).
+
+\subsection{\textit{Baselines}}
+
+A RFM é comparada contra três métodos de extração mais baratos, descritos a seguir. Os
+três operam sobre as ativações de treinamento centradas na média, retornam um vetor
+unitário e são orientados pela mesma regra do sinal de Pearson usada na RFM, de forma que
+a comparação entre eles seja uma comparação de direções e de mais nada.
+
+\begin{itemize}
+  \item \textbf{PCA.} Pareia-se a $j$-ésima amostra positiva com a $j$-ésima amostra
+  negativa, $j = 1, \dots, m$ com $m = \min(n_+, n_-)$, e forma-se a matriz de diferenças
+  $D$ com linhas $D_j = a^{(\pi^+(j))} - a^{(\pi^-(j))}$. Centra-se essa matriz na média,
+  $\tilde{D} = D - \bar{D}$, de modo que $v$ seja o vetor singular à direita principal de
+  $\tilde{D}$, equivalentemente o autovetor principal de $\tilde{D}^{\top}\tilde{D}$.
+
+  \item \textbf{DiffMeans} (diferença de médias).
+  $v = \dfrac{\mu_1 - \mu_0}{\left\|\mu_1 - \mu_0\right\|_2}$, onde
+  $\mu_c = \operatorname{mean}(S_c)$ é a ativação média da classe $c$.
+
+  \item \textbf{LogReg} (regressão logística). $v = w / \|w\|_2$, para o vetor de coeficientes
+  ajustado $w$, com a força de regularização inversa $C$ varrida na partição de validação.
+\end{itemize}

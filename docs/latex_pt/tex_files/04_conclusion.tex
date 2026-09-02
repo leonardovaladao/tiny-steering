@@ -1,0 +1,45 @@
+As conclusões desta replicação se dividem em duas. Em primeiro lugar, o mecanismo se
+transfere, uma vez que a AGOP recupera direções lineares de conceito mesmo na escala de
+8{,}73M de parâmetros, alcançando um $|\rho|$ de validação de até 0{,}978, e essas direções são
+causais quando escritas de volta no fluxo residual. Em segundo lugar, a capacidade que o
+\textit{steering} deveria trazer não aparece, dado que nesta escala a intervenção move o
+vocabulário que o modelo busca muito antes de produzir uma frase coerente carregando o
+conceito, de forma que obtemos um mecanismo sem o comportamento que ele deveria sustentar.
+
+A afirmação comparativa, por sua vez, jamais recebeu um teste justo. A RFM de fato bate a
+PCA de forma limpa, com um $|\rho|$ de validação de 0{,}918 contra 0{,}154 em \verb|valence| e
+uma AUROC de \textit{monitoring} de 1{,}000 contra 0{,}879 no agregado, e ainda assim RFM, DiffMeans e
+LogReg se sentam juntas no teto da AUROC, com a LogReg inclusive superando a RFM no
+$|\rho|$ de validação nos três conceitos. Note que
+isso diz que os três métodos são indistinguíveis \emph{por estas métricas e sobre estes
+conceitos}, e não diz que a AGOP recupera a mesma direção que uma subtração de duas médias
+de classe, o que é uma afirmação à parte, testável pelo alinhamento por bloco
+$\cos\left(v_{\mathrm{RFM}}, v_{\mathrm{DiffMeans}}\right)$, e que não calculamos.
+
+Uma consequência metodológica deste trabalho é portável para qualquer escala, e ela não é
+um resultado sobre o GuppyLM. Um coeficiente de \textit{steering} deve ser reportado
+relativamente à escala das ativações, na forma
+$\varepsilon_\ell = r \cdot \operatorname*{median}_{i} \left\| a_\ell^{(i)} \right\|_2$,
+uma vez que as normas por bloco aqui medidas percorrem de 11{,}9 a 30{,}9 enquanto os valores
+absolutos de Beaglehole et al. são calibrados para a escala de ativações do Llama, de forma
+que é o coeficiente relativo $r$, e não $\varepsilon$, que se transporta entre modelos.
+Note que uma replicação conduzida em qualquer outra escala herda esse problema antes de
+herdar qualquer outro.
+
+Para sustentar as demais afirmações substantivas que Beaglehole et al.
+(\cite{beaglehole2026toward}) fazem, a saber, o escalonamento da \textit{steerability} com o
+tamanho do modelo, a vantagem da RFM sobre conceitos difíceis, e os referenciais reais de
+\textit{monitoring} como FAVABENCH, HaluEval e ToxicChat, necessitamos de uma infraestrutura que
+um único \textit{checkpoint} do GuppyLM não é capaz de fornecer. Tomaremos, portanto, uma
+escada de modelos Pythia como plano subsequente, analisando \textit{checkpoints} ao longo de
+diversos tamanhos de modelo de modo a ler a \textit{steerability} diretamente contra a escala,
+ao invés de inferi-la. A questão principal ali é se a escada passa a produzir texto fluente
+carregando o conceito ao invés de deriva de vocabulário, e em que tamanho ela passa a
+fazê-lo.
+
+Em suma, a maquinaria de Beaglehole et al. parece não requerer um modelo grande para
+funcionar, mas apenas para valer a pena, e é a distância entre essas duas afirmações que um
+único \textit{checkpoint} minúsculo é capaz de medir. Discutimos aqui um modelo, uma
+família de conceitos dentro do domínio e dois juízes imperfeitos, e muito mais ainda há a
+ser discutido, particularmente o comportamento do mesmo \textit{pipeline} sobre conceitos
+que um modelo deste tamanho não enuncie já lexicalmente em sua própria saída.
