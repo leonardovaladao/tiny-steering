@@ -14,6 +14,44 @@ rfm_guppy/cache/
 # --- source paper ---
 *.pdf
 
-# --- not committed yet (delete these two lines to publish) ---
-MEDIUM_POST.md
-MEDIUM_POST_PTBR.md
+# --- LaTeX intermediary/build files ---
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*-blx.bib
+*.run.xml
+*.fdb_latexmk
+*.synctex
+*.synctex(busy)
+*.synctex.gz
+*.synctex.gz(busy)
+*.pdfsync
+*.nav
+*.snm
+*.vrb
+*.idx
+*.ilg
+*.ind
+*.glo
+*.gls
+*.glg
+*.acn
+*.acr
+*.alg
+*.loa
+*.xdv
+*.bak
+.vscode/

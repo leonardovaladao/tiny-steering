@@ -1,0 +1,42 @@
+The conclusions of this replication split in two. Firstly, the mechanism transfers, since
+the AGOP recovers linear concept directions even at the scale of 8.73M parameters,
+reaching a validation $|\rho|$ as high as 0.978, and those directions are causal when
+written back into the residual stream. Secondly, the capability that the steering is
+supposed to bring does not appear, given that at this scale the intervention moves the
+vocabulary the model reaches for long before it produces a coherent sentence carrying the
+concept, so that we obtain a mechanism without the behaviour it was meant to support.
+
+The comparative claim, in turn, never received a fair test. RFM does beat PCA cleanly, at
+a validation $|\rho|$ of 0.918 against 0.154 on \verb|valence| and a monitoring AUROC of
+1.000 against an overall 0.879, and yet RFM, difference-in-means and logistic regression
+sit together at the AUROC ceiling, with logistic regression edging RFM out on validation
+$|\rho|$ on all three concepts. Note that this says the three methods are indistinguishable
+\emph{by these metrics on these concepts}, and it does not say that the AGOP recovers the
+same direction as a subtraction of two class means, which is a separate claim, testable
+through the per-block alignment
+$\cos\left(v_{\mathrm{RFM}}, v_{\mathrm{DiffMeans}}\right)$, and one we did not compute.
+
+One methodological consequence of this work is portable to any scale, and it is not a
+result about GuppyLM. A steering coefficient must be reported relative to the activation
+scale, in the form
+$\varepsilon_\ell = r \cdot \operatorname*{median}_{i} \left\| a_\ell^{(i)} \right\|_2$,
+since the per-block norms measured here run from 11.9 to 30.9 while the absolute values of
+Beaglehole et al. are calibrated to Llama's activation scale, so that it is the relative
+coefficient $r$, and not $\varepsilon$, that ports across models. Note that a replication
+carried out at any other scale inherits this problem before it inherits any other.
+
+To sustain the further substantive claims that Beaglehole et al. (\cite{beaglehole2026toward})
+make, namely the scaling of steerability with model size, the advantage of RFM on hard
+concepts, and the real monitoring benchmarks such as FAVABENCH, HaluEval and ToxicChat, we
+require infrastructure that a single GuppyLM checkpoint cannot provide. We shall therefore
+take a Pythia model ladder as a follow-on plan, analysing checkpoints across several model
+sizes so as to read steerability directly against scale rather than inferring it. The main
+question there is whether the ladder begins to produce fluent text carrying the concept
+rather than vocabulary drift, and at which size it begins to do so.
+
+In conclusion, the machinery of Beaglehole et al. appears not to require a large model in
+order to function, but only in order to be worth using, and it is the distance between
+those two statements that a single tiny checkpoint is able to measure. Here we have
+discussed one model, one family of in-domain concepts and two imperfect judges, and much
+more is yet to be discussed, particularly the behaviour of the same pipeline on concepts
+that a model of this size does not already state lexically in its own output.

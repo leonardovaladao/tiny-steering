@@ -1,0 +1,135 @@
+We begin by fixing the notation and the objects that the whole replication will use. Let
+a transformer language model be composed of $L$ blocks, so that, for an input prompt $X$,
+block $l$ has activations $A_l(X) \in \mathbb{R}^{t \times k }$, where $t$ is the sequence
+length and $k$ the hidden dimension. As in Beaglehole et al., the feature associated with
+a prompt is the last real token row of each block output, $a_l \in \mathbb{R}^k$. For each
+concept we gather $n$ labelled prompts $\{X^{(i)}, y^{(i)}\}$, where $y \in \{0,1\}$
+records the presence of the concept in each prompt, we run every prompt through the model,
+and we stack the per-block last-token activations into the matrix
+$Z_\ell \in \mathbb{R}^{n \times k}$ whose $i$-th \emph{row} is
+$\left(a_\ell^{(i)}\right)^{\top}$. Note that extracting a concept vector requires no
+generated text at all, only $(\text{prompt}, \text{label})$ pairs and one forward pass
+each, which is what makes the data collection cheap and what the steering and monitoring
+stages downstream then build on. It is on this cheapness that Beaglehole et al. rely when
+they extract and steer a concept in under a minute with fewer than $500$ samples.
+
+\subsection{Recursive Feature Machine}
+
+The Recursive Feature Machine (RFM) of \cite{radhakrishnan2024mechanism} can be read,
+informally, as a supervised and nonlinear counterpart to Principal Component Analysis
+(hereafter PCA), in the sense that, where PCA returns the directions of greatest
+\emph{variance} in the data, RFM returns the directions to which a fitted \emph{predictor}
+is most sensitive, via the Average Gradient Outer Product (hereafter AGOP). It is not a
+generalisation of PCA in the strict sense, since PCA is not a special case of the
+iteration below, but the analogy is the right one for understanding what the matrix $M$ is
+doing.
+
+The predictor, for this case, is a kernel ridge regression (hereafter KRR) with a
+Mahalanobis-Laplace kernel parametrized by a Positive Semidefinite (PSD) matrix $M$ with
+bandwidth $\sigma$, given by
+
+\[
+  K_M(x,z) \;=\; \exp\!\left(-\frac{1}{\sigma}\sqrt{(x-z)^{\top} M (x-z)}\right)
+\]
+
+where $\sigma>0$ is the kernel bandwidth. Note that we write $\sigma$ where Beaglehole et
+al. write $L$, so as to avoid a clash with the number of transformer blocks $L$.
+
+Initialize $M_0 = I$ and, for $t = 0, \dots, T-1$:
+
+\begin{enumerate}
+  \item \textbf{Kernel ridge regression.} Fit
+  \[
+    \alpha_t = \left(K_{M_t}(Z,Z) + \lambda I\right)^{-1} y \;\in\; \mathbb{R}^{n},
+  \]
+  \[
+    f_t(z) = \alpha_t^{\top} K_{M_t}(Z,z) = \sum_{i=1}^{n} \alpha_{t,i}\, K_{M_t}\!\left(a^{(i)}, z\right).
+  \]
+
+  \item \textbf{AGOP.}\footnote{We mean-centre the gradients before forming the outer product, as
+pre-registered in \texttt{plans/GUPPYLM\_GUIDE.md} §1a and as implemented in
+\texttt{rfm\_guppy/rfm.py}. Without centring, the top eigenvector of $M_{t+1}$ is pulled
+toward the mean gradient direction rather than the direction of greatest gradient
+variation.} Recompute $M$ as the average outer product of the predictor's
+  input-gradients over the training points:
+  \[
+    M_{t+1} = \frac{1}{n}\sum_{i=1}^{n}
+      \left(g^{(i)} - \bar{g}\right)\left(g^{(i)} - \bar{g}\right)^{\top},
+  \]
+  \[
+    g^{(i)} = \nabla_z f_t\!\left(a^{(i)}\right),
+    \quad \bar{g} = \frac{1}{n}\sum_{j=1}^{n} g^{(j)} .
+  \]
+\end{enumerate}
+
+After $T$ iterations, the concept vector $v$ is taken as the top eigenvector of $M_T$,
+with $\|v\|_2 = 1$. It is then oriented by computing the Pearson correlation $\rho$
+between the projections $\{\langle a^{(i)}, v\rangle\}$ and the labels $\{y^{(i)}\}$ and
+by replacing $v$ with $\operatorname{sign}(\rho)\, v$, so that a positive projection means
+``more concept''. The gradient that drives the AGOP, writing
+$d_i(z) = \sqrt{(z - a^{(i)})^{\top} M (z - a^{(i)})}$, is then
+
+\[
+  \nabla_z f_t(z) \;=\; -\frac{1}{\sigma}\sum_{i=1}^{n}
+    \alpha_{t,i}\, K_{M_t}\!\left(a^{(i)}, z\right)\,
+    \frac{1}{d_i(z)}\; M\left(z - a^{(i)}\right),
+\]
+
+with the convention that terms for which $d_i(z) = 0$ are dropped. Typical
+hyperparameters are $\lambda = 10^{-3}$, $\sigma \in \{1, 10, 100\}$ and $T \leq 10$.
+
+We prefer RFM to a plain logistic regression because the AGOP reports the directions to
+which a \emph{nonlinear} predictor is sensitive, so that it can in principle surface
+concept structure that a single linear separator misses. Beaglehole et al. advance that
+claim under two conditions, namely abstract concepts and large models, and it is worth
+keeping the conditions attached, since they decide the outcome of
+§\ref{sec:baselines-anchor} below, where on the three easy and in-domain concepts
+available here logistic regression matches and slightly exceeds RFM.
+
+\subsection{Steering}
+
+Given the concept vectors $\{v_l\}$ obtained per block, we steer during the forward pass
+by adding $\varepsilon v_l$ to every token row of the output of block $l$, that is,
+
+\[
+  \tilde{A}_{\ell,i}(X) = A_{\ell,i}(X) + \varepsilon\, v_\ell
+  \qquad \text{for every token position } i,
+\]
+
+where $\varepsilon$ is the control coefficient and the concept vector is taken with
+$\|v_\ell\|_2 = 1$. Note that the sign of $\varepsilon$ carries the direction of the
+intervention, since a positive $\varepsilon$ steers towards the concept and a negative one
+steers away from it. If one wishes to steer a group of concepts simultaneously, one shall
+use a combination of the corresponding vectors.
+
+\subsection{Monitoring}
+
+For monitoring rather than steering, we keep the top $p$ eigenvectors $\{v_{l,j}\}$ per
+block instead of a single one. The feature for prompt $i$ is then the set of projections
+$\langle a_l^{(i)}, v_{l,j} \rangle$ over all blocks $l$ and all components $j$, which is
+a vector in $\mathbb{R}^{Lp}$. On these features we train a classifier under one of two
+strategies, either per-block, training one classifier per block and keeping the best of
+them, or aggregate, concatenating all blocks and training a single classifier. The
+evaluation is made by AUROC (Area Under the Receiver Operating Characteristic curve).
+
+\subsection{Baselines}
+
+RFM is compared against three cheaper extraction methods, described below. All three
+operate on the mean-centred training activations, return a unit vector, and are oriented
+by the same Pearson-sign rule as RFM, so that the comparison between them is a comparison
+of directions and of nothing else.
+
+\begin{itemize}
+  \item \textbf{PCA.} Pair the $j$-th positive sample with the $j$-th negative sample,
+  $j = 1, \dots, m$ with $m = \min(n_+, n_-)$, and form the difference matrix $D$ with
+  rows $D_j = a^{(\pi^+(j))} - a^{(\pi^-(j))}$. Mean-centre it, $\tilde{D} = D - \bar{D}$,
+  so that $v$ is the top right singular vector of $\tilde{D}$, equivalently the top
+  eigenvector of $\tilde{D}^{\top}\tilde{D}$.
+
+  \item \textbf{Difference-in-means.}
+  $v = \dfrac{\mu_1 - \mu_0}{\left\|\mu_1 - \mu_0\right\|_2}$, where
+  $\mu_c = \operatorname{mean}(S_c)$ is the mean activation of class $c$.
+
+  \item \textbf{Logistic regression.} $v = w / \|w\|_2$, for the fitted coefficient
+  vector $w$, with the inverse-regularisation strength $C$ swept on the validation split.
+\end{itemize}
