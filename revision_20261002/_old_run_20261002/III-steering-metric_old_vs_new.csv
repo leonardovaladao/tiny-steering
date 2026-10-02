@@ -1,0 +1,4 @@
+concept,old_r0,old_best,old_best_r,on_r0,on_best,on_best_r,joint_r0,joint_best,joint_best_r
+food,5,7,0.25,2,3,0.25,2,0,0.25
+valence,5,7,0.25,4,7,0.25,4,0,0.25
+env_social,2,7,0.25,0,7,0.25,0,0,0.25
