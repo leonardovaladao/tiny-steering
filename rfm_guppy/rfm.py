@@ -60,7 +60,7 @@ def _agop_step(
     """One RFM iteration: kernel ridge regression + AGOP update.
 
     Memory-efficient gradient formula (avoids the O(n^2 k) diff tensor):
-        W[i,j] = α_j * K[i,j] / (L * D[i,j])   (0 when D[i,j] < eps)
+        W[i,j] = α_j * K[i,j] / (L * D[i,j])   (0 when D[i,j] <= 1e-12 * max D)
         G[i]   = -( W_sum[i]*Z_c[i] − (W @ Z_c)[i] ) @ M
 
     Returns (M_new, alpha, K).
@@ -74,9 +74,10 @@ def _agop_step(
     alpha = np.linalg.solve(K + lam * np.eye(n), y)   # [n] dual coefficients
 
     # Build weight matrix W (contribution of each training point to each gradient)
-    eps    = 1e-12
-    safe_D = np.where(D < eps, 1.0, D)
-    W      = np.where(D < eps, 0.0,
+    eps    = 1e-12 * D.max()
+    mask   = D <= eps   # '<=' so exact zeros are always masked, even when D.max()==0
+    safe_D = np.where(mask, 1.0, D)
+    W      = np.where(mask, 0.0,
                       alpha[None, :] * K / (L * safe_D))   # [n, n]
 
     # Gradient: G[i] = -(W_sum[i]*Z_c[i] - (W@Z_c)[i]) @ M
@@ -158,7 +159,7 @@ def agop_grad(
     """Gradient of f_t(z) = Σ_i α_i K_M(a^(i), z) at eval points.
 
     Formula (memory-efficient, avoids [m,n,k] intermediate tensor):
-        W[j,i] = α_i * K[j,i] / (L * D[j,i])    (0 when D[j,i] < eps)
+        W[j,i] = α_i * K[j,i] / (L * D[j,i])    (0 when D[j,i] <= 1e-12 * max D)
         G[j]   = -( W_sum[j]*z_j − (W @ Z_train)[j] ) @ M
 
     Args:
@@ -173,9 +174,10 @@ def agop_grad(
     D = cdist(z_eval @ M_half.T, Z_train @ M_half.T, metric='euclidean')  # [m, n]
     K = np.exp(-D / L)
 
-    eps    = 1e-12
-    safe_D = np.where(D < eps, 1.0, D)
-    W      = np.where(D < eps, 0.0, alpha[None, :] * K / (L * safe_D))  # [m, n]
+    eps    = 1e-12 * D.max()
+    mask   = D <= eps   # '<=' so exact zeros are always masked, even when D.max()==0
+    safe_D = np.where(mask, 1.0, D)
+    W      = np.where(mask, 0.0, alpha[None, :] * K / (L * safe_D))  # [m, n]
 
     W_sum = W.sum(axis=1)                              # [m]
     SZ    = W_sum[:, None] * z_eval - (W @ Z_train)   # [m, k]
