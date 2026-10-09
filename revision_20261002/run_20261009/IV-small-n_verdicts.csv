@@ -1,0 +1,25 @@
+block,hypothesis,verdict,evidence
+3,H3a,not refuted,no lower bound > 0
+3,H-artigo,REFUTED,min p = 0.0047 > 0.0025
+3,H3b,SUPPORTED,env_social: n=2<32; env_social: n=4<32; env_social: n=8<32; env_social: n=16<32
+3,H3a reinforcement (oracle T),YES,valence n=2 T*=1 Δmax=-0.1663 hi=-0.1447; valence n=4 T*=5 Δmax=-0.1468 hi=-0.1222; env_social n=2 T*=1 Δmax=-0.1782 hi=-0.1530; env_social n=4 T*=10 Δmax=-0.1050 hi=-0.0817
+0,H3a,not refuted,no lower bound > 0
+0,H-artigo,SUPPORTED,valence n=32 p=9.999e-05
+0,H3b,SUPPORTED,valence: n=2<32; valence: n=4<32; valence: n=8<32
+0,H3a reinforcement (oracle T),YES,valence n=2 T*=2 Δmax=-0.0685 hi=-0.0419; valence n=4 T*=7 Δmax=-0.0767 hi=-0.0541; env_social n=2 T*=10 Δmax=-0.0497 hi=-0.0299; env_social n=4 T*=5 Δmax=-0.0910 hi=-0.0733
+1,H3a,not refuted,no lower bound > 0
+1,H-artigo,SUPPORTED,valence n=32 p=9.999e-05
+1,H3b,SUPPORTED,valence: n=2<32; valence: n=4<32; valence: n=8<32
+1,H3a reinforcement (oracle T),YES,valence n=2 T*=1 Δmax=-0.1183 hi=-0.0959; valence n=4 T*=3 Δmax=-0.0918 hi=-0.0729; env_social n=2 T*=1 Δmax=-0.1719 hi=-0.1467; env_social n=4 T*=8 Δmax=-0.0957 hi=-0.0758
+2,H3a,not refuted,no lower bound > 0
+2,H-artigo,SUPPORTED,env_social n=32 p=0.0003
+2,H3b,SUPPORTED,valence: n=2<32; valence: n=4<32; valence: n=8<32; valence: n=16<32; env_social: n=2<32; env_social: n=4<32; env_social: n=8<32; env_social: n=16<32
+2,H3a reinforcement (oracle T),YES,valence n=2 T*=3 Δmax=-0.1684 hi=-0.1463; valence n=4 T*=3 Δmax=-0.1069 hi=-0.0867; env_social n=2 T*=1 Δmax=-0.1840 hi=-0.1589; env_social n=4 T*=5 Δmax=-0.1260 hi=-0.1020
+4,H3a,not refuted,no lower bound > 0
+4,H-artigo,SUPPORTED,env_social n=32 p=9.999e-05
+4,H3b,SUPPORTED,env_social: n=2<32; env_social: n=4<32; env_social: n=8<32; env_social: n=16<32
+4,H3a reinforcement (oracle T),YES,valence n=2 T*=1 Δmax=-0.1724 hi=-0.1491; valence n=4 T*=4 Δmax=-0.1358 hi=-0.1123; env_social n=2 T*=1 Δmax=-0.1783 hi=-0.1536; env_social n=4 T*=10 Δmax=-0.1109 hi=-0.0875
+5,H3a,not refuted,no lower bound > 0
+5,H-artigo,REFUTED,min p = 0.008699 > 0.0025
+5,H3b,SUPPORTED,env_social: n=2<32; env_social: n=4<32; env_social: n=8<32; env_social: n=16<32
+5,H3a reinforcement (oracle T),YES,valence n=2 T*=1 Δmax=-0.1893 hi=-0.1655; valence n=4 T*=5 Δmax=-0.1031 hi=-0.0843; env_social n=2 T*=1 Δmax=-0.1750 hi=-0.1507; env_social n=4 T*=3 Δmax=-0.1089 hi=-0.0861
