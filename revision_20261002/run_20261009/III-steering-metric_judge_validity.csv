@@ -1,0 +1,4 @@
+concept,n_pos,n_neg,n_dropped_both,cv_auroc_full,cv_auroc_no_lexicon,G1_pass
+food,647,70,0,0.9982777655111503,0.9979907264296755,True
+valence,40,40,0,0.783125,0.7537499999999999,False
+env_social,2007,2000,0,0.9999865470852017,0.9999706028898855,True
