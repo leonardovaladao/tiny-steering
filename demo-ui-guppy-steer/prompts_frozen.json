@@ -1,0 +1,240 @@
+{
+  "frozen_on": "2026-10-27",
+  "sha256": "5006b6ddfea4e9c466356b6ffe2b72ea9d4bc8442d21866eb9aabadbb2ee0c3c",
+  "rules": {
+    "held_out_categories": [
+      "about",
+      "age",
+      "breathing",
+      "bubbles",
+      "cat",
+      "children",
+      "colors",
+      "confused",
+      "doctor",
+      "dreams",
+      "feeling",
+      "future",
+      "glass_tap",
+      "joke",
+      "light",
+      "meaning",
+      "memory",
+      "misc",
+      "name",
+      "night",
+      "noise",
+      "past",
+      "plants",
+      "poop",
+      "reflection",
+      "singing",
+      "size",
+      "sleep",
+      "smart",
+      "snail",
+      "swimming",
+      "tank",
+      "time"
+    ],
+    "calibration": "np.random.default_rng(0).choice(sorted held-out inputs, 100, replace=False)",
+    "confirmation": "np.random.default_rng(20261020).choice(eligible, 20, replace=False); eligible = held-out inputs not in calibration/exploration/concept-category inputs (normalised match), T0 + 64 <= 128",
+    "n_pool": 477,
+    "n_eligible": 374
+  },
+  "confirmation_categories": {
+    "explain reading": [
+      "confused"
+    ],
+    "what's your take on a meeting": [
+      "confused"
+    ],
+    "what happened today": [
+      "past"
+    ],
+    "tell me about the internet": [
+      "confused"
+    ],
+    "do you like colors": [
+      "colors"
+    ],
+    "describe yourself": [
+      "about"
+    ],
+    "do you know what a podcast is": [
+      "confused"
+    ],
+    "what do you think about a computer": [
+      "confused"
+    ],
+    "can you help me with the stock market": [
+      "confused"
+    ],
+    "how do fish sleep": [
+      "sleep"
+    ],
+    "have you heard of a job": [
+      "confused"
+    ],
+    "what do you think about an alarm clock": [
+      "confused"
+    ],
+    "what's your take on email": [
+      "confused"
+    ],
+    "what's your take on wifi": [
+      "confused"
+    ],
+    "have you heard of taxes": [
+      "confused"
+    ],
+    "sleep well": [
+      "night"
+    ],
+    "tell me about work": [
+      "confused"
+    ],
+    "do fish think": [
+      "smart"
+    ],
+    "the sun is coming through the window": [
+      "light"
+    ],
+    "what do you think about a password": [
+      "confused"
+    ]
+  },
+  "exploration": [
+    "How are you doing today?",
+    "What are you up to right now?",
+    "Tell me something about yourself.",
+    "What's on your mind?",
+    "How do you feel at this moment?",
+    "Describe what's around you.",
+    "What would you like to do?"
+  ],
+  "calibration": [
+    "you alright",
+    "are you chasing bubbles",
+    "explain cooking",
+    "tell me about the stock market",
+    "can you help me with math",
+    "how old are you",
+    "are you healthy",
+    "tell me about a phone",
+    "tell me about an app",
+    "have you heard of politics",
+    "have you heard of a computer",
+    "what do you hope for",
+    "there's a little bridge in your tank now",
+    "i added a decoration for you",
+    "are you doing ok",
+    "i got you a new hiding spot",
+    "it's dark now",
+    "tell me something",
+    "here's a new hiding spot for your tank",
+    "can you think",
+    "what do you think about wifi",
+    "what's your life like",
+    "i added a little bridge for you",
+    "tell me about a movie",
+    "what's your vibe today",
+    "the neighbors are loud",
+    "when is your birthday",
+    "do you like your tank",
+    "what's your take on reading",
+    "do you have a name",
+    "have you heard of email",
+    "i got you an ornament",
+    "what's your take on a phone",
+    "do you like swimming",
+    "can you help me with driving",
+    "what do you want",
+    "have you heard of an alarm clock",
+    "who are you",
+    "what did you do yesterday",
+    "there's a decoration in your tank now",
+    "how are you",
+    "tell me about math",
+    "what do you think about driving",
+    "how are you feeling",
+    "sorry i tapped the glass",
+    "i added an ornament for you",
+    "sorry about the noise",
+    "explain money",
+    "do you poop",
+    "have you heard of cryptocurrency",
+    "what's your take on a job",
+    "i cleaned the tank",
+    "do fish dream",
+    "the light just flickered",
+    "explain cryptocurrency",
+    "i'm going to sing for you",
+    "have you heard of math",
+    "any plans for tomorrow",
+    "do you use an alarm clock",
+    "explain a spreadsheet",
+    "tell me about reading",
+    "who is guppy",
+    "can you help me with a meeting",
+    "do you know what work is",
+    "what kind of fish are you",
+    "tell me about shopping",
+    "why are you called guppy",
+    "time to sleep",
+    "here's an ornament for your tank",
+    "explain the internet",
+    "tell me about rent",
+    "what do you think about a meeting",
+    "any news from the tank",
+    "how are you doing today",
+    "can you help me with an alarm clock",
+    "do you use taxes",
+    "rest well guppy",
+    "goodnight guppy",
+    "can you help me with reading",
+    "nighty night",
+    "do you use a job",
+    "tell me about a password",
+    "what about a tankmate",
+    "oops that was noisy",
+    "what's your take on math",
+    "someone tapped the glass",
+    "feeling good",
+    "what do you think about politics",
+    "how's it going",
+    "explain politics",
+    "what do you think about social media",
+    "teach me to swim",
+    "are you sick",
+    "are you a good swimmer",
+    "explain a job",
+    "what's your take on the internet",
+    "a kid wants to see you",
+    "do you know what a computer is",
+    "what's your take on the news",
+    "explain shopping"
+  ],
+  "confirmation": [
+    "explain reading",
+    "what's your take on a meeting",
+    "what happened today",
+    "tell me about the internet",
+    "do you like colors",
+    "describe yourself",
+    "do you know what a podcast is",
+    "what do you think about a computer",
+    "can you help me with the stock market",
+    "how do fish sleep",
+    "have you heard of a job",
+    "what do you think about an alarm clock",
+    "what's your take on email",
+    "what's your take on wifi",
+    "have you heard of taxes",
+    "sleep well",
+    "tell me about work",
+    "do fish think",
+    "the sun is coming through the window",
+    "what do you think about a password"
+  ]
+}

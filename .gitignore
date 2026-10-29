@@ -55,3 +55,5 @@ rfm_guppy/cache/
 *.xdv
 *.bak
 .vscode/
+# --- demo: raw fp32 weights, regenerable with demo-ui-guppy-steer/export.py ---
+demo-ui-guppy-steer/web*/data/weights_*.wasm
