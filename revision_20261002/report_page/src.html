@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revision 2026-10 Test Results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>/*KATEX*/</style>
+<style>
+/* Layout idea: a lab report. Sticky index on the left, one column of prose, figures take the full column.
+   Every check has the same anatomy, so the reader can jump to the part needed. */
+:root{
+  color-scheme:light;
+  --bg:#f5f6f8; --surface:#fcfcfb; --ink:#12181f; --ink2:#46505c; --muted:#646e7a; --rule:#dadee3; --accent:#1c5cab; --tint:#e8eef6;
+  --grid:#e1e0d9; --axis:#b4b6b2;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --nul:#6d7480; --nul-soft:#cfd3d9;
+  --seq-lo:#e6eefa; --seq-hi:#104281; --div-neg:#d03b3b; --div-mid:#f0efec; --div-pos:#1c5cab;
+  --good:#006300; --warn:#8a5b00; --crit:#b32b2b; --good-bg:#e0f1e0; --warn-bg:#fbeecf; --crit-bg:#f9e2e0;
+  --display:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --bg:#101316; --surface:#181b1f; --ink:#eef0f2; --ink2:#c2c8d0; --muted:#9aa3ae; --rule:#2d3339; --accent:#86b6ef; --tint:#1d2733;
+  --grid:#2c2f33; --axis:#454a50;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --nul:#a3abb5; --nul-soft:#3b4148;
+  --seq-lo:#1e2a38; --seq-hi:#86b6ef; --div-neg:#e66767; --div-mid:#383835; --div-pos:#5598e7;
+  --good:#4cc24c; --warn:#f2bf52; --crit:#f08a8a; --good-bg:#17301a; --warn-bg:#33280f; --crit-bg:#3a1b1b;
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#101316; --surface:#181b1f; --ink:#eef0f2; --ink2:#c2c8d0; --muted:#9aa3ae; --rule:#2d3339; --accent:#86b6ef; --tint:#1d2733;
+  --grid:#2c2f33; --axis:#454a50;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --nul:#a3abb5; --nul-soft:#3b4148;
+  --seq-lo:#1e2a38; --seq-hi:#86b6ef; --div-neg:#e66767; --div-mid:#383835; --div-pos:#5598e7;
+  --good:#4cc24c; --warn:#f2bf52; --crit:#f08a8a; --good-bg:#17301a; --warn-bg:#33280f; --crit-bg:#3a1b1b;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.62 var(--body);-webkit-font-smoothing:antialiased}
+.shell{display:grid;grid-template-columns:200px minmax(0,1fr);gap:40px;max-width:1200px;margin:0 auto;padding:0 24px}
+nav.index{position:sticky;top:0;align-self:start;max-height:100vh;overflow:auto;padding:32px 0;font:400 14px/1.4 var(--display)}
+nav.index p{margin:0 0 8px;font-weight:600;color:var(--muted);font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+nav.index a{display:block;padding:6px 10px;color:var(--ink2);text-decoration:none;border-left:2px solid var(--rule)}
+nav.index a:hover{color:var(--accent);border-left-color:var(--accent)}
+main{min-width:0;padding:32px 0 96px}
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:34px;font-weight:700;letter-spacing:-.01em}
+h2{font-size:26px;font-weight:700;letter-spacing:-.005em}
+h3{font-size:18px;font-weight:600;margin:32px 0 8px}
+.lede{font-size:19px;color:var(--ink2);max-width:66ch;margin:12px 0 0}
+.meta{font:400 13px/1.5 var(--mono);color:var(--muted);margin:12px 0 0}
+p,ul,ol{max-width:68ch}
+p{margin:0 0 14px}
+ul,ol{padding-left:22px;margin:0 0 14px}
+li{margin:0 0 6px}
+a{color:var(--accent)}
+code{font:400 .86em var(--mono);background:var(--tint);padding:1px 4px;border-radius:3px}
+section{padding-top:56px}
+section+section{border-top:1px solid var(--rule);margin-top:56px}
+.head{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:6px}
+.kicker{font:500 13px var(--mono);color:var(--muted);margin:0 0 6px}
+.pill{display:inline-flex;gap:6px;align-items:center;font:600 13px/1 var(--display);padding:5px 9px;border-radius:4px;white-space:nowrap}
+.pill.crit{background:var(--crit-bg);color:var(--crit)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.good{background:var(--good-bg);color:var(--good)}
+.answer{border-left:3px solid var(--accent);background:var(--tint);padding:12px 16px;margin:16px 0 8px;max-width:72ch}
+.answer p:last-child{margin:0}
+.answer strong{font-family:var(--display);font-weight:600}
+.tool{border:1px solid var(--rule);background:var(--surface);padding:12px 16px;margin:16px 0;max-width:72ch;font-size:16px}
+.tool h4{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 6px}
+.tool p:last-child,.tool ul:last-child{margin-bottom:0}
+.mine{border-left:3px solid var(--s4);padding:10px 16px;margin:16px 0;max-width:72ch;background:var(--surface)}
+.mine h4{font-size:13px;font-weight:600;color:var(--warn);margin:0 0 6px}
+.mine p:last-child{margin:0}
+figure{margin:24px 0;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:6px;min-width:0}
+figcaption{font:400 14.5px/1.45 var(--display);color:var(--ink2);margin:0 0 12px}
+figcaption b{display:block;color:var(--ink);font-weight:600;font-size:15.5px;margin-bottom:2px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:0 0 12px;font:400 13px var(--display);color:var(--muted)}
+.seg{display:inline-flex;gap:0;align-items:center}
+.seg>span{margin-right:6px}
+.seg button{font:500 13px var(--display);padding:5px 10px;border:1px solid var(--rule);background:transparent;color:var(--ink2);cursor:pointer;margin-left:-1px}
+.seg button:first-of-type{border-radius:4px 0 0 4px;margin-left:0}.seg button:last-of-type{border-radius:0 4px 4px 0}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font:400 13px var(--display);color:var(--ink2);margin:0 0 8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{flex:none;overflow:visible}
+.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.panels.wide{grid-template-columns:minmax(0,1fr)}
+.panels svg,.scroll svg{display:block;width:100%;height:auto}
+.scroll{overflow-x:auto}.scroll>svg{min-width:640px}
+svg text{font-family:var(--display);fill:var(--muted);font-size:10.5px}
+svg text.t{fill:var(--ink);font-size:12.5px;font-weight:600}
+svg text.i{fill:var(--ink2);font-size:10.5px}
+svg .g{stroke:var(--grid);stroke-width:1} svg .ax{stroke:var(--axis);stroke-width:1}
+details.dt{margin-top:12px;font:400 13px var(--display);color:var(--ink2)}
+details.dt summary{cursor:pointer;color:var(--accent)}
+.tw{overflow-x:auto;margin-top:8px}
+table{border-collapse:collapse;font:400 14px/1.35 var(--display);font-variant-numeric:tabular-nums;width:100%}
+th{font-weight:600;text-align:left;color:var(--muted);font-size:12.5px;border-bottom:1px solid var(--axis);padding:6px 10px 6px 0;vertical-align:bottom}
+td{border-bottom:1px solid var(--rule);padding:7px 10px 7px 0;vertical-align:top}
+td.n,th.n{text-align:right}
+.tablewrap{overflow-x:auto;margin:16px 0}
+td .q{color:var(--ink2)}
+td.txt{font:400 12.5px/1.4 var(--mono);min-width:280px}
+.map{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;font:400 13.5px/1.3 var(--display);margin:16px 0}
+.map div{flex:1 1 130px;border:1px solid var(--rule);background:var(--surface);padding:10px;border-radius:4px;min-width:130px}
+.map b{display:block;font-weight:600;margin-bottom:4px}
+.map i{display:block;font-style:normal;font:500 12px var(--mono);color:var(--accent);margin-top:6px}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps>li{counter-increment:s;padding-left:30px;position:relative}
+.steps>li::before{content:counter(s);position:absolute;left:0;top:2px;width:20px;height:20px;font:600 12px/20px var(--display);text-align:center;background:var(--tint);color:var(--accent);border-radius:3px}
+.corr{border:1px solid var(--rule);background:var(--surface);padding:14px 16px;margin:12px 0;border-radius:6px}
+.corr h4{font-size:15px;font-weight:600;margin:0 0 6px}
+.corr p{margin:0 0 8px;font-size:16px;max-width:none}.corr p:last-child{margin:0}
+.corr .say{border-left:3px solid var(--s3);padding-left:10px}
+#tip{position:fixed;z-index:9;pointer-events:none;max-width:280px;padding:7px 10px;font:400 12.5px/1.4 var(--display);background:var(--ink);color:var(--bg);border-radius:4px;display:none}
+.katex{font-size:1.04em}.katex-display{margin:10px 0;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+@media (max-width:960px){.shell{display:block}nav.index{position:static;max-height:none;padding:24px 0 0;display:flex;flex-wrap:wrap;gap:4px}nav.index p{width:100%}nav.index a{border:1px solid var(--rule);border-radius:4px;padding:5px 8px}}
+@media (max-width:480px){.shell{padding:0 16px}figure{padding:12px}h1{font-size:28px}}
+</style>
+</head>
+<body>
+<div id="tip" role="status"></div>
+<div class="shell">
+<nav class="index" aria-label="Contents">
+  <p>Contents</p>
+  <a href="#verdicts">Results at a glance</a>
+  <a href="#setup">Shared setup</a>
+  <a href="#check-1">Check I: null for the share</a>
+  <a href="#check-1a">Check Ia: iteration</a>
+  <a href="#check-2">Check II: PCA baseline</a>
+  <a href="#check-3">Check III: blind judge</a>
+  <a href="#check-4">Check IV: small n</a>
+  <a href="#corrections">Corrections to the summary</a>
+</nav>
+<main>
+<header>
+  <h1>Revision 2026-10 test results</h1>
+  <p class="lede">Five checks on the GuppyLM replication of <em>Towards Universal Steering</em>. Each one attacks a claim the replication made, with a criterion fixed before the run. This page explains what each test did, what it found, and how far the result can be pushed.</p>
+  <p class="meta">Source: revision_20261002/SUMMARY_OF_TESTS.md and run_20261009/ · all charts draw from the run's CSV and npz files</p>
+</header>
+
+<section id="verdicts" style="padding-top:32px;margin-top:0;border:0">
+<h2>Results at a glance</h2>
+<p style="margin-top:10px">Four of the five claims fall. The fifth is weakened. RFM keeps real properties, listed in the last column, but they are smaller than the replication reported.</p>
+<div class="tablewrap"><table>
+<thead><tr><th style="min-width:170px">Claim under test</th><th>Result</th><th style="min-width:230px">Key numbers</th><th style="min-width:210px">What survives</th></tr></thead>
+<tbody>
+<tr><td><a href="#check-1">I.</a> A share $s\approx1$ is evidence of one concept direction</td><td><span class="pill warn">◐ Weakened</span></td><td>Shuffled labels reach $s=0.99$. Share fails the null in 4–5 of 18 cells.</td><td class="q">The real share beats the null in 13–14 of 18 cells.</td></tr>
+<tr><td><a href="#check-1a">Ia.</a> Concentration comes from the concept</td><td><span class="pill crit">✕ Refuted</span></td><td>$H_0$ rejected in 972 of 972 tests, already at $T=2$. Growth of +0.15 to +0.59 on random labels.</td><td class="q">Real labels end higher: $s\ge0.999$ in 71 of 108 cells, shuffled never reach 0.99.</td></tr>
+<tr><td><a href="#check-2">II.</a> RFM beats PCA by a wide margin</td><td><span class="pill crit">✕ Refuted</span></td><td>Mean test AUROC of PCA goes from 0.879 to 0.998 after the fix.</td><td class="q">RFM keeps a val $|\rho|$ lead on <code>valence</code> (+0.22) and <code>env_social</code> (+0.06).</td></tr>
+<tr><td><a href="#check-3">III.</a> Steering succeeds in 100 % of cases</td><td><span class="pill crit">✕ Refuted</span></td><td>On-concept and coherent: 0/7 at every $r\ne0$, for every concept.</td><td class="q">The direction moves a blind judge on <code>env_social</code> (7/7 up at $+r^\star$), on incoherent text.</td></tr>
+<tr><td><a href="#check-4">IV.</a> RFM helps when examples are scarce</td><td><span class="pill crit">✕ Refuted</span></td><td>$\Delta=-0.05$ to $-0.21$ against DiffMeans at $n\in\{2,4\}$, all blocks.</td><td class="q">A real win at block 0 with more data: +0.077 on <code>valence</code> at $n=32$.</td></tr>
+</tbody></table></div>
+<p>The two runs agree: I compared the 19 CSVs shared by the 10-02 and 10-09 runs and all are byte-identical. I also recomputed the summary's numbers from these files, wherever the files contain them. Most match. <a href="#corrections">Eight statements need a correction</a>, each with a replacement sentence ready to paste.</p>
+</section>
+
+<section id="setup">
+<h2>Shared setup</h2>
+<p style="margin-top:10px">Every check uses the same objects, so they are defined once here. The notation follows <code>rfm_guppy/rfm.py</code>.</p>
+<h3>Data</h3>
+<p>The model is GuppyLM (8.73M parameters, blocks $\ell=0,\dots,5$). For a text $x$, the cached object is the residual activation at the last token, $a_\ell(x)\in\mathbb R^{384}$. There are three concepts, <code>food</code>, <code>valence</code> and <code>env_social</code>, with balanced train sets of 360, 120 and 360 examples. Labels are $y\in\{0,1\}$ for the two poles of each concept. A <em>cell</em> means one (concept, block) pair, or a finer combination when hyperparameters are included.</p>
+<h3>One iteration of RFM</h3>
+<p>Fix a block and centre the activations. Start from $M_0=I_{384}$. Given $M_t$, one iteration has three steps.</p>
+<ol class="steps">
+<li>Define a Laplace kernel in the metric of $M_t$, with bandwidth $L$:
+$$K_{M}(a,a')=\exp\!\Big(-\frac{\|a-a'\|_{M}}{L}\Big),\qquad \|u\|_{M}^2=u^\top M u .$$</li>
+<li>Fit kernel ridge regression, with $\lambda=10^{-3}$:
+$$\alpha=(K_{M_t}+\lambda I)^{-1}y,\qquad f_t(z)=\sum_i\alpha_i\,K_{M_t}(a^{(i)},z).$$</li>
+<li>Take the gradient of the fit at each training point, $g_i=\nabla f_t(a^{(i)})$, and form the average gradient outer product, with gradients mean-centred as in the code:
+$$M_{t+1}=\mathrm{AGOP}=\frac1n\sum_{i=1}^n (g_i-\bar g)(g_i-\bar g)^\top .$$</li>
+</ol>
+<p>The concept direction $v_{\rm RFM}$ is the top eigenvector of $M_T$, oriented so that the projection correlates positively with $y$. The summary writes the bandwidth as $\sigma$ in Checks I–Ia and $L$ in Check IV. They are the same parameter.</p>
+<h3>The quantities that get reported</h3>
+<ul>
+<li><strong>Share.</strong> $s_T=\lambda_1(M_T)/\operatorname{tr}M_T\in(0,1]$. It equals 1 exactly when $M_T$ has rank one.</li>
+<li><strong>Val $|\rho|$.</strong> The absolute Pearson correlation between $\langle a_\ell(x),v\rangle$ and $y$ on the validation split. It also selects the hyperparameters $(L,T,\text{normalize})$.</li>
+<li><strong>AUROC.</strong> The probability that a random positive example scores above a random negative one. 0.5 is chance, 1 is perfect.</li>
+<li><strong>Steering.</strong> At each block and token, $a_\ell\mapsto a_\ell+r\,\tilde a_\ell\,v_\ell$, where $\tilde a_\ell$ is the median of $\|a_\ell\|$. So $r$ is a size relative to a typical activation.</li>
+</ul>
+<h3>The two baselines</h3>
+<ul>
+<li><strong>DiffMeans (DM).</strong> $v_{\rm DM}\propto\hat\mu_+-\hat\mu_-$, the difference of class means. It costs one line of code.</li>
+<li><strong>PCA on paired differences.</strong> Pair positives with negatives, stack the differences as rows of $D\in\mathbb R^{m\times384}$, and take the top right singular vector.</li>
+</ul>
+<h3>Where each check attacks the pipeline</h3>
+<div class="map" aria-label="Pipeline stages and the checks that test them">
+<div><b>Labels</b>Pairing of $y$ with $a_\ell$<i>Checks I, Ia</i></div>
+<div><b>Iteration</b>$M_0\to M_T$<i>Checks I, Ia</i></div>
+<div><b>Comparison</b>RFM against baselines<i>Checks II, IV</i></div>
+<div><b>Data size</b>$n$ examples per class<i>Check IV</i></div>
+<div><b>Evaluation</b>Did steering work?<i>Check III</i></div>
+</div>
+</section>
+
+<section id="check-1">
+<p class="kicker">Check I</p>
+<div class="head"><h2>Is a high top-eigenvalue share evidence of a concept?</h2><span class="pill warn">◐ Weakened</span></div>
+<div class="answer"><p><strong>Short answer.</strong> Only partly. RFM produces a large share even when the labels carry no information, so "$s$ is large" says little alone. The share becomes informative when compared against this null, and the real share beats the null in 13 to 14 of the 18 cells.</p></div>
+<h3>Why this test exists</h3>
+<p>The replication read $\lambda_1/\sum_j\lambda_j\approx1$ as a sign that the concept lives on one line. That reading needs a comparison: what would $s$ be if there were no concept at all? A statistic with no null distribution cannot serve as evidence.</p>
+<h3>What was done</h3>
+<ol class="steps">
+<li><strong>Build the null.</strong> Replace $y_{\rm train}$ by a random permutation. Class counts stay the same, and the link between label and activation is destroyed. Everything else, code included, stays identical.</li>
+<li><strong>Gate.</strong> Recompute the 18 stored shares (3 concepts × 6 blocks) at the stored hyperparameters. They must match the cache to $10^{-4}$.</li>
+<li><strong>Regime A.</strong> Keep hyperparameters frozen at the values chosen with the real labels and draw $B=100$ permutations per cell.</li>
+<li><strong>Regime B.</strong> Rerun the whole sweep ($\sigma\in\{1,10,100\}$, $T=1..10$, normalize) on shuffled labels with $B=20$. This matters because the reported number is the output of a selection, so the fair null must include that selection.</li>
+<li><strong>Regime C and side check E.</strong> Compare $s(T)$ curves, and calibrate $|\rho|$ with 2000 random unit directions, PC1 and DiffMeans.</li>
+</ol>
+<div class="tool"><h4>The statistic: permutation p-value</h4>
+<p>Under the null, the real labelling is one more draw among the permutations. So we count how many shuffled runs match or beat the real value:
+$$p=\frac{1+\#\{s_{\rm shuf}\ge s_{\rm real}\}}{1+B}.$$
+The $+1$ terms count the real run itself. They also set a floor: $p$ can never go below $1/(1+B)$. With $B=100$ the floor is $0.0099$. With $B=20$ it is $1/21=0.048$, so in Regime B a cell that "holds" sits exactly on the resolution limit.</p></div>
+<p><strong>Decision rule, fixed before running.</strong> "Concept-informative" is refuted at a cell if $p\ge0.05$, or if at least 5 % of shuffled runs reach $s\ge0.95$.</p>
+<h3>What came out</h3>
+<figure><figcaption><b>Random labels reach large shares, and the real share usually clears them</b>Each grey bar is the range of shuffled shares in one cell. A filled dot is a real share that passes the test. A hollow dot is a refuted cell.</figcaption>
+<div class="ctrl" id="c1a"></div><div class="legend" id="l1a"></div><div class="panels" id="f1a"></div><details class="dt"><summary>Show the numbers</summary><div class="tw" id="t1a"></div></details></figure>
+<ul>
+<li>At the stored hyperparameters the shuffled medians sit at 0.43–0.76 in the 15 cells with $T^\star>1$, and near 0.20 in the three cells with $T^\star=1$. The maximum reaches 0.99.</li>
+<li>Refuted cells: 5 of 18 in Regime A, 4 of 18 in Regime B, all in <code>valence</code> (blocks 0, 2, 5) and <code>env_social</code> (block 1, and block 0 in Regime A only).</li>
+<li>In three refuted cells the real share is itself small, 0.15–0.22, with $T=1$ and $\sigma=100$.</li>
+</ul>
+<div class="mine"><h4>My reading (not in the summary)</h4><p>Those three cells are informative. <code>valence</code> blocks 2 and 5 and <code>env_social</code> block 1 have $s\le0.22$ and still reach val $|\rho|\ge0.90$. So a good direction can come from a matrix with no spectral concentration at all, which separates "good direction" from "high share" in both senses: high share without a concept (shuffled runs), and a concept without high share (these cells).</p></div>
+<h3>The side result on $|\rho|$</h3>
+<figure><figcaption><b>Val $|\rho|$ is a weak criterion, especially on <code>food</code></b>Random directions fill the grey zone. On <code>food</code>, RFM trained on shuffled labels sits close to the real run, and unsupervised PC1 is almost as good.</figcaption>
+<div class="legend" id="l1b"></div><div class="panels" id="f1b"></div><details class="dt"><summary>Show the numbers</summary><div class="tw" id="t1b"></div></details></figure>
+<p>On <code>food</code>, the concept is the dominant axis of variation in the activations. PC1 needs no labels and reaches 0.94–0.97 from block 1 on, and DiffMeans reaches 0.95–0.98. A shuffled RFM reaches 0.85–0.88, because any method that picks up the top variance axis scores well. So <code>food</code> cannot tell methods apart. It works as a ceiling control, the role it takes again in Check IV.</p>
+<p>On <code>valence</code> and <code>env_social</code>, Regime A shuffled RFM falls to random-direction level (0.10–0.50). Regime B behaves differently, and the gap is itself a finding: once hyperparameters are selected by val $|\rho|$, shuffled RFM rises to 0.36–0.80 on <code>env_social</code>. The sweep can pick the configuration whose direction happens to align with the top-variance axes, and PC1 alone reaches 0.85 here, so this is the likely route. Either way, a $|\rho|$ reported after a sweep carries optimism.</p>
+</section>
+
+<section id="check-1a">
+<p class="kicker">Check Ia</p>
+<div class="head"><h2>Does the iteration itself concentrate the spectrum?</h2><span class="pill crit">✕ Refuted</span></div>
+<div class="answer"><p><strong>Short answer.</strong> Yes, in every cell. Iterating raises the share on random labels by +0.15 to +0.59, so part of every reported $s\approx1$ is an effect of $T$. The claim that concentration comes from the concept is refuted.</p></div>
+<h3>What was done</h3>
+<ol class="steps">
+<li><strong>Grid.</strong> All cells $(c,\ell,\text{normalize},\sigma)$: $3\times6\times2\times3=108$. Regime C of Check I only covered each concept's best block.</li>
+<li><strong>Run.</strong> In each cell, iterate from $M_0=I_{384}$ and record $s(T)$ for $T=1..10$, for the real labels and for $B=20$ permutations (seed 20261002).</li>
+<li><strong>Gate.</strong> The real $s(T^\star)$ at the stored hyperparameters must match the cache to $10^{-4}$.</li>
+<li><strong>Test.</strong> $H_0$: on shuffled labels, $s(T)=s(1)$. That gives $108\times9=972$ tests.</li>
+</ol>
+<div class="tool"><h4>The statistic: paired sign test</h4>
+<p>Each permutation $b$ acts as its own control: $\Delta_b(T)=s_b(T)-s_b(1)$. Under $H_0$, an increase and a decrease are equally likely, so the number of positive $\Delta_b$ follows $\mathrm{Bin}(20,\tfrac12)$. $H_0$ is refuted at (cell, $T$) if $|\operatorname{median}_b\Delta_b|>0.05$ <em>and</em> the two-sided sign test gives $p<0.05$. The first condition requires an effect of real size, the second requires consistency.</p></div>
+<h3>What came out</h3>
+<p>$H_0$ is refuted in <strong>972 of 972</strong> (cell, $T$) pairs, already at $T=2$ everywhere. At least 19 of the 20 permutations rise in every test. The largest p-value is $4\times10^{-5}$, so the result also survives a Bonferroni correction over 972 tests ($p\le0.039$). The checks agree with Regime C: the real curves match exactly on all 18 shared cells.</p>
+<figure><figcaption><b>The share climbs on random labels too</b>Pick any of the 108 cells, here or by clicking the map below. The grey band spans all 20 permutations. The real curve and the shuffled curve rise together.</figcaption>
+<div class="ctrl" id="c2a"></div><div class="legend" id="l2a"></div><div class="panels wide" id="f2a"></div><details class="dt"><summary>Show the numbers</summary><div class="tw" id="t2a"></div></details></figure>
+<figure><figcaption><b>Growth on shuffled labels from $T=1$ to $T=10$, in all 108 cells</b>Each number is the median of $\Delta_b(10)$ over 20 permutations. Every cell is positive. Click a cell to load it in the chart above.</figcaption>
+<div class="panels" id="f2b"></div></figure>
+<p>The separation between real and shuffled also appears late. At $T=1$ the real share fails to beat the null in 14 of the 18 stored cells ($p_{\rm perm}(1)\ge0.05$). Of those 14, 11 pass at $T^\star$. The other 3 are the cells with $T^\star=1$, where iterating was never selected.</p>
+<figure><figcaption><b>In most cells, the gap between real and shuffled opens only after iterating</b>Gap = real share − shuffled median, at the stored hyperparameters. Hollow marks show $T=1$, filled marks show $T^\star$. Cells with $T^\star=1$ have a single mark.</figcaption>
+<div class="legend" id="l2c"></div><div class="panels" id="f2c"></div><details class="dt"><summary>Show the numbers</summary><div class="tw" id="t2c"></div></details></figure>
+<div class="mine"><h4>Why the iteration concentrates: a matrix explanation (heuristic, my derivation, not tested by the checks)</h4>
+<p>The code hints at the mechanism. Differentiating the kernel gives $\nabla_z K_M(a,z)=-\frac{1}{L}K_M(a,z)\,\frac{M(z-a)}{\|z-a\|_M}$, so every gradient carries a factor of $M$ on the left:
+$$g_i=-M_t\,s_i,\qquad s_i=\sum_j\frac{\alpha_j K_{ij}}{L\,\|a^{(i)}-a^{(j)}\|_{M_t}}\big(a^{(i)}-a^{(j)}\big).$$
+This is the line <code>G = -SZ @ M</code> in <code>_agop_step</code>. Writing $S$ for the centred matrix of the $s_i$ and $C_t=\frac1nS^\top S\succeq0$, the update becomes
+$$M_{t+1}=M_t\,C_t\,M_t .$$
+Take the toy case where $C_t$ commutes with $M_t$ and acts as $c\,I$ on the leading eigenvectors. Then each eigenvalue obeys $\lambda\mapsto c\,\lambda^2$, so a ratio $\lambda_1/\lambda_2=\kappa$ becomes $\kappa^{2}$, then $\kappa^{4}$, then $\kappa^{2^t}$. Any initial gap, however it arose, explodes. The labels enter only through $\alpha$, and random labels still produce a nonzero fit with $\lambda=10^{-3}$. This matches the pattern above: concentration on any labels, with real labels biasing which direction wins.</p>
+<p style="margin-top:10px"><strong>Status: conjecture.</strong> $C_t$ depends on $M_t$ and does not commute with it in general, so a theorem would need hypotheses on $C_t$. A cheap test: compare the empirical growth of $\log(\lambda_1/\lambda_2)$ against the doubling rate. That would take about an hour on the cached activations.</p></div>
+</section>
+
+<section id="check-2">
+<p class="kicker">Check II</p>
+<div class="head"><h2>Was the PCA baseline wrong by construction?</h2><span class="pill crit">✕ Refuted</span></div>
+<div class="answer"><p><strong>Short answer.</strong> Yes. The code centred the difference matrix before the SVD, which deletes the DiffMeans direction from the data. Beaglehole et al. (App. H) do not centre. With the fix, mean test AUROC rises from 0.879 to 0.998, and "RFM beats PCA by a wide margin" no longer holds on AUROC. A gap in $|\rho|$ remains, and on <code>valence</code> it is sizeable.</p></div>
+<h3>The algebra, step by step</h3>
+<p>Let $D\in\mathbb R^{m\times384}$ have rows $d_i=a(x_i^+)-a(x_i^-)$, with mean $\bar d=\frac1m\sum_i d_i$. Centring gives $\tilde D=D-\mathbf 1\bar d^\top$. Expanding,</p>
+$$\tilde D^\top\tilde D=D^\top D-\bar d\,\mathbf 1^\top D-D^\top\mathbf 1\,\bar d^\top+\bar d\,\mathbf 1^\top\mathbf 1\,\bar d^\top .$$
+<p>Since $\mathbf 1^\top\mathbf 1=m$ and $D^\top\mathbf 1=\sum_i d_i=m\bar d$, each of the last three terms equals $\pm m\,\bar d\bar d^\top$, with signs $-,-,+$. Therefore</p>
+$$\tilde D^\top\tilde D=D^\top D-m\,\bar d\bar d^\top .$$
+<p>Now note that, with one pair per example, $\bar d=\frac1m\sum_i a(x_i^+)-\frac1m\sum_i a(x_i^-)=\hat\mu_+-\hat\mu_-$, which is exactly the DiffMeans direction. So centring subtracts a rank-one matrix pointing along DiffMeans. After centring, the columns of $\tilde D$ have mean zero, so the top singular vector of $\tilde D$ can only describe how pairs vary around their mean. The signal that separates the classes is what was removed.</p>
+<figure><figcaption><b>What centring does to the top principal direction</b>Schematic on synthetic 2-D data, with numbers invented for illustration. Each dot is one paired difference $d_i$. The within-pair spread is deliberately long and perpendicular to $\bar d$.</figcaption>
+<div class="legend" id="l3a"></div><div class="panels" id="f3a"></div></figure>
+<h3>What was done</h3>
+<ol class="steps">
+<li><strong>Gates.</strong> The current <code>pca_vector</code> must reproduce the published Phase-8 numbers, and the identity above must hold numerically in all 18 cells.</li>
+<li><strong>Compare variants</strong> under the same preprocessing: <code>PCA_c</code> (current code), <code>PCA_u</code> (uncentred, sequential pairing and 20 random pairings), DM, and the stored RFM.</li>
+<li><strong>Headline measures.</strong> Best-block val $|\rho|$ and test AUROC of the 6-feature aggregate probe.</li>
+<li><strong>Bootstrap.</strong> Resample val examples in pairs, keeping directions fixed, for the gaps $|\rho|_{\rm RFM}-|\rho|_{\rm PCA_u}$ and $|\rho|_{\rm DM}-|\rho|_{\rm PCA_u}$.</li>
+</ol>
+<p><strong>Decision rule, fixed before running.</strong> Uncentred PCA "breaks even" with DM if, for all 3 concepts and at the worst pairing, AUROC $\ge$ DM $-0.005$ and best-block $|\rho|\ge$ DM $-0.02$.</p>
+<h3>What came out</h3>
+<div class="tablewrap"><table id="t3head"></table></div>
+<p>The gates passed. Break-even was <strong>not reached</strong>: only <code>food</code> passes both parts. <code>valence</code> fails both (AUROC 0.990 against 1.000, $|\rho|$ gap 0.13), and <code>env_social</code> fails on $|\rho|$ (gap 0.03). So uncentred PCA sits slightly below DiffMeans.</p>
+<figure><figcaption><b>Uncentring moves PCA close to DiffMeans from block 1 or 2 on</b>Switch to $|\cos|$ to see the geometry. <code>valence</code> joins the others one block later: its cosine at block 1 is still 0.76.</figcaption>
+<div class="ctrl" id="c3b"></div><div class="legend" id="l3b"></div><div class="panels" id="f3b"></div><details class="dt"><summary>Show the numbers</summary><div class="tw" id="t3b"></div></details></figure>
+<p>Why is the fix so close to DM even though the rank-one term $m\|\bar d\|^2$ carries only 8 to 34 % of $\|D\|_F^2$? The top singular vector needs no majority of the energy. The spike only has to exceed the largest eigenvalue of $\tilde D^\top\tilde D$, and that remaining energy is spread over many directions.</p>
+<figure><figcaption><b>What remains after the fix, measured on validation</b>Bootstrap gap in best-block val $|\rho|$ against uncentred PCA, with 95 % intervals. An interval clear of zero means the gap survives resampling of val examples.</figcaption>
+<div class="legend" id="l3d"></div><div class="panels wide" id="f3d"></div></figure>
+<div class="mine"><h4>Caveat for the thesis (my reading, not in the summary)</h4><p>The $|\rho|$ comparison is tilted toward RFM. Its hyperparameters were selected by val $|\rho|$ over 60 configurations, then it is scored on the same val split. DM and PCA have no such selection. The bootstrap holds directions fixed, so its interval does not cover this optimism. Regime B of Check I shows the size of the effect is not negligible. The gap of +0.22 on <code>valence</code> is therefore an upper estimate.</p></div>
+</section>
+
+<section id="check-3">
+<p class="kicker">Check III</p>
+<div class="head"><h2>Does the 100 % steering success survive a blind judge?</h2><span class="pill crit">✕ Refuted</span></div>
+<div class="answer"><p><strong>Short answer.</strong> No. The direction moves the text toward the concept in some cases, but every steered generation is incoherent. At every $r\ne0$, for every concept, 0 of 7 generations are both on-concept and coherent.</p></div>
+<h3>Why this test exists</h3>
+<p>The old success metric was "probe $>0.5$ or lexicon hit". The probe reads the same AGOP basis that the steering vector comes from, so the metric is partly circular: push along a direction, then ask a detector built on that direction whether it noticed. A valid judge should see text only.</p>
+<h3>What was done</h3>
+<p>No new generation was run. The stored outputs (7 prompts × 12 values of $r$, for 84 texts per concept) are scored again.</p>
+<ol class="steps">
+<li><strong>Blind judge $g_c$.</strong> TF-IDF on word 1–2-grams plus balanced logistic regression, trained on deduplicated assistant outputs of the GuppyLM dataset. Score $g_c=2P(\text{pos})-1\in[-1,1]$. Text with no known n-grams scores about 0.</li>
+<li><strong>Coherence.</strong> Two measures on the text. $\mathrm{PPL}(y\mid x)$ is the perplexity of the output under the unsteered model: how surprised the model is by it. Distinct-2 is unique bigrams over bigrams, which falls when text repeats itself. "Coherent" means PPL $\le q_{95}$ and distinct-2 $\ge q_{05}$, with quantiles taken from 100 unsteered generations on prompts from categories no concept uses. Here $q_{95}=2.25$.</li>
+<li><strong>Gates.</strong> G1: 5-fold CV AUROC of $g_c\ge0.95$, or the concept is not interpreted. G2: lexicon rates recompute exactly. G3: the 7 regenerated $r=0$ texts match character for character.</li>
+</ol>
+<p><strong>Hypotheses.</strong> H1: exact one-sided sign tests against $r=0$ at $r^\star\in\{0.25,0.5\}$, supported only with 7/7 up at $+r^\star$ and 7/7 down at $-r^\star$. H2: "no coherent steering" is refuted if at some $r>0$ at least 4 of 7 generations are $g_c>0$ and coherent. H3: descriptive agreement between probe and judge.</p>
+<div class="tablewrap"><table id="t3gate"></table></div>
+<p><strong>G1 failed for <code>valence</code>:</strong> the dataset has only 40+40 unique outputs, and CV AUROC is 0.78. The judge cannot be trusted there, so its <code>valence</code> numbers appear below but should not be interpreted. G2 (36/36) and G3 (7/7) passed.</p>
+<h3>What the text looks like</h3>
+<p>Reading the outputs is the fastest way to see the result. All are first-prompt samples, taken verbatim from the stored file.</p>
+<div class="tablewrap"><table id="t3ex"></table></div>
+<h3>What came out</h3>
+<figure><figcaption><b>Coherence collapses as soon as $r\ne0$</b>Each dot is one generation. PPL is about 1.6 at $r=0$. The lowest steered value is about 2 559, three orders of magnitude above the threshold of 2.25. The axis is logarithmic, and $r$ is spaced by rank.</figcaption>
+<div class="legend" id="l4b"></div><div class="panels" id="f4b"></div></figure>
+<p>This single chart settles <strong>H2</strong>: 0 coherent generations at any $r\ne0$, for every concept, so the claim "no coherent steering" is not refuted. Steering in this form breaks fluency at the smallest $r$ tried.</p>
+<figure><figcaption><b>The judge moves with $r$ on <code>env_social</code>, weakly on <code>food</code></b>Small dots are the 7 generations, the line is their mean. Above zero counts as on-concept. <code>valence</code> failed gate G1 and is shown for completeness.</figcaption>
+<div class="legend" id="l4a"></div><div class="panels" id="f4a"></div><details class="dt"><summary>Show the numbers</summary><div class="tw" id="t4a"></div></details></figure>
+<p><strong>H1</strong> is not supported on either interpretable concept. <code>food</code> reaches 5/7 up and 6/7 down. <code>env_social</code> reaches 7/7 up and 6/7 down, one short of the rule. The single supported cell is <code>valence</code> at $r=0.5$, which G1 says to ignore. It also disappears when the lexicon words are removed from the judge (6/7 up with <code>g_abl</code>).</p>
+<figure><figcaption><b>Three ways of counting success, out of 7</b>The old metric stays high, and on <code>valence</code> it also reports 7/7 at negative $r$. Requiring coherence drops every steered count to zero.</figcaption>
+<div class="legend" id="l4e"></div><div class="panels" id="f4e"></div><details class="dt"><summary>Show the numbers</summary><div class="tw" id="t4e"></div></details></figure>
+<div class="mine"><h4>Not in the summary: the old metric succeeds in the wrong direction</h4><p>On <code>valence</code>, the old metric reports 7/7 at $r=-4$, where the probe reads 0. The cause is the lexicon, which contains both poles (<code>happy</code>, <code>excited</code>, and also <code>scared</code>, <code>hide</code>, <code>stiff</code>). A text steered toward the negative pole hits the lexicon too, so a lexicon hit carries no sign. This is a concrete defect in the old metric, and easier to defend before a committee than the circularity argument.</p></div>
+<figure><figcaption><b>The probe and the blind judge disagree on <code>food</code></b>Each dot is one generation. The shaded quadrant holds texts the probe calls on-concept and the judge does not.</figcaption>
+<div class="legend" id="l4d"></div><div class="panels" id="f4d"></div></figure>
+<p><strong>H3:</strong> agreement is strong on <code>valence</code> and <code>env_social</code> (Spearman about 0.81, binary agreement 99 %), and poor on <code>food</code> (Spearman 0.41, agreement 57 %, with 35 cases of "probe yes, judge no"). That disagreement is the circularity made visible: on <code>food</code> the probe fires on activations that the words do not support.</p>
+<figure><figcaption><b>The 7 prompts are not 7 observations</b>Mean bigram Jaccard similarity across prompts, by $r$. Unsteered text sits at 0.05. Steered text approaches 1, since all prompts collapse to nearly the same output.</figcaption>
+<div class="scroll" id="f4f"></div></figure>
+<p>This post-hoc check affects how the sign tests should be read. An exact sign test assumes independent trials. With 1 to 6 distinct texts out of 7 at $|r|\ge0.5$, "7/7" can be one observation counted several times. So even the positive H1 results are weaker than their p-values suggest.</p>
+</section>
+
+<section id="check-4">
+<p class="kicker">Check IV · pre-registered</p>
+<div class="head"><h2>With few examples per class, does RFM beat DiffMeans?</h2><span class="pill crit">✕ Refuted</span></div>
+<div class="answer"><p><strong>Short answer.</strong> No, the opposite. At $n\in\{2,4\}$ RFM is clearly worse in all six blocks, and it stays below zero even when the best $T$ is chosen by an oracle. A small advantage appears only near $n\approx32$, and only block 0 shows one of practical size.</p></div>
+<h3>The question as a formula</h3>
+$$\Delta_c(n)=\mathbb E_S\big[\mathrm{AUROC}(v_{\rm RFM})-\mathrm{AUROC}(v_{\rm DM})\big],$$
+<p>where $S$ is a balanced random subsample with $n$ examples per class, and AUROC is measured on the full test split. A positive $\Delta_c(n)$ means RFM wins.</p>
+<h3>What was done</h3>
+<ol class="steps">
+<li><strong>Freeze first.</strong> Hyperparameters are chosen on train and val only, before the test split is opened: $L\in\{1,10,100\}$, $T=1..10$, normalize = False.</li>
+<li><strong>Paired subsamples.</strong> For each concept and $n\in\{1,2,4,8,16,32\}$, draw $R=200$ balanced subsamples, plus one full-pool draw. All four methods and all blocks see the same subsamples, which removes between-sample noise from the differences.</li>
+<li><strong>Methods.</strong> RFM (frozen $L,T$, and also every $M_t$ for $t\le10$), DM, uncentred PCA, and logistic regression ($\ell_2$).</li>
+<li><strong>Sanity gate C0, enforced in the loop.</strong> See the box below.</li>
+<li><strong>Statistics.</strong> $B=10\,000$ bootstrap resamples over the $R$ draws, percentile 95 % intervals, and a one-sided $p$. Holm correction within each block over $k=10$ cells (2 main concepts × $n\in\{2,..,32\}$), at $\alpha=0.025$.</li>
+</ol>
+<div class="tool"><h4>Why C0 is a real test: at $n=1$ all methods must coincide</h4>
+<p>With one example per class, $a_+$ and $a_-$, centring gives $z_\pm=\pm\tfrac12 d$ with $d=a_+-a_-$. Every quantity is built from differences of these two points, so every gradient lies along the line of $M d$, and with $M_0=I$ the line is that of $d$. So $M_T$ has rank one with top eigenvector $\pm d/\|d\|$. DM gives $d/\|d\|$ directly. Therefore, in exact arithmetic, RFM ≡ DM at $n=1$. Any violation means a bug.</p>
+<p>The rule also caught one. An earlier run stopped with an RFM residual of 1 at $n=1$ (<code>IV-small-n_run_failedC0.log</code>). In the final run, I recomputed from the draws: the AUROC spread across methods at $n=1$ is 0, and the largest residual to the data span is $2.7\times10^{-12}$.</p></div>
+<div class="tool"><h4>The statistic: Holm correction</h4><p>With $k$ tests, sort p-values ascending and compare the $j$-th smallest to $\alpha/(k-j+1)$, stopping at the first failure. The first comparison is the strictest, $0.025/10=0.0025$. This controls the chance of any false positive across the 10 cells. So a block where the smallest $p$ exceeds 0.0025 declares nothing.</p></div>
+<p><strong>Hypotheses, fixed before running.</strong></p>
+<ul>
+<li><strong>H3a</strong> says RFM is not better at small $n$. It is refuted if some main concept at $n\in\{2,4\}$ has a lower CI bound above 0.</li>
+<li><strong>H-artigo</strong> says RFM wins somewhere. It is supported if Holm declares some cell with $\Delta>0$.</li>
+<li><strong>H3b</strong> says RFM loses at small $n$ and wins at larger $n$. It is supported if one concept has a cell with upper bound below 0 and a larger $n$ with lower bound above 0.</li>
+</ul>
+<h3>What came out</h3>
+<div class="ctrl" id="c5"></div>
+<figure><figcaption><b>Mean test AUROC against sample size</b>All methods start at the same point at $n=1$, as C0 requires, then RFM falls behind. The last position is the full pool: one draw, so it has no interval. Use the block selector above, which drives the next three charts too.</figcaption>
+<div class="legend" id="l5a"></div><div class="panels" id="f5a"></div><details class="dt"><summary>Show the numbers</summary><div class="tw" id="t5a"></div></details></figure>
+<figure><figcaption><b>The paired difference, with 95 % bootstrap intervals</b>Below zero means RFM loses. This is the pre-registered quantity when the contrast is RFM − DM and the metric is AUROC.</figcaption>
+<div class="ctrl" id="c5b"></div><div class="panels" id="f5b"></div><details class="dt"><summary>Show the numbers</summary><div class="tw" id="t5b"></div></details></figure>
+<figure><figcaption><b>The whole picture: $\Delta$ (RFM − DM, AUROC) in every block</b>Red means RFM loses, blue means RFM wins. A dot after the number means the 95 % interval excludes zero. A ★ means Holm declared the cell. The full-pool column is a single draw, with no test.</figcaption>
+<div class="panels" id="f5c"></div></figure>
+<div class="tablewrap"><table id="t5v"></table></div>
+<ul>
+<li><strong>H3a is not refuted, in all 6 blocks.</strong> On <code>valence</code> and <code>env_social</code> at $n\in\{2,4\}$, $\Delta$ runs from $-0.05$ to $-0.21$, and all intervals lie below 0.</li>
+<li><strong>H-artigo is refuted at the primary block 3</strong>, and at block 5. There the smallest $p$ is 0.0047 and 0.0087, above the 0.0025 threshold. It is supported in blocks 0, 1, 2, 4, always at $n=32$.</li>
+<li><strong>H3b is supported in every block,</strong> with the crossover near $n\approx32$.</li>
+<li>The size of the wins matters. Of the four Holm-declared cells, only <code>valence</code> block 0 is practically relevant (+0.077). Block 1 gives +0.016, and the two <code>env_social</code> cells give about $10^{-4}$.</li>
+<li><code>food</code> is the ceiling control: at block 3 RFM is worse up to $n=16$ and tied at $n=32$.</li>
+</ul>
+<figure><figcaption><b>Would a better $T$ have rescued RFM? No.</b>$\Delta(n,T)$ on AUROC for the selected block. The outlined cell in each column is the frozen $T$. The ★ marks the oracle $T^\star$, the best value in hindsight using the test split. It stays negative at small $n$.</figcaption>
+<div class="panels" id="f5d"></div></figure>
+<div class="mine"><h4>Not in the summary: block 0 behaves differently</h4><p>Open block 0 in the charts above. There, DiffMeans is weak even with all data (AUROC 0.80 on <code>valence</code>, 0.83 on <code>env_social</code>), and RFM's lead keeps growing with $n$: +0.077 at $n=32$, and +0.15 and +0.13 at the full pool, from one draw each. LogReg still does better (0.98 and 0.999, against 0.95 and 0.96). This suggests RFM helps where the class means do not separate the concept, a case the later blocks do not offer, since DM there is already near 1. <strong>Conjecture,</strong> and it stays inside the current theme: it is a candidate question for <code>Perguntas de pesquisa</code>.</p></div>
+</section>
+
+<section id="corrections">
+<h2>Corrections to the summary</h2>
+<p style="margin-top:10px">I checked each claim in <code>SUMMARY_OF_TESTS.md</code> against the CSVs. Nearly all hold, including every table and every hypothesis verdict. These eight statements are imprecise or contradict the data. No conclusion changes, but a committee could catch them. Each comes with a replacement sentence.</p>
+<div class="corr"><h4>1. Check I, shuffled median range</h4><p>The summary says the median is 0.43–0.76, and the one-line table says 0.4–0.8. The data give 0.20–0.76, because three $T=1$ cells were left out.</p><p class="say">Shuffled labels already give large shares at the stored HPs: median 0.43–0.76 in the 15 cells with $T^\star>1$ and 0.20–0.21 in the three cells with $T^\star=1$, with a maximum of 0.99.</p></div>
+<div class="corr"><h4>2. Check I, shuffled $|\rho|$ on the harder concepts</h4><p>The summary gives 0.1–0.5, which holds for Regime A only. In Regime B the values reach 0.61 (<code>valence</code>) and 0.80 (<code>env_social</code>).</p><p class="say">On <code>valence</code>/<code>env_social</code>, shuffled RFM at frozen HPs falls to random-direction level (0.1–0.5); with HPs reselected on val $|\rho|$ it reaches 0.16–0.61 and 0.36–0.80.</p></div>
+<div class="corr"><h4>3. Check Ia, shuffled maximum</h4><p>The summary says shuffled shares never pass 0.989. The maximum is 0.9893.</p><p class="say">Real labels reach $s\ge0.999$ in 71/108 cells; shuffled never reach 0.99.</p></div>
+<div class="corr"><h4>4. Check II, the cosine range</h4><p>The summary says $|\cos|\approx0.95$–$0.99$ from block 1 on. <code>valence</code> block 1 is 0.76.</p><p class="say">Uncentred PCA is almost parallel to DiffMeans: $|\cos|\approx0.95$–$0.99$ from block 2 on in all concepts, and from block 1 on for <code>food</code> and <code>env_social</code> (<code>valence</code> block 1: 0.76).</p></div>
+<div class="corr"><h4>5. Check II, size of the remaining gap</h4><p>"The remaining gap is small" and "the RFM gap nearly closes" conflict with the +0.22 on <code>valence</code>, CI [0.10, 0.40], and "fixed PCA ≈ DM" conflicts with the failed break-even.</p><p class="say">On test AUROC the gap closes (0.99 or more at the worst pairing, against 1.000). On val $|\rho|$ it is absent on <code>food</code>, small on <code>env_social</code> (+0.06) and large on <code>valence</code> (+0.22, CI [0.10, 0.40]); uncentred PCA stays below DM on both of the latter.</p></div>
+<div class="corr"><h4>6. Check III, Jaccard range</h4><p>The summary gives 0.85–1.00 at $|r|\ge0.5$. The minimum is 0.71 (<code>valence</code>, $r=0.5$), with other cells at 0.77, 0.80 and 0.84.</p><p class="say">Steered texts are near-copies across prompts (bigram Jaccard 0.71–1.00 at $|r|\ge0.5$, with 1 to 6 distinct texts out of 7).</p></div>
+<div class="corr"><h4>7. Check IV, losses to LogReg and PCA</h4><p>"Loses to LogReg at every $n\le32$" and "to uncentred PCA at $n\le4$" hold at block 3 only, with a tie on <code>food</code> at $n=32$. Elsewhere, <code>valence</code> block 1 at $n=32$ is a tiny RFM win over LogReg (+0.0007), and block 0 ties with PCA.</p><p class="say">At block 3, RFM loses to LogReg at $2\le n\le32$ on <code>valence</code> and <code>env_social</code> and to uncentred PCA at $n\in\{2,4\}$ on all concepts. Other blocks show the same pattern with few exceptions, none of them practically relevant.</p></div>
+<div class="corr"><h4>8. One-line table, Check IV</h4><p>"Worse than DM at $n\le16$" is exact at block 3. Across blocks, $n=16$ also contains ties, and at $n=1$ the methods coincide by construction.</p><p class="say">No: at $n=1$ RFM equals DM by construction, at $2\le n\le8$ it is worse in every block and concept, at $n=16$ it is worse or tied, and a small advantage appears only at $n\approx32$.</p></div>
+<h3>What I confirmed directly</h3>
+<p>Recomputed from the files: the direction of all five one-line answers, the 5/18 and 4/18 counts, 972/972, 71/108, 14/18, the Check II table, every H1–H3 count, PPL threshold and minimum, all Check IV verdicts, C0, and the Regime C cross-check of the real curves. Quoted from the summary without recomputing: gates G2 and G3 and the Check I and II numerical gates, whose inputs are outside the CSVs.</p>
+</section>
+</main>
+</div>
+<script>const DATA=/*DATA*/;</script>
+<script>/*CHARTS*/</script>
+</body>
+</html>

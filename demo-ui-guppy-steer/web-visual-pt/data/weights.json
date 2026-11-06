@@ -1,0 +1,583 @@
+{
+ "files": [
+  "weights_0.wasm",
+  "weights_1.wasm",
+  "weights_2.wasm"
+ ],
+ "tensors": {
+  "tok_emb.weight": {
+   "file": "weights_0.wasm",
+   "offset": 0,
+   "shape": [
+    4096,
+    384
+   ]
+  },
+  "pos_emb.weight": {
+   "file": "weights_0.wasm",
+   "offset": 6291456,
+   "shape": [
+    128,
+    384
+   ]
+  },
+  "blocks.0.norm1.weight": {
+   "file": "weights_0.wasm",
+   "offset": 6488064,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.0.norm1.bias": {
+   "file": "weights_0.wasm",
+   "offset": 6489600,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.0.attn.qkv.weight": {
+   "file": "weights_0.wasm",
+   "offset": 6491136,
+   "shape": [
+    1152,
+    384
+   ]
+  },
+  "blocks.0.attn.qkv.bias": {
+   "file": "weights_0.wasm",
+   "offset": 8260608,
+   "shape": [
+    1152
+   ]
+  },
+  "blocks.0.attn.out.weight": {
+   "file": "weights_0.wasm",
+   "offset": 8265216,
+   "shape": [
+    384,
+    384
+   ]
+  },
+  "blocks.0.attn.out.bias": {
+   "file": "weights_0.wasm",
+   "offset": 8855040,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.0.norm2.weight": {
+   "file": "weights_0.wasm",
+   "offset": 8856576,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.0.norm2.bias": {
+   "file": "weights_0.wasm",
+   "offset": 8858112,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.0.ffn.up.weight": {
+   "file": "weights_0.wasm",
+   "offset": 8859648,
+   "shape": [
+    768,
+    384
+   ]
+  },
+  "blocks.0.ffn.up.bias": {
+   "file": "weights_0.wasm",
+   "offset": 10039296,
+   "shape": [
+    768
+   ]
+  },
+  "blocks.0.ffn.down.weight": {
+   "file": "weights_0.wasm",
+   "offset": 10042368,
+   "shape": [
+    384,
+    768
+   ]
+  },
+  "blocks.0.ffn.down.bias": {
+   "file": "weights_0.wasm",
+   "offset": 11222016,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.1.norm1.weight": {
+   "file": "weights_0.wasm",
+   "offset": 11223552,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.1.norm1.bias": {
+   "file": "weights_0.wasm",
+   "offset": 11225088,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.1.attn.qkv.weight": {
+   "file": "weights_1.wasm",
+   "offset": 0,
+   "shape": [
+    1152,
+    384
+   ]
+  },
+  "blocks.1.attn.qkv.bias": {
+   "file": "weights_1.wasm",
+   "offset": 1769472,
+   "shape": [
+    1152
+   ]
+  },
+  "blocks.1.attn.out.weight": {
+   "file": "weights_1.wasm",
+   "offset": 1774080,
+   "shape": [
+    384,
+    384
+   ]
+  },
+  "blocks.1.attn.out.bias": {
+   "file": "weights_1.wasm",
+   "offset": 2363904,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.1.norm2.weight": {
+   "file": "weights_1.wasm",
+   "offset": 2365440,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.1.norm2.bias": {
+   "file": "weights_1.wasm",
+   "offset": 2366976,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.1.ffn.up.weight": {
+   "file": "weights_1.wasm",
+   "offset": 2368512,
+   "shape": [
+    768,
+    384
+   ]
+  },
+  "blocks.1.ffn.up.bias": {
+   "file": "weights_1.wasm",
+   "offset": 3548160,
+   "shape": [
+    768
+   ]
+  },
+  "blocks.1.ffn.down.weight": {
+   "file": "weights_1.wasm",
+   "offset": 3551232,
+   "shape": [
+    384,
+    768
+   ]
+  },
+  "blocks.1.ffn.down.bias": {
+   "file": "weights_1.wasm",
+   "offset": 4730880,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.2.norm1.weight": {
+   "file": "weights_1.wasm",
+   "offset": 4732416,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.2.norm1.bias": {
+   "file": "weights_1.wasm",
+   "offset": 4733952,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.2.attn.qkv.weight": {
+   "file": "weights_1.wasm",
+   "offset": 4735488,
+   "shape": [
+    1152,
+    384
+   ]
+  },
+  "blocks.2.attn.qkv.bias": {
+   "file": "weights_1.wasm",
+   "offset": 6504960,
+   "shape": [
+    1152
+   ]
+  },
+  "blocks.2.attn.out.weight": {
+   "file": "weights_1.wasm",
+   "offset": 6509568,
+   "shape": [
+    384,
+    384
+   ]
+  },
+  "blocks.2.attn.out.bias": {
+   "file": "weights_1.wasm",
+   "offset": 7099392,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.2.norm2.weight": {
+   "file": "weights_1.wasm",
+   "offset": 7100928,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.2.norm2.bias": {
+   "file": "weights_1.wasm",
+   "offset": 7102464,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.2.ffn.up.weight": {
+   "file": "weights_1.wasm",
+   "offset": 7104000,
+   "shape": [
+    768,
+    384
+   ]
+  },
+  "blocks.2.ffn.up.bias": {
+   "file": "weights_1.wasm",
+   "offset": 8283648,
+   "shape": [
+    768
+   ]
+  },
+  "blocks.2.ffn.down.weight": {
+   "file": "weights_1.wasm",
+   "offset": 8286720,
+   "shape": [
+    384,
+    768
+   ]
+  },
+  "blocks.2.ffn.down.bias": {
+   "file": "weights_1.wasm",
+   "offset": 9466368,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.3.norm1.weight": {
+   "file": "weights_1.wasm",
+   "offset": 9467904,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.3.norm1.bias": {
+   "file": "weights_1.wasm",
+   "offset": 9469440,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.3.attn.qkv.weight": {
+   "file": "weights_1.wasm",
+   "offset": 9470976,
+   "shape": [
+    1152,
+    384
+   ]
+  },
+  "blocks.3.attn.qkv.bias": {
+   "file": "weights_1.wasm",
+   "offset": 11240448,
+   "shape": [
+    1152
+   ]
+  },
+  "blocks.3.attn.out.weight": {
+   "file": "weights_2.wasm",
+   "offset": 0,
+   "shape": [
+    384,
+    384
+   ]
+  },
+  "blocks.3.attn.out.bias": {
+   "file": "weights_2.wasm",
+   "offset": 589824,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.3.norm2.weight": {
+   "file": "weights_2.wasm",
+   "offset": 591360,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.3.norm2.bias": {
+   "file": "weights_2.wasm",
+   "offset": 592896,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.3.ffn.up.weight": {
+   "file": "weights_2.wasm",
+   "offset": 594432,
+   "shape": [
+    768,
+    384
+   ]
+  },
+  "blocks.3.ffn.up.bias": {
+   "file": "weights_2.wasm",
+   "offset": 1774080,
+   "shape": [
+    768
+   ]
+  },
+  "blocks.3.ffn.down.weight": {
+   "file": "weights_2.wasm",
+   "offset": 1777152,
+   "shape": [
+    384,
+    768
+   ]
+  },
+  "blocks.3.ffn.down.bias": {
+   "file": "weights_2.wasm",
+   "offset": 2956800,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.4.norm1.weight": {
+   "file": "weights_2.wasm",
+   "offset": 2958336,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.4.norm1.bias": {
+   "file": "weights_2.wasm",
+   "offset": 2959872,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.4.attn.qkv.weight": {
+   "file": "weights_2.wasm",
+   "offset": 2961408,
+   "shape": [
+    1152,
+    384
+   ]
+  },
+  "blocks.4.attn.qkv.bias": {
+   "file": "weights_2.wasm",
+   "offset": 4730880,
+   "shape": [
+    1152
+   ]
+  },
+  "blocks.4.attn.out.weight": {
+   "file": "weights_2.wasm",
+   "offset": 4735488,
+   "shape": [
+    384,
+    384
+   ]
+  },
+  "blocks.4.attn.out.bias": {
+   "file": "weights_2.wasm",
+   "offset": 5325312,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.4.norm2.weight": {
+   "file": "weights_2.wasm",
+   "offset": 5326848,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.4.norm2.bias": {
+   "file": "weights_2.wasm",
+   "offset": 5328384,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.4.ffn.up.weight": {
+   "file": "weights_2.wasm",
+   "offset": 5329920,
+   "shape": [
+    768,
+    384
+   ]
+  },
+  "blocks.4.ffn.up.bias": {
+   "file": "weights_2.wasm",
+   "offset": 6509568,
+   "shape": [
+    768
+   ]
+  },
+  "blocks.4.ffn.down.weight": {
+   "file": "weights_2.wasm",
+   "offset": 6512640,
+   "shape": [
+    384,
+    768
+   ]
+  },
+  "blocks.4.ffn.down.bias": {
+   "file": "weights_2.wasm",
+   "offset": 7692288,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.5.norm1.weight": {
+   "file": "weights_2.wasm",
+   "offset": 7693824,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.5.norm1.bias": {
+   "file": "weights_2.wasm",
+   "offset": 7695360,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.5.attn.qkv.weight": {
+   "file": "weights_2.wasm",
+   "offset": 7696896,
+   "shape": [
+    1152,
+    384
+   ]
+  },
+  "blocks.5.attn.qkv.bias": {
+   "file": "weights_2.wasm",
+   "offset": 9466368,
+   "shape": [
+    1152
+   ]
+  },
+  "blocks.5.attn.out.weight": {
+   "file": "weights_2.wasm",
+   "offset": 9470976,
+   "shape": [
+    384,
+    384
+   ]
+  },
+  "blocks.5.attn.out.bias": {
+   "file": "weights_2.wasm",
+   "offset": 10060800,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.5.norm2.weight": {
+   "file": "weights_2.wasm",
+   "offset": 10062336,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.5.norm2.bias": {
+   "file": "weights_2.wasm",
+   "offset": 10063872,
+   "shape": [
+    384
+   ]
+  },
+  "blocks.5.ffn.up.weight": {
+   "file": "weights_2.wasm",
+   "offset": 10065408,
+   "shape": [
+    768,
+    384
+   ]
+  },
+  "blocks.5.ffn.up.bias": {
+   "file": "weights_2.wasm",
+   "offset": 11245056,
+   "shape": [
+    768
+   ]
+  },
+  "blocks.5.ffn.down.weight": {
+   "file": "weights_2.wasm",
+   "offset": 11248128,
+   "shape": [
+    384,
+    768
+   ]
+  },
+  "blocks.5.ffn.down.bias": {
+   "file": "weights_2.wasm",
+   "offset": 12427776,
+   "shape": [
+    384
+   ]
+  },
+  "norm.weight": {
+   "file": "weights_2.wasm",
+   "offset": 12429312,
+   "shape": [
+    384
+   ]
+  },
+  "norm.bias": {
+   "file": "weights_2.wasm",
+   "offset": 12430848,
+   "shape": [
+    384
+   ]
+  }
+ },
+ "tied": {
+  "lm_head.weight": "tok_emb.weight"
+ },
+ "dtype": "float32-le",
+ "config": {
+  "vocab_size": 4096,
+  "max_seq_len": 128,
+  "d_model": 384,
+  "n_layers": 6,
+  "n_heads": 6,
+  "ffn_hidden": 768,
+  "pad_id": 0,
+  "bos_id": 1,
+  "eos_id": 2,
+  "layer_norm_eps": 1e-05
+ }
+}

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Share do AGOP sob rótulos embaralhados</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>/*KATEX*/</style>
+<style>
+/* Layout idea: nota de laboratório em coluna única. Título e h2 dizem a conclusão, cor só codifica real, nula e estado. */
+:root{
+  color-scheme:light;
+  --bg:#f5f6f8; --surface:#fcfcfb; --ink:#12181f; --ink2:#46505c; --muted:#646e7a; --rule:#dadee3; --accent:#1c5cab; --tint:#e8eef6;
+  --grid:#e1e0d9; --axis:#b4b6b2;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --nul:#6d7480; --nul-soft:#cfd3d9;
+  --seq-lo:#e6eefa; --seq-hi:#104281; --div-neg:#d03b3b; --div-mid:#f0efec; --div-pos:#1c5cab;
+  --good:#006300; --warn:#8a5b00; --crit:#b32b2b; --good-bg:#e0f1e0; --warn-bg:#fbeecf; --crit-bg:#f9e2e0;
+  --display:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --bg:#101316; --surface:#181b1f; --ink:#eef0f2; --ink2:#c2c8d0; --muted:#9aa3ae; --rule:#2d3339; --accent:#86b6ef; --tint:#1d2733;
+  --grid:#2c2f33; --axis:#454a50;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --nul:#a3abb5; --nul-soft:#3b4148;
+  --seq-lo:#1e2a38; --seq-hi:#86b6ef; --div-neg:#e66767; --div-mid:#383835; --div-pos:#5598e7;
+  --good:#4cc24c; --warn:#f2bf52; --crit:#f08a8a; --good-bg:#17301a; --warn-bg:#33280f; --crit-bg:#3a1b1b;
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#101316; --surface:#181b1f; --ink:#eef0f2; --ink2:#c2c8d0; --muted:#9aa3ae; --rule:#2d3339; --accent:#86b6ef; --tint:#1d2733;
+  --grid:#2c2f33; --axis:#454a50;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --nul:#a3abb5; --nul-soft:#3b4148;
+  --seq-lo:#1e2a38; --seq-hi:#86b6ef; --div-neg:#e66767; --div-mid:#383835; --div-pos:#5598e7;
+  --good:#4cc24c; --warn:#f2bf52; --crit:#f08a8a; --good-bg:#17301a; --warn-bg:#33280f; --crit-bg:#3a1b1b;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.62 var(--body);-webkit-font-smoothing:antialiased}
+.shell{max-width:800px;margin:0 auto;padding:40px 24px 96px}
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:32px;font-weight:700;letter-spacing:-.01em}
+h2{font-size:24px;font-weight:700;letter-spacing:-.005em}
+h3{font-size:18px;font-weight:600;margin:32px 0 8px}
+.lede{font-size:19px;color:var(--ink2);max-width:66ch;margin:12px 0 0}
+.meta{font:400 13px/1.5 var(--mono);color:var(--muted);margin:12px 0 0}
+p,ul,ol{max-width:68ch}
+p{margin:0 0 14px}
+ul,ol{padding-left:22px;margin:0 0 14px}
+li{margin:0 0 6px}
+a{color:var(--accent)}
+code{font:400 .86em var(--mono);background:var(--tint);padding:1px 4px;border-radius:3px}
+section{padding-top:56px}
+section+section{border-top:1px solid var(--rule);margin-top:56px}
+.head{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:6px}
+.kicker{font:500 13px var(--mono);color:var(--muted);margin:0 0 6px}
+.pill{display:inline-flex;gap:6px;align-items:center;font:600 13px/1 var(--display);padding:5px 9px;border-radius:4px;white-space:nowrap}
+.pill.crit{background:var(--crit-bg);color:var(--crit)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.good{background:var(--good-bg);color:var(--good)}
+.answer{border-left:3px solid var(--accent);background:var(--tint);padding:12px 16px;margin:16px 0 8px;max-width:72ch}
+.answer p:last-child{margin:0}
+.answer strong{font-family:var(--display);font-weight:600}
+.tool{border:1px solid var(--rule);background:var(--surface);padding:12px 16px;margin:16px 0;max-width:72ch;font-size:16px}
+.tool h4{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 6px}
+.tool p:last-child,.tool ul:last-child{margin-bottom:0}
+.mine{border-left:3px solid var(--s4);padding:10px 16px;margin:16px 0;max-width:72ch;background:var(--surface)}
+.mine h4{font-size:13px;font-weight:600;color:var(--warn);margin:0 0 6px}
+.mine p:last-child{margin:0}
+figure{margin:24px 0;padding:16px;background:var(--surface);border:1px solid var(--rule);border-radius:6px;min-width:0}
+figcaption{font:400 14.5px/1.45 var(--display);color:var(--ink2);margin:0 0 12px}
+.src{display:block;margin-top:4px;font:400 11.5px/1.4 var(--mono);color:var(--muted);overflow-wrap:anywhere}
+section.first{padding-top:24px;margin-top:0;border:0}
+figcaption b{display:block;color:var(--ink);font-weight:600;font-size:15.5px;margin-bottom:2px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:0 0 12px;font:400 13px var(--display);color:var(--muted)}
+.seg{display:inline-flex;gap:0;align-items:center}
+.seg>span{margin-right:6px}
+.seg button{font:500 13px var(--display);padding:5px 10px;border:1px solid var(--rule);background:transparent;color:var(--ink2);cursor:pointer;margin-left:-1px}
+.seg button:first-of-type{border-radius:4px 0 0 4px;margin-left:0}.seg button:last-of-type{border-radius:0 4px 4px 0}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font:400 13px var(--display);color:var(--ink2);margin:0 0 8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{flex:none;overflow:visible}
+.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:10px}
+.panels.wide{grid-template-columns:minmax(0,1fr)}
+.panels svg,.scroll svg{display:block;width:100%;height:auto}
+.scroll{overflow-x:auto}.scroll>svg{min-width:640px}
+svg text{font-family:var(--display);fill:var(--muted);font-size:10.5px}
+svg text.t{fill:var(--ink);font-size:12.5px;font-weight:600}
+svg text.i{fill:var(--ink2);font-size:10.5px}
+svg .g{stroke:var(--grid);stroke-width:1} svg .ax{stroke:var(--axis);stroke-width:1}
+details.dt{margin-top:12px;font:400 13px var(--display);color:var(--ink2)}
+details.dt summary{cursor:pointer;color:var(--accent)}
+.tw{overflow-x:auto;margin-top:8px}
+table{border-collapse:collapse;font:400 14px/1.35 var(--display);font-variant-numeric:tabular-nums;width:100%}
+th{font-weight:600;text-align:left;color:var(--muted);font-size:12.5px;border-bottom:1px solid var(--axis);padding:6px 10px 6px 0;vertical-align:bottom}
+td{border-bottom:1px solid var(--rule);padding:7px 10px 7px 0;vertical-align:top}
+td.n,th.n{text-align:right}
+.tablewrap{overflow-x:auto;margin:16px 0}
+td .q{color:var(--ink2)}
+td.txt{font:400 12.5px/1.4 var(--mono);min-width:280px}
+.map{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;font:400 13.5px/1.3 var(--display);margin:16px 0}
+.map div{flex:1 1 130px;border:1px solid var(--rule);background:var(--surface);padding:10px;border-radius:4px;min-width:130px}
+.map b{display:block;font-weight:600;margin-bottom:4px}
+.map i{display:block;font-style:normal;font:500 12px var(--mono);color:var(--accent);margin-top:6px}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps>li{counter-increment:s;padding-left:30px;position:relative}
+.steps>li::before{content:counter(s);position:absolute;left:0;top:2px;width:20px;height:20px;font:600 12px/20px var(--display);text-align:center;background:var(--tint);color:var(--accent);border-radius:3px}
+.corr{border:1px solid var(--rule);background:var(--surface);padding:14px 16px;margin:12px 0;border-radius:6px}
+.corr h4{font-size:15px;font-weight:600;margin:0 0 6px}
+.corr p{margin:0 0 8px;font-size:16px;max-width:none}.corr p:last-child{margin:0}
+.corr .say{border-left:3px solid var(--s3);padding-left:10px}
+#tip{position:fixed;z-index:9;pointer-events:none;max-width:280px;padding:7px 10px;font:400 12.5px/1.4 var(--display);background:var(--ink);color:var(--bg);border-radius:4px;display:none}
+.katex{font-size:1.04em}.katex-display{margin:10px 0;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+@media (max-width:480px){.shell{padding:0 16px}figure{padding:12px}h1{font-size:28px}}
+</style>
+</head>
+<body>
+<div id="tip" role="status"></div>
+<main class="shell">
+<header>
+  <p class="kicker">Réplica de <em>Towards Universal Steering</em> no GuppyLM · Checks I e Ia · revisão de outubro de 2026</p>
+  <h1>O share do AGOP sobe com qualquer rótulo, e só rótulos reais chegam perto de 1</h1>
+  <p class="lede">Nas 108 células da grade, o share mediano com rótulos embaralhados vai de 0,21 em $T=1$ a 0,62 em $T=10$. Com rótulos reais, vai de 0,17 a 1,00. Por isso $s$ alto, sozinho, não indica um conceito. A informação está na distância entre $s$ real e a nula no mesmo $T$, e em 11 das 18 células guardadas essa distância só aparece depois de iterar.</p>
+</header>
+
+<section id="resultado" class="first">
+<div class="tablewrap"><table>
+<thead><tr><th style="min-width:150px">O que foi testado</th><th style="min-width:180px">Regra de decisão</th><th style="min-width:200px">Resultado</th><th style="min-width:150px">O que fica de pé</th></tr></thead>
+<tbody>
+<tr><td><strong>Check I.</strong> $s\approx1$ indica que o conceito vive em uma direção</td><td>Célula refutada se $p\ge0{,}05$, ou se ao menos 5 % das permutações têm $s\ge0{,}95$. Fixada antes de rodar.</td><td><span class="pill warn">◐ 4–5 de 18 células refutadas</span><br>Nula com mediana 0,20–0,76 e máximo 0,99.</td><td>$s$ real supera a nula em 13–14 de 18 células.</td></tr>
+<tr><td><strong>Check Ia.</strong> $H_0$: com rótulos embaralhados, $s(T)=s(1)$</td><td>$H_0$ rejeitada se a mediana de $\Delta_b(T)$ passa de 0,05 em módulo e o teste do sinal dá $p<0{,}05$.</td><td><span class="pill crit">✕ 972 de 972 rejeitadas</span><br>Crescimento de +0,15 a +0,59, já em $T=2$.</td><td>Reais atingem $s\ge0{,}999$ em 71 de 108 células. Embaralhados nunca chegam a 0,99.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="definicoes">
+<h2>Definições: tudo abaixo mede o share de $M_T$</h2>
+<h3>Dados</h3>
+<p>O modelo é o GuppyLM (8,73M parâmetros, blocos $\ell=0,\dots,5$). Para um texto $x$, o objeto guardado é a ativação residual no último token, $a_\ell(x)\in\mathbb R^{384}$. Cada texto é uma troca ChatML completa, e o rótulo $y\in\{0,1\}$ vem das categorias do próprio dataset de treino do GuppyLM (<code>rfm_guppy/concepts.py</code>). Os conceitos <code>food</code>, <code>valence</code> e <code>env_social</code> têm 360, 120 e 360 exemplos de treino, balanceados, e foram escolhidos por serem fáceis de separar. Nos três, $n<384$.</p>
+<h3>Uma iteração do RFM</h3>
+<p>Fixe um bloco, centralize as ativações e comece de $M_0=I_{384}$. Dado $M_t$:</p>
+<ol class="steps">
+<li>Kernel de Laplace na métrica de $M_t$, com bandwidth $\sigma$:
+$$K_{M}(a,a')=\exp\!\Big(-\frac{\|a-a'\|_{M}}{\sigma}\Big),\qquad \|u\|_{M}^2=u^\top M u .$$</li>
+<li>Kernel ridge regression, com $\lambda=10^{-3}$:
+$$\alpha=(K_{M_t}+\lambda I)^{-1}y,\qquad f_t(z)=\sum_i\alpha_i\,K_{M_t}(a^{(i)},z).$$</li>
+<li>AGOP dos gradientes do ajuste nos pontos de treino, com $g_i=\nabla f_t(a^{(i)})$:
+$$M_{t+1}=\frac1n\sum_{i=1}^n (g_i-\bar g)(g_i-\bar g)^\top .$$</li>
+</ol>
+<p>A direção de conceito $v_{\rm RFM}$ é o autovetor principal de $M_T$.</p>
+<h3>Observáveis</h3>
+<ul>
+<li><strong>Share.</strong> $s_T=\lambda_1(M_T)/\operatorname{tr}M_T\in(0,1]$. Vale 1 exatamente quando $M_T$ tem posto 1. Antes de iterar, $s_0=1/384\approx0{,}003$.</li>
+<li><strong>Val $|\rho|$.</strong> Correlação de Pearson absoluta entre $\langle a_\ell(x),v\rangle$ e $y$ na validação. É também o critério que seleciona os hiperparâmetros.</li>
+<li><strong>Célula.</strong> No Check I, um par (conceito, bloco) nos hiperparâmetros guardados $(\sigma^\star,T^\star,\text{normalize}^\star)$, escolhidos por val $|\rho|$ com rótulos reais. São 18. No Check Ia, uma quádrupla (conceito, bloco, normalize, $\sigma$). São 108.</li>
+</ul>
+</section>
+
+<section id="check-1">
+<p class="kicker">Check I</p>
+<h2>Rótulos embaralhados já dão share alto, e o share real ainda supera a nula em 13–14 de 18 células</h2>
+<h3>Duas explicações para $s\approx1$</h3>
+<p>Na primeira, a concentração vem do vínculo entre rótulo e ativação. Na segunda, vem da máquina RFM e apareceria com qualquer rótulo. Uma permutação aleatória de $y_{\rm train}$ separa as duas, porque mantém ativações, proporção de classes e código, e destrói só o vínculo. Se a segunda explicação bastasse, $s_{\rm shuf}$ e $s_{\rm real}$ teriam a mesma distribuição.</p>
+<div class="tool"><h4>Estatística: p-valor de permutação</h4>
+<p>$$p=\frac{1+\#\{s_{\rm shuf}\ge s_{\rm real}\}}{1+B}.$$
+O menor valor possível é $1/(1+B)$: 0,0099 com $B=100$ e 0,048 com $B=20$. No Regime B, então, uma célula que passa está no limite de resolução.</p></div>
+<ul>
+<li><strong>Regime A.</strong> Hiperparâmetros congelados nos valores escolhidos com rótulos reais, $B=100$ por célula.</li>
+<li><strong>Regime B.</strong> O sweep inteiro ($\sigma\in\{1,10,100\}$, $T=1..10$, normalize) refeito sobre rótulos embaralhados, $B=20$. O $s$ reportado é saída de uma seleção, então a nula justa inclui a seleção.</li>
+<li><strong>Gate.</strong> Os 18 shares guardados foram recalculados e batem com o cache até $10^{-4}$.</li>
+</ul>
+<figure><figcaption><b>A nula é alta, e as células refutadas estão todas em <code>valence</code> e <code>env_social</code></b>Cada barra cinza é a faixa dos shares embaralhados em uma célula. Ponto vazio marca célula refutada.<span class="src">run_20261009/I-shuffled-label-control_regimeA.csv, _regimeB.csv, _results.npz, _resultsB.npz</span></figcaption>
+<div class="ctrl" id="c1a"></div><div class="legend" id="l1a"></div><div class="panels" id="f1a"></div><details class="dt"><summary>Ver os números</summary><div class="tw" id="t1a"></div></details></figure>
+<ul>
+<li><strong>Tamanho da nula (Regime A).</strong> Medianas de 0,43–0,76 nas 15 células com $T^\star>1$ e de 0,20–0,21 nas 3 com $T^\star=1$. O máximo chega a 0,99.</li>
+<li><strong>Células refutadas.</strong> 5 de 18 no Regime A e 4 de 18 no Regime B, todas em <code>valence</code> (blocos 0, 2, 5) e <code>env_social</code> (bloco 1, e bloco 0 só no Regime A). Todas caem por $p$: a fração de permutações com $s\ge0{,}95$ não passa de 2 %.</li>
+<li><strong>Direção.</strong> No Regime A, a mediana de $|\cos(u_{\rm shuf},v_{\rm real})|$ fica entre 0,06 e 0,30 por célula. A nula concentra em outra direção.</li>
+<li><strong>Share e qualidade da direção são coisas separadas.</strong> Três células refutadas têm $s$ real baixo (0,15–0,22, com $T^\star=1$, $\sigma=100$) e mesmo assim val $|\rho|$ de 0,91, 0,91 e 0,94, acima de DiffMeans (0,75, 0,80 e 0,88). Há $s$ alto sem conceito e direção boa com $s$ baixo.</li>
+</ul>
+<h3>Val $|\rho|$ também não separa métodos em <code>food</code></h3>
+<figure><figcaption><b>Em <code>food</code>, até o RFM embaralhado passa de 0,85</b>A zona cinza mostra 2000 direções unitárias aleatórias. PC1 não usa rótulos.<span class="src">run_20261009/I-shuffled-label-control_rho_baselines.csv, _regimeB.csv</span></figcaption>
+<div class="legend" id="l1b"></div><div class="panels" id="f1b"></div><details class="dt"><summary>Ver os números</summary><div class="tw" id="t1b"></div></details></figure>
+<p>A partir do bloco 1 de <code>food</code>, PC1 chega a 0,94–0,97, DiffMeans a 0,95–0,98 e o RFM embaralhado a 0,85–0,88. Esse conceito funciona como controle de teto e não ordena métodos.</p>
+<p>Em <code>valence</code> e <code>env_social</code>, o RFM embaralhado do Regime A cai ao nível de direções aleatórias (0,10–0,50). No Regime B, com seleção por val $|\rho|$, sobe para 0,16–0,61 e 0,36–0,80. Esse salto dá a ordem de grandeza do otimismo de um val $|\rho|$ reportado depois de um sweep.</p>
+</section>
+
+<section id="check-1a">
+<p class="kicker">Check Ia</p>
+<h2>A iteração sobe o share sem conceito algum, e a separação entre real e nula vem depois</h2>
+<p>Em cada uma das $3\times6\times2\times3=108$ células, iteramos a partir de $M_0=I_{384}$ e registramos $s(T)$, $T=1..10$, para os rótulos reais e para $B=20$ permutações. O Regime C do Check I olhava só o melhor bloco de cada conceito. A hipótese nula é $H_0$: $s_{\rm shuf}(T)=s_{\rm shuf}(1)$, o que dá $108\times9=972$ testes.</p>
+<div class="tool"><h4>Estatística: teste do sinal pareado</h4>
+<p>Cada permutação $b$ é seu próprio controle: $\Delta_b(T)=s_b(T)-s_b(1)$. Sob $H_0$, o número de $\Delta_b$ positivos segue $\mathrm{Bin}(20,\tfrac12)$. A primeira condição da regra exige efeito de tamanho real, a segunda exige consistência entre permutações.</p></div>
+<p>$H_0$ é rejeitada em <strong>972 de 972</strong> testes, já em $T=2$ em todas as células. Pelo menos 19 das 20 permutações sobem em cada teste. O maior p-valor é $4\times10^{-5}$, então o resultado passa também por Bonferroni sobre os 972 testes. As curvas reais coincidem com as do Regime C nas 18 células em comum, e o gate reproduz os 18 shares guardados até $10^{-4}$.</p>
+<figure><figcaption><b>As duas curvas sobem até $T=2$; depois a nula quase para e a real segue até 1</b>Mediana entre células da mediana entre permutações. As faixas mostram a variação entre células, q05 a q95.<span class="src">run_20261009/Ia-shuffle-label-on-blocks_sT.npz</span></figcaption>
+<div class="legend" id="l2z"></div><div class="panels wide" id="f2z"></div><details class="dt"><summary>Ver os números</summary><div class="tw" id="t2z"></div></details></figure>
+<ul>
+<li><strong>Em $T=1$ não há separação.</strong> A diferença mediana por célula entre real e embaralhado é −0,004.</li>
+<li><strong>Em $T=2$ a nula dá o maior salto,</strong> de 0,21 para 0,45. De $T=4$ a $T=10$ ela vai só de 0,55 a 0,62, cerca de +0,01 por iteração.</li>
+<li><strong>A curva real passa de 0,99 em $T=5$.</strong> Em $T=10$, 14 das 2160 rodadas embaralhadas têm $s\ge0{,}95$ e nenhuma tem $s\ge0{,}99$. Rótulos reais atingem $s\ge0{,}999$ em 71 de 108 células.</li>
+<li><strong>A mediana esconde um regime.</strong> Em 24 das 108 células, o $s(10)$ real fica dentro da faixa embaralhada: 18 são de <code>valence</code> e 12 do bloco 0. Nenhuma das 18 células do bloco 0 chega a 0,999.</li>
+</ul>
+<figure><figcaption><b>Em 11 das 18 células guardadas, a distância até a nula só existe depois de iterar</b>Distância = $s$ real − mediana embaralhada. Ponto vazio em $T=1$, cheio em $T^\star$. Células com $T^\star=1$ têm uma só marca.<span class="src">run_20261009/Ia-shuffle-label-on-blocks_stored_hp.csv</span></figcaption>
+<div class="legend" id="l2c"></div><div class="panels" id="f2c"></div><details class="dt"><summary>Ver os números</summary><div class="tw" id="t2c"></div></details></figure>
+<p>Em $T=1$, $s$ real não supera a nula em 14 das 18 células guardadas ($p\ge0{,}05$, $B=20$). Dessas 14, 11 passam em $T^\star$, e as outras 3 são as células com $T^\star=1$. As 4 que já passam em $T=1$ são <code>food</code> blocos 0 e 1, <code>valence</code> bloco 0 e <code>env_social</code> bloco 0. Em <code>valence</code> bloco 0 a iteração apaga a separação: $p=0{,}048$ em $T=1$ e $p=0{,}52$ em $T^\star=10$.</p>
+<figure><figcaption><b>Qualquer uma das 108 células</b>Escolha nos controles ou clique no mapa. O mapa mostra a mediana de $\Delta_b(10)$, positiva em todas as células.<span class="src">run_20261009/Ia-shuffle-label-on-blocks_sT.npz, _per_cell.csv</span></figcaption>
+<div class="ctrl" id="c2a"></div><div class="legend" id="l2a"></div><div class="panels wide" id="f2a"></div><div class="panels" id="f2b" style="margin-top:12px"></div><details class="dt"><summary>Ver os números da célula</summary><div class="tw" id="t2a"></div></details></figure>
+</section>
+
+<section id="mecanismo">
+<h2>A forma do update vale para qualquer rótulo; por que as curvas se separam segue aberto</h2>
+<p>Derivando o kernel, $\nabla_z K_M(a,z)=-\frac1\sigma K_M(a,z)\,\frac{M(z-a)}{\|z-a\|_M}$. Todo gradiente carrega então um fator $M_t$:
+$$g_i=-M_t\,w_i,\qquad w_i=\sum_j\frac{\alpha_j K_{ij}}{\sigma\,\|a^{(i)}-a^{(j)}\|_{M_t}}\big(a^{(i)}-a^{(j)}\big).$$
+Com $C_t=\frac1n\sum_i(w_i-\bar w)(w_i-\bar w)^\top\succeq0$, o update fica
+$$M_{t+1}=M_t\,C_t\,M_t .$$
+É a linha <code>G = -SZ @ M</code> de <code>_agop_step</code>, em <code>rfm_guppy/rfm.py</code>. A identidade é exata e vale para todo $y$. Os rótulos entram apenas por $\alpha$, dentro de $C_t$.</p>
+<div class="mine"><h4>Status: identidade exata, mecanismo em aberto</h4><p>A identidade isola a dependência em $M_t$ e ainda não explica por que a nula desacelera perto de $s\approx0{,}6$ enquanto os rótulos reais seguem até 1. Isso depende de como $C_t$ se alinha a $M_t$, e estes checks não mediram $C_t$.</p></div>
+</section>
+
+<section id="limites">
+<h2>O que estes checks não estabelecem</h2>
+<ul>
+<li><strong>Regime.</strong> Tudo vale para GuppyLM, ativação no último token, $n\in\{120,360\}<d=384$, $\lambda=10^{-3}$, $\sigma\in\{1,10,100\}$, $T\le10$ e três conceitos escolhidos por serem fáceis de separar. Nada foi testado fora disso.</li>
+<li><strong>Conceito.</strong> $s$ real acima da nula mostra dependência do vínculo entre rótulo e ativação. Não mostra que uma única direção semântica descreve o conceito.</li>
+<li><strong>Direção.</strong> $s$ é uma estatística do espectro e não mede a qualidade de $v$, nem seu efeito em steering.</li>
+<li><strong>$T>10$.</strong> A nula ainda sobe cerca de 0,01 por iteração em $T=10$, então 0,62 não é assíntota.</li>
+<li><strong>"Nunca chega a 0,99".</strong> Vale para 20 permutações em cada uma das 108 células. É uma contagem, não uma cota.</li>
+<li><strong>Multiplicidade.</strong> As decisões do Check I são por célula. Com $B=100$, o piso de $p$ (0,0099) fica acima de $0{,}05/18\approx0{,}0028$, então não há garantia conjunta sobre as 18 células.</li>
+</ul>
+</section>
+
+<section id="pergunta">
+<h2>Pergunta para o Renato</h2>
+<div class="answer"><p>Proponho que, na dissertação, $s$ deixe de ser evidência de direção única e passe a ser reportado sempre junto da nula no mesmo $T$: $s_{\rm real}$, mediana e máximo de $s_{\rm shuf}$. Você concorda, ou há um jeito melhor de descontar o efeito de $T$?</p></div>
+<p class="meta">Dados em revision_20261002/run_20261009/. O rerun de 2026-10-09 reproduz byte a byte os CSVs de 2026-10-02.</p>
+</section>
+</main>
+<script>const DATA=/*DATA*/;</script>
+<script>/*CHARTS*/</script>
+</body>
+</html>

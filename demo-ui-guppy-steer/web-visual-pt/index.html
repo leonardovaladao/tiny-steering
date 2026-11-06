@@ -1,0 +1,2277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<title>GuppyLM Steering — Edição Visual (PT-BR)</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one working column — controls, slider with its measured band, formula — then two answer
+   panes side by side (stacked on phones). The slider is the instrument; everything else is quiet. */
+:root {
+  --bg: #f5f7f6;
+  --surface: #ffffff;
+  --ink: #18211f;
+  --muted: #5b6965;
+  --line: #d6dedb;
+  --accent: #0f6e68;          /* the steering direction itself */
+  --accent-soft: #d5ebe8;
+  --band: rgba(15, 110, 104, 0.18);
+  --pos: #c0612b;             /* concept's label-1 side */
+  --neg: #3f5fa8;             /* label-0 side */
+  --warn: #8a5a00;
+  --warn-soft: #fbefd5;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Public Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --step--1: 0.8125rem; --step-0: 0.9375rem; --step-1: 1.125rem; --step-2: 1.5rem; --step-3: 2.1rem;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #111816; --surface: #18211f; --ink: #e4ece9; --muted: #98a8a3; --line: #2d3a37;
+  --accent: #4fc2b8; --accent-soft: #1d3a37; --band: rgba(79, 194, 184, 0.2);
+  --pos: #f08a52; --neg: #7f9cf0; --warn: #f0c060; --warn-soft: #3a2f16; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #111816; --surface: #18211f; --ink: #e4ece9; --muted: #98a8a3; --line: #2d3a37;
+  --accent: #4fc2b8; --accent-soft: #1d3a37; --band: rgba(79, 194, 184, 0.2);
+  --pos: #f08a52; --neg: #7f9cf0; --warn: #f0c060; --warn-soft: #3a2f16; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font: 400 var(--step-0)/1.55 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 22px; }
+h1, h2 { font-family: var(--font-display); font-weight: 650; text-wrap: balance; margin: 0; }
+h1 { font-size: var(--step-3); line-height: 1.1; letter-spacing: -0.01em; }
+h2 { font-size: var(--step-1); }
+p { margin: 0; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.label { font-size: var(--step--1); color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+.muted { color: var(--muted); }
+.label-plain { text-transform: none; letter-spacing: normal; }
+button, input, textarea, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+header { display: grid; gap: 10px; }
+header .lede { max-width: 68ch; color: var(--muted); }
+header .lede a { color: var(--accent); }
+/* page header: text on the left, a hand-drawn goldfish on the right (decorative, inline SVG) */
+.page-head { grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 28px; }
+.page-head .head-text { display: grid; gap: 10px; min-width: 0; }
+.goldfish { width: 144px; height: auto; display: block; --gf-water: #d8ecf3; --gf-water-2: #c4e2ee; --gf-bubble: #5f9fbd; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .goldfish { --gf-water: #16303a; --gf-water-2: #1c3d4a; --gf-bubble: #6cbfdc; } }
+:root[data-theme="dark"] .goldfish { --gf-water: #16303a; --gf-water-2: #1c3d4a; --gf-bubble: #6cbfdc; }
+.goldfish .gf-water { fill: var(--gf-water); }
+.goldfish .gf-wave { fill: none; stroke: var(--gf-water-2); stroke-width: 3; stroke-linecap: round; }
+.goldfish .gf-bubble { fill: none; stroke: var(--gf-bubble); stroke-width: 1.6; }
+.goldfish .gf-tail, .goldfish .gf-pec, .goldfish .gf-fish { transform-box: view-box; }
+.goldfish .gf-tail { transform-origin: 114px 62px; }
+.goldfish .gf-pec { transform-origin: 68px 65px; }
+@media (prefers-reduced-motion: no-preference) {
+  .goldfish .gf-fish { animation: gf-bob 4.8s ease-in-out infinite; }
+  .goldfish .gf-tail { animation: gf-sway 2.4s ease-in-out infinite; }
+  .goldfish .gf-pec { animation: gf-flap 1.7s ease-in-out infinite; }
+  .goldfish .gf-bubble { animation: gf-blink 4.8s ease-in-out infinite; }
+  .goldfish .gf-bubble.b2 { animation-delay: -1.6s; }
+  .goldfish .gf-bubble.b3 { animation-delay: -3.2s; }
+}
+@keyframes gf-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes gf-sway { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+@keyframes gf-flap { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(14deg); } }
+@keyframes gf-blink { 0%, 100% { opacity: 0.9; } 50% { opacity: 0.4; } }
+@media (max-width: 600px) {
+  .page-head { position: relative; grid-template-columns: minmax(0, 1fr); }
+  .page-head .goldfish { position: absolute; top: -8px; right: 0; width: 72px; }
+  .page-head h1 { padding-right: 84px; min-height: 50px; display: flex; align-items: center; }
+}
+.message { max-width: 72ch; border-left: 3px solid var(--accent); padding: 4px 0 4px 12px; }
+.status { font-size: var(--step--1); color: var(--muted); }
+.status progress { width: 160px; vertical-align: middle; accent-color: var(--accent); }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 16px; }
+
+/* prompt */
+.prompt-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; }
+.prompt-row textarea { width: 100%; min-height: 48px; resize: vertical; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+.prompt-meta { display: flex; justify-content: space-between; gap: 12px; font-size: var(--step--1); margin-top: 4px; }
+.over { color: var(--warn); font-weight: 600; }
+/* lowercase callout: GuppyLM's vocabulary is lowercase; turns to the warning look when the prompt has capitals */
+.case-hint { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; align-items: center; margin-bottom: 10px; padding: 8px 12px; border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; background: var(--accent-soft); max-width: 100ch; }
+.case-hint .glyph { grid-row: span 2; font-family: var(--font-display); font-weight: 650; font-size: var(--step-2); line-height: 1; color: var(--accent); }
+.case-hint strong { font-weight: 600; color: var(--ink); }
+.case-hint .why { font-size: var(--step--1); color: var(--muted); }
+.case-hint .alert { color: var(--warn); }
+.case-hint.warn { border-left-color: var(--warn); background: var(--warn-soft); }
+.case-hint.warn .glyph { color: var(--warn); }
+.primary { background: var(--accent); color: var(--surface); border: 0; border-radius: 8px; padding: 11px 20px; font-weight: 600; cursor: pointer; }
+.primary:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* segmented controls */
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px 20px; }
+.field { display: grid; gap: 6px; min-width: 0; align-content: start; }
+.seg { display: flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; width: fit-content; max-width: 100%; }
+.seg button { border: 0; background: transparent; padding: 6px 11px; cursor: pointer; border-right: 1px solid var(--line); font-size: var(--step--1); }
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+/* position labels are long: stack them as a vertical list instead of letting the row wrap */
+#positions { flex-direction: column; }
+#positions button { border-right: 0; border-bottom: 1px solid var(--line); text-align: left; }
+#positions button:last-child { border-bottom: 0; }
+.decoding { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; font-size: var(--step--1); }
+.decoding input[type="number"] { width: 84px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); }
+.badge { display: inline-block; font-size: 0.75rem; background: var(--warn-soft); color: var(--warn); border-radius: 999px; padding: 2px 9px; font-weight: 600; }
+
+/* presets */
+.presets { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.presets button { border: 1px solid var(--line); background: var(--bg); border-radius: 999px; padding: 5px 13px; cursor: pointer; font-size: var(--step--1); }
+.presets button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.caption { font-size: var(--step--1); color: var(--muted); min-height: 1.4em; max-width: 90ch; }
+.answers-caption { margin-bottom: -10px; }
+.concept-guide { display: grid; gap: 4px; margin-bottom: 12px; }
+.concept-guide ul { margin: 0; padding-left: 18px; display: grid; gap: 2px; font-size: var(--step--1); max-width: 100ch; }
+.concept-guide li.on { color: var(--ink); font-weight: 600; }
+.concept-guide .rp { color: var(--pos); font-weight: 600; } .concept-guide .rn { color: var(--neg); font-weight: 600; }
+
+/* slider */
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.rval { font-size: var(--step-2); font-family: var(--font-mono); color: var(--accent); }
+.rval small { font-size: var(--step--1); color: var(--muted); margin-left: 10px; }
+.track { position: relative; height: 54px; }
+.track .rail { position: absolute; left: 0; right: 0; top: 18px; height: 8px; border-radius: 4px; background: var(--line); }
+.track .bandfill { position: absolute; top: 12px; height: 20px; background: var(--band); border-radius: 4px; }
+.track .zero { position: absolute; top: 10px; width: 1px; height: 24px; background: var(--muted); }
+.track .star { position: absolute; top: 4px; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 9px solid var(--accent); transform: translateX(-6px); cursor: help; }
+.track input[type="range"] { position: absolute; left: 0; right: 0; top: 10px; width: 100%; margin: 0; background: transparent; -webkit-appearance: none; appearance: none; height: 24px; }
+.track input[type="range"]::-webkit-slider-runnable-track { background: transparent; height: 24px; }
+.track input[type="range"]::-moz-range-track { background: transparent; }
+.track input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: 3px; border-radius: 50%; background: var(--accent); border: 3px solid var(--surface); box-shadow: 0 0 0 1px var(--accent); cursor: grab; }
+.track input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--accent); border: 3px solid var(--surface); cursor: grab; }
+.ticks { position: absolute; left: 0; right: 0; top: 36px; font-size: 0.72rem; color: var(--muted); }
+.ticks span { position: absolute; transform: translateX(-50%); font-family: var(--font-mono); white-space: nowrap; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: var(--step--1); color: var(--muted); }
+.legend i { display: inline-block; width: 18px; height: 10px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; background: var(--band); }
+
+/* formula */
+details.formula summary { cursor: pointer; font-weight: 600; }
+.eq { font-family: var(--font-display); font-size: var(--step-1); overflow-x: auto; padding: 8px 0; white-space: nowrap; }
+.eq var { font-style: italic; }
+.eq sub, .eq sup { font-size: 0.7em; }
+.tbl-wrap { overflow-x: auto; }
+table { border-collapse: collapse; font-size: var(--step--1); font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+th, td { padding: 4px 12px 4px 0; text-align: right; border-bottom: 1px solid var(--line); }
+th:first-child, td:first-child { text-align: left; }
+th { font-family: var(--font-body); font-weight: 600; color: var(--muted); }
+tr.off td { color: var(--muted); opacity: 0.6; }
+
+/* answers */
+.answers { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.answer { min-width: 0; }
+.answer.steered { border-color: var(--accent); }
+.answer header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.text { font-size: var(--step-1); line-height: 1.6; min-height: 6.5em; white-space: pre-wrap; overflow-wrap: anywhere; }
+.text.pending::after { content: "▍"; color: var(--accent); animation: blink 1s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .text.pending::after { animation: none; } }
+.strip { display: flex; flex-wrap: wrap; gap: 2px; min-height: 16px; }
+.strip span { width: 12px; height: 14px; border-radius: 2px; }
+.score { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; font-size: var(--step--1); }
+.gbar { position: relative; height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--neg), var(--line) 50%, var(--pos)); opacity: 0.85; }
+.gbar b { position: absolute; top: -4px; width: 3px; height: 16px; background: var(--ink); transform: translateX(-1px); border-radius: 1px; }
+.score.invalid { opacity: 0.4; }
+.ends { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); }
+.readout { font-size: var(--step--1); color: var(--muted); }
+
+footer { font-size: var(--step--1); color: var(--muted); max-width: 80ch; display: grid; gap: 6px; }
+
+/* tabs: the demo and the dictionary share the header; only one pane shows at a time */
+[hidden] { display: none !important; }
+.tabs { display: flex; flex-wrap: wrap; gap: 0 4px; border-bottom: 1px solid var(--line); }
+.tabs button { border: 0; border-bottom: 2px solid transparent; background: transparent; padding: 8px 14px; cursor: pointer; font-weight: 600; color: var(--muted); margin-bottom: -1px; }
+.tabs button[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+.pane { display: grid; gap: 22px; }
+/* grid children may shrink below their content, so wide formulas and tables scroll inside their own box */
+.wrap > *, .pane > *, .panel > * { min-width: 0; }
+
+/* dictionary */
+.dict { max-width: 84ch; }
+.dict > p { color: var(--muted); }
+.dict dl { margin: 0; display: grid; gap: 12px; }
+.dict dt { font-weight: 600; }
+.dict dt .mono { font-weight: 500; color: var(--accent); margin-left: 6px; }
+.dict dd { margin: 2px 0 0; }
+.dict dd + dd { margin-top: 6px; }
+
+/* understanding tab: each section is a panel, figure first, short text beside it */
+.learn h2 { display: flex; gap: 10px; align-items: baseline; }
+.learn h2 .num { font-family: var(--font-mono); font-size: var(--step--1); color: var(--accent); font-weight: 500; }
+.learn .panel p, .learn .panel li { max-width: 70ch; }
+.learn .panel p.lead { max-width: 90ch; margin: -8px 0 0; color: var(--ink); font-size: var(--step-0); line-height: 1.55; text-wrap: pretty; }
+.learn .panel p.lead sub, .learn .panel p.lead sup { line-height: 0; }
+.learn ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.learn a { color: var(--accent); }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.prose { display: grid; gap: 10px; }
+figure { margin: 0; display: grid; gap: 8px; min-width: 0; }
+figcaption { font-size: var(--step--1); color: var(--muted); max-width: 70ch; }
+.fig svg { width: 100%; height: auto; display: block; color: var(--ink); }
+.fig .scroll { overflow-x: auto; }
+.math { font-family: var(--font-display); font-size: var(--step-1); overflow-x: auto; white-space: nowrap; padding: 2px 0; }
+.math sub, .math sup { font-size: 0.7em; }
+.note { font-size: var(--step--1); color: var(--muted); border-left: 3px solid var(--line); padding-left: 10px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.fact { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; display: grid; gap: 2px; align-content: start; }
+.fact b { font-family: var(--font-mono); font-size: var(--step-1); color: var(--accent); font-weight: 500; }
+.fact span { font-size: var(--step--1); color: var(--muted); }
+/* tokens → ids → vectors */
+.tokin { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: var(--step--1); }
+.tokin input { flex: 1 1 220px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); font-family: var(--font-mono); }
+.toks { display: flex; flex-wrap: wrap; gap: 14px 10px; align-items: start; }
+.tok { display: grid; justify-items: center; gap: 3px; font-family: var(--font-mono); font-size: var(--step--1); }
+.tok .t { color: var(--muted); font-size: 0.72rem; }
+.tok .chip { padding: 3px 8px; border-radius: 6px; border: 1px solid var(--c); background: color-mix(in srgb, var(--c) 16%, var(--surface)); white-space: pre; font-size: var(--step-0); }
+.tok .ar { color: var(--muted); line-height: 1; }
+.tok .vec { display: grid; grid-template-rows: repeat(24, 5px); width: 24px; border: 1px solid var(--c); border-radius: 3px; overflow: hidden; }
+/* animation */
+.anim-controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.btn { border: 1px solid var(--line); background: var(--bg); border-radius: 8px; padding: 6px 14px; cursor: pointer; font-weight: 600; font-size: var(--step--1); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn.main { background: var(--accent); border-color: var(--accent); color: var(--surface); min-width: 6em; }
+.pipe { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.pipe .node { border: 1px solid var(--line); border-radius: 8px; padding: 5px 9px; font-family: var(--font-mono); font-size: var(--step--1); background: var(--surface); display: inline-flex; gap: 6px; align-items: center; transition: background-color 0.3s, border-color 0.3s, color 0.3s; }
+.pipe .node .plus { width: 18px; height: 18px; border-radius: 50%; border: 1px solid currentColor; display: inline-grid; place-items: center; line-height: 1; font-size: 0.8rem; }
+.pipe .node.done { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.pipe .node.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.pipe .arr { color: var(--muted); font-size: var(--step--1); }
+.stage-text { min-height: 3.2em; font-size: var(--step--1); border-left: 3px solid var(--accent); padding-left: 10px; max-width: 80ch; }
+.anim-main { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+.mat-head { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: var(--step--1); color: var(--muted); }
+.mat { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 2px 8px; font-family: var(--font-mono); font-size: 0.72rem; align-items: center; }
+.mat .ti { color: var(--muted); text-align: right; }
+.mat .rl { white-space: pre; text-align: right; line-height: 12px; }
+.mat .rl.gen { color: var(--accent); font-weight: 500; }
+.mat .row { display: grid; grid-template-columns: repeat(32, minmax(0, 1fr)); gap: 1px; height: 12px; }
+.mat .row i { transition: background-color 0.45s ease; }
+.scale { display: flex; align-items: center; gap: 8px; font-size: 0.72rem; color: var(--muted); }
+.scale i { display: inline-block; width: 90px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--neg), var(--surface) 50%, var(--pos)); border: 1px solid var(--line); }
+.bars { display: grid; gap: 6px; }
+.bar { display: grid; grid-template-columns: 9ch minmax(0, 1fr) 6ch; gap: 8px; align-items: center; font-size: var(--step--1); font-family: var(--font-mono); }
+.bar .w { white-space: pre; text-align: right; overflow: hidden; text-overflow: ellipsis; }
+.bar .b { height: 12px; background: color-mix(in srgb, var(--line) 50%, transparent); border-radius: 3px; position: relative; }
+.bar .b i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--muted); border-radius: 3px; transition: width 0.4s ease; }
+.bar.pick .b i { background: var(--accent); }
+.bar.pick .w, .bar.pick .p { color: var(--accent); font-weight: 600; }
+.bar .p { text-align: right; }
+.gen-line { font-family: var(--font-mono); font-size: var(--step-1); white-space: pre-wrap; overflow-wrap: anywhere; }
+.gen-line .g { color: var(--accent); font-weight: 500; }
+@media (prefers-reduced-motion: reduce) { .mat .row i, .bar .b i, .pipe .node { transition: none; } }
+
+/* understanding steering tab: same panels as the first tab, plus small instruments next to each figure */
+.st-row { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; font-size: var(--step--1); }
+.st-row label { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.st-row input[type="range"] { width: 170px; max-width: 100%; accent-color: var(--accent); }
+.st-row input[type="text"] { flex: 1 1 220px; min-width: 0; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); font-family: var(--font-mono); }
+.st-row output { font-family: var(--font-mono); color: var(--accent); min-width: 4ch; }
+.fig svg.plot { max-width: 440px; margin-inline: auto; }
+.fig svg .drag { cursor: grab; touch-action: none; }
+.fig svg .drag:focus { outline: none; }
+.fig svg .drag:focus-visible { stroke: var(--accent); stroke-width: 3; }
+.readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+.readouts .fact b { font-size: var(--step-0); }
+.live-read { font-size: var(--step--1); border-left: 3px solid var(--accent); padding-left: 10px; min-height: 2.6em; max-width: 80ch; }
+.steps { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.sw { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 5px; border: 1px solid var(--line); }
+.cosgrid { display: grid; grid-template-columns: auto repeat(6, minmax(0, 1fr)); gap: 2px; font-family: var(--font-mono); font-size: 0.72rem; max-width: 380px; }
+.cosgrid span { display: grid; place-items: center; min-height: 26px; border-radius: 3px; font-variant-numeric: tabular-nums; }
+.cosgrid .hd { color: var(--muted); }
+.cdf { position: relative; display: flex; height: 26px; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; background: var(--bg); }
+.cdf i { display: block; height: 100%; border-right: 1px solid var(--surface); background: color-mix(in srgb, var(--muted) 35%, var(--surface)); }
+.cdf i:nth-child(2n) { background: color-mix(in srgb, var(--muted) 20%, var(--surface)); }
+.cdf i.hit { background: var(--accent); }
+.cdf b { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--ink); }
+.bar.cut { opacity: 0.4; }
+.bar.drawn .w { text-decoration: underline 2px var(--accent); }
+.bar .b .f { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ink); border-radius: 1px; }
+.bar .tag { font-size: 0.7rem; color: var(--accent); margin-left: 4px; }
+.pair { display: grid; grid-template-columns: auto repeat(8, minmax(0, 1fr)); gap: 4px; font-family: var(--font-mono); font-size: 0.72rem; align-items: center; max-width: 560px; }
+.pair span { text-align: center; padding: 3px 0; border-radius: 4px; }
+.pair .rl { text-align: right; color: var(--muted); padding-right: 6px; white-space: nowrap; }
+.pair .same { background: var(--accent-soft); }
+.pair .diff { background: var(--warn-soft); color: var(--warn); font-weight: 600; }
+.pair .u { color: var(--muted); }
+.map { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px; }
+.map a { display: grid; gap: 2px; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; text-decoration: none; color: var(--ink); background: var(--bg); }
+.map a b { color: var(--accent); font-size: var(--step--1); }
+.map a span { font-size: var(--step--1); color: var(--muted); }
+.map a:hover { border-color: var(--accent); }
+@media (max-width: 760px) { .st-row input[type="range"] { width: 140px; } }
+
+/* visual edition: tags, display equations with one-line glosses, "Try this" lines */
+.learn h2 { display: block; }
+.learn h2 .num { margin-right: 8px; }
+.learn h2 sup { font-size: 0.65em; }
+.pill { display: inline-block; font-family: var(--font-body); font-size: 0.72rem; font-weight: 600; line-height: 1.5; border-radius: 999px; padding: 0 9px; border: 1px solid var(--line); color: var(--muted); background: var(--bg); text-transform: none; letter-spacing: normal; vertical-align: 0.1em; white-space: nowrap; }
+.pill.real { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+.pill.toy { border-style: dashed; }
+.pill.hyp { color: var(--warn); border-color: var(--warn); background: var(--warn-soft); }
+h2 .pill { font-size: 0.75rem; }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.pills .pill, .gloss .pill, .st-row .pill { white-space: normal; max-width: 100%; }
+.try { font-size: var(--step--1); max-width: 80ch; }
+.try b { color: var(--accent); }
+.eqs { display: grid; gap: 12px; align-content: start; }
+.eq1 { display: grid; gap: 2px; border-left: 3px solid var(--accent-soft); padding-left: 10px; min-width: 0; align-content: start; }
+.eq1 .math { padding: 0; }
+.math.wrap { white-space: normal; }
+.gloss { font-size: var(--step--1); color: var(--muted); }
+.fig > .label { display: block; }
+/* §0 four steps */
+.four { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.four a { display: grid; gap: 4px; justify-items: center; text-align: center; padding: 10px 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); text-decoration: none; }
+.four a:hover, .four a:focus-visible { border-color: var(--accent); }
+.four svg { width: 100%; max-width: 130px; height: auto; color: var(--ink); }
+.four b { font-size: var(--step--1); color: var(--accent); }
+.four span { font-size: 0.72rem; color: var(--muted); }
+/* §1 score bar */
+.sbar { position: relative; height: 16px; border-radius: 8px; border: 1px solid var(--line); background: linear-gradient(90deg, color-mix(in srgb, var(--neg) 22%, var(--bg)), var(--bg) 50%, color-mix(in srgb, var(--pos) 22%, var(--bg))); }
+.sbar i { position: absolute; top: 2px; bottom: 2px; border-radius: 6px; }
+.sbar .z { position: absolute; left: 50%; top: -4px; bottom: -4px; width: 2px; background: var(--muted); transform: translateX(-1px); }
+/* §3 gauge */
+.gauge { width: 100%; max-width: 260px; height: auto; display: block; color: var(--ink); }
+.st3-blk { cursor: pointer; }
+.st3-blk:focus { outline: none; }
+.st3-blk:focus-visible rect { stroke: var(--accent); stroke-width: 3; }
+.modecap { font-size: var(--step--1); font-weight: 600; color: var(--accent); min-height: 1.5em; }
+/* §7 mock of the Demo controls */
+.mock { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; border: 1px dashed var(--line); border-radius: 10px; padding: 12px; background: var(--bg); }
+.mock a { display: grid; gap: 8px; text-decoration: none; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: var(--surface); }
+.mock a:hover, .mock a:focus-visible { border-color: var(--accent); }
+.mock .lab { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: var(--step--1); font-weight: 600; color: var(--muted); }
+.mock .fake { display: flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; width: fit-content; max-width: 100%; }
+.mock .fake i { font-style: normal; font-size: 0.72rem; padding: 3px 8px; border-right: 1px solid var(--line); }
+.mock .fake i:last-child { border-right: 0; }
+.mock .fake i.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.mock .fake.rail { position: relative; width: 100%; height: 22px; border: 0; overflow: visible; }
+.mock .fake.rail::before { content: ""; position: absolute; left: 0; right: 0; top: 8px; height: 6px; border-radius: 3px; background: var(--line); }
+.mock .fake.rail .band { position: absolute; left: 38%; width: 24%; top: 4px; height: 14px; padding: 0; border: 0; background: var(--band); border-radius: 4px; }
+.mock .fake.rail .thumb { position: absolute; left: 56%; top: 3px; width: 16px; height: 16px; padding: 0; border: 3px solid var(--surface); border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+@media (max-width: 760px) { .four { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+@media (max-width: 760px) {
+  .tabs button { padding: 7px 9px; }
+  .two, .anim-main { grid-template-columns: 1fr; }
+  .answers { grid-template-columns: 1fr; }
+  .prompt-row { grid-template-columns: 1fr; }
+  h1 { font-size: var(--step-2); }
+}
+</style>
+
+<div class="wrap">
+  <header class="page-head">
+    <div class="head-text">
+    <h1>Steering em um peixinho</h1>
+    <p class="lede">Aprenda como funciona o steering de conceitos dentro de LLMs usando um modelo minúsculo, o GuppyLM, um modelo-peixinho! Siga pelas abas para entender modelos de linguagem e steering, ou <a href="#demo" id="lede-demo">clique aqui</a> para ir direto à demo!</p>
+    <span class="label">GuppyLM · 6 blocks · d = 384 · roda no seu navegador</span>
+    <p class="message" id="message" hidden></p>
+    <p class="status" id="status"><progress id="loadbar" max="1" value="0"></progress> <span id="loadtext">Carregando o modelo (35 MB)…</span></p>
+    </div>
+    <svg class="goldfish" viewBox="0 0 160 124" role="img" aria-label="Ilustração de um peixinho-dourado">
+      <defs>
+        <linearGradient id="gf-body" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f9c74f"/><stop offset="0.55" stop-color="#f3902f"/><stop offset="1" stop-color="#e2553a"/></linearGradient>
+        <linearGradient id="gf-fin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f08a35"/><stop offset="1" stop-color="#d9443a" stop-opacity="0.85"/></linearGradient>
+      </defs>
+      <circle class="gf-water" cx="84" cy="62" r="56"/>
+      <path class="gf-wave" d="M40 96 q11 -6 22 0 t22 0 t22 0 t22 0"/>
+      <circle class="gf-bubble" cx="26" cy="44" r="4.5"/>
+      <circle class="gf-bubble b2" cx="18" cy="28" r="3.2"/>
+      <circle class="gf-bubble b3" cx="25" cy="14" r="2.2"/>
+      <g class="gf-fish">
+        <path class="gf-tail" fill="url(#gf-fin)" d="M112 62 C120 46 134 32 154 30 C146 43 141 53 143 62 C141 71 146 81 154 94 C134 92 120 78 112 62 Z"/>
+        <path class="gf-tail" fill="none" stroke="#fbd38d" stroke-opacity="0.7" stroke-width="1.2" stroke-linecap="round" d="M120 60 C130 50 140 42 148 37 M121 64 C131 74 140 82 148 88"/>
+        <path fill="url(#gf-fin)" d="M60 43 C66 26 90 22 104 40 C92 39 78 40 68 47 Z"/>
+        <path fill="url(#gf-fin)" d="M72 81 C75 93 87 99 95 92 C88 86 82 82 77 79 Z"/>
+        <path fill="url(#gf-body)" stroke="#b5432a" stroke-opacity="0.35" stroke-width="1" d="M36 62 C42 41 76 34 99 47 C107 52 113 57 117 62 C113 67 107 72 99 77 C76 90 42 83 36 62 Z"/>
+        <path fill="none" stroke="#fff3d6" stroke-opacity="0.55" stroke-width="1.1" d="M74 52 q4 4 0 8 M84 50 q4 5 0 10 M74 64 q4 4 0 8 M84 64 q4 5 0 10 M94 56 q3 6 0 12"/>
+        <path fill="none" stroke="#b5432a" stroke-opacity="0.45" stroke-width="1.3" stroke-linecap="round" d="M57 49 C63 57 63 67 57 75"/>
+        <path class="gf-pec" fill="#f7b34c" stroke="#c9562e" stroke-opacity="0.4" stroke-width="0.8" d="M66 65 C71 74 81 77 86 72 C80 68 74 64 66 64 Z"/>
+        <circle cx="47" cy="56" r="6.2" fill="#ffffff"/>
+        <circle cx="46" cy="56.5" r="3.6" fill="#1d1a1a"/>
+        <circle cx="44.8" cy="55" r="1.3" fill="#ffffff"/>
+        <path fill="none" stroke="#a23a24" stroke-width="1.3" stroke-linecap="round" d="M37 65 q3 2.4 6.5 1"/>
+      </g>
+    </svg>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Seções da página">
+    <button type="button" role="tab" id="tab-learn" aria-controls="pane-learn" aria-selected="true">1. Entendendo Modelos de Linguagem</button>
+    <button type="button" role="tab" id="tab-steer" aria-controls="pane-steer" aria-selected="false" tabindex="-1">2. Entendendo Steering</button>
+    <button type="button" role="tab" id="tab-demo" aria-controls="pane-demo" aria-selected="false" tabindex="-1">3. Rode a Demo</button>
+    <button type="button" role="tab" id="tab-dict" aria-controls="pane-dict" aria-selected="false" tabindex="-1">4. Dicionário</button>
+  </nav>
+
+  <div class="pane learn" id="pane-learn" role="tabpanel" aria-labelledby="tab-learn">
+
+  <!-- 1 · a language model is a function -->
+  <section class="panel" aria-labelledby="h-learn-1">
+    <h2 id="h-learn-1"><span class="num">1</span> Um modelo de linguagem é uma função: entram tokens, saem probabilidades</h2>
+    <p class="lead">Todo modelo de linguagem, como o GuppyLM, é uma rede neural: uma composição de funções simples que leva tokens a uma probabilidade para cada próximo token possível. Pelo teorema da aproximação universal, uma rede grande o bastante aproxima qualquer função contínua num compacto tão bem quanto se queira; o treino escolhe os parâmetros.</p>
+    <figure class="fig">
+      <div class="scroll">
+      <svg viewBox="0 0 720 150" style="min-width:560px;max-width:760px" role="img" aria-label="Uma cadeia de caixas: os ids dos tokens entram em f1, depois em f2, até fL; a última caixa devolve um vetor de probabilidades p em R elevado a 4096, com uma entrada por token do vocabulário.">
+        <defs><marker id="ah1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="currentColor"/></marker></defs>
+        <g fill="none" stroke="currentColor" stroke-width="1.4">
+          <rect x="10" y="35" width="130" height="50" rx="8"/>
+          <rect x="180" y="35" width="80" height="50" rx="8" stroke="var(--accent)"/>
+          <rect x="300" y="35" width="80" height="50" rx="8" stroke="var(--accent)"/>
+          <rect x="460" y="35" width="80" height="50" rx="8" stroke="var(--accent)"/>
+          <rect x="580" y="35" width="130" height="50" rx="8"/>
+          <line x1="140" y1="60" x2="178" y2="60" marker-end="url(#ah1)"/>
+          <line x1="260" y1="60" x2="298" y2="60" marker-end="url(#ah1)"/>
+          <line x1="380" y1="60" x2="400" y2="60"/>
+          <line x1="440" y1="60" x2="458" y2="60" marker-end="url(#ah1)"/>
+          <line x1="540" y1="60" x2="578" y2="60" marker-end="url(#ah1)"/>
+        </g>
+        <g fill="currentColor" font-family="var(--font-mono)" font-size="14" text-anchor="middle">
+          <text x="75" y="56">how are you</text><text x="75" y="74" fill="var(--muted)" font-size="12">ids dos tokens</text>
+          <text x="220" y="65" font-size="17">f<tspan font-size="12" dy="4">1</tspan></text>
+          <text x="340" y="65" font-size="17">f<tspan font-size="12" dy="4">2</tspan></text>
+          <text x="420" y="65" font-size="17">⋯</text>
+          <text x="500" y="65" font-size="17">f<tspan font-size="12" dy="4">L</tspan></text>
+          <text x="645" y="56">p ∈ ℝ<tspan font-size="10" dy="-6">4096</tspan></text><text x="645" y="74" fill="var(--muted)" font-size="12">P(próximo token)</text>
+          <g fill="var(--muted)" font-size="12">
+            <text x="220" y="108">σ(W₁x + b₁)</text>
+            <text x="340" y="108">σ(W₂x + b₂)</text>
+            <text x="500" y="108">σ(W<tspan font-size="9" dy="3">L</tspan><tspan dy="-3">x + b</tspan><tspan font-size="9" dy="3">L</tspan><tspan dy="-3">)</tspan></text>
+            <text x="360" y="22">f = f<tspan font-size="9" dy="3">L</tspan><tspan dy="-3"> ∘ ⋯ ∘ f</tspan><tspan font-size="9" dy="3">2</tspan><tspan dy="-3"> ∘ f</tspan><tspan font-size="9" dy="3">1</tspan></text>
+          </g>
+        </g>
+      </svg>
+      </div>
+      <figcaption><span class="pill toy">diagrama</span> O texto entra como ids de tokens; sai uma probabilidade para cada entrada do vocabulário. O treino ajusta os parâmetros para que o próximo token verdadeiro receba probabilidade alta.</figcaption>
+    </figure>
+    <div class="eqs two">
+      <div class="eq1">
+        <p class="math">f = f<sub>L</sub> ∘ ⋯ ∘ f<sub>1</sub>,&nbsp;&nbsp; f<sub>k</sub>(x) = σ(W<sub>k</sub>x + b<sub>k</sub>)</p>
+        <p class="gloss">um mapa afim seguido de uma não linearidade fixa σ; os W<sub>k</sub>, b<sub>k</sub> são os parâmetros (8 726 016 no GuppyLM).</p>
+      </div>
+      <div class="eq1">
+        <p class="math">p ∈ ℝ<sup>4096</sup>,&nbsp; p<sub>i</sub> ≥ 0,&nbsp; Σ<sub>i</sub> p<sub>i</sub> = 1</p>
+        <p class="gloss">p<sub>i</sub> é a probabilidade de que a linha i do vocabulário venha a seguir.</p>
+      </div>
+    </div>
+    <p class="pills"><span class="pill toy">simplificado: um block real também tem attention e LayerNorm (§3)</span></p>
+  </section>
+
+  <!-- 2 · tokens and embeddings -->
+  <section class="panel" aria-labelledby="h-learn-2">
+    <h2 id="h-learn-2"><span class="num">2</span> Cada token vira um vetor em ℝ<sup>384</sup></h2>
+    <p class="lead">Antes de qualquer conta, o texto é cortado em tokens, e cada token vira, por consulta a uma tabela, uma lista de 384 números, somada a um vetor aprendido para sua posição. Daí em diante o modelo só trabalha com vetores em ℝ<sup>384</sup>, e o steering vai somar vetores desse mesmo tamanho, nunca mexer no texto.</p>
+    <div class="tokin">
+      <label for="learn-text" class="label label-plain">Texto</label>
+      <input id="learn-text" type="text" value="how are you feeling today" spellcheck="false" autocomplete="off">
+      <span class="muted" id="learn-tokstatus">tokenizado offline; ao vivo assim que o modelo carregar</span>
+    </div>
+    <figure class="fig">
+      <div class="toks" id="learn-toks" role="img" aria-label="Cada token do texto como uma ficha colorida, seu id inteiro e seu vetor de embedding desenhado como uma coluna de células coloridas."></div>
+      <figcaption><span class="pill real">tokenizer real</span> <span class="pill toy">cores ilustrativas</span> Cada ficha é um token, com sua posição t e seu id; a coluna representa seus 384 números. Um espaço no início faz parte do token: “ are” ≠ “are”.</figcaption>
+    </figure>
+    <p class="try"><b>Experimente:</b> digite “you are” e depois “are you”: mesmos ids, posições t diferentes.</p>
+    <div class="eq1">
+      <p class="math">x<sub>t</sub> = E[id<sub>t</sub>] + Pos[t] ∈ ℝ<sup>384</sup></p>
+      <p class="gloss">E ∈ ℝ<sup>4096 × 384</sup> e Pos ∈ ℝ<sup>128 × 384</sup> são tabelas aprendidas; o tokenizer usa as linhas 0 … 2417 (2 418 tokens), e T ≤ 128.</p>
+    </div>
+  </section>
+
+  <!-- 3 · GuppyLM's shape -->
+  <section class="panel" aria-labelledby="h-learn-3">
+    <h2 id="h-learn-3"><span class="num">3</span> Seis blocks somam suas saídas a um único stream de largura 384</h2>
+    <p class="lead">O GuppyLM passa esses vetores por 6 transformer blocks. Cada block lê uma soma acumulada compartilhada, o residual stream, e soma a ela a própria saída; assim a largura fica d = 384 do início ao fim. O steering depende desse desenho aditivo: um vetor somado num block segue até todos os blocks seguintes e até a saída.</p>
+    <figure class="fig">
+      <div class="scroll">
+      <svg viewBox="0 0 760 190" style="min-width:600px;max-width:820px" role="img" aria-label="O residual stream: uma linha horizontal que vai dos embeddings x até o unembedding. Seis blocks, F0 a F5, ficam acima dela. Cada um lê o stream e soma sua saída de volta num nó +, gerando h0 a h5.">
+        <defs><marker id="ah3" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="currentColor"/></marker></defs>
+        <line x1="10" y1="130" x2="748" y2="130" stroke="var(--accent)" stroke-width="3"/>
+        <polygon points="748,124 758,130 748,136" fill="var(--accent)"/>
+        <g fill="none" stroke="currentColor" stroke-width="1.4">
+          <rect x="85" y="30" width="70" height="50" rx="8"/><rect x="185" y="30" width="70" height="50" rx="8"/><rect x="285" y="30" width="70" height="50" rx="8"/>
+          <rect x="385" y="30" width="70" height="50" rx="8"/><rect x="485" y="30" width="70" height="50" rx="8"/><rect x="585" y="30" width="70" height="50" rx="8"/>
+          <line x1="98" y1="130" x2="98" y2="82" marker-end="url(#ah3)"/><line x1="142" y1="80" x2="142" y2="120" marker-end="url(#ah3)"/>
+          <line x1="198" y1="130" x2="198" y2="82" marker-end="url(#ah3)"/><line x1="242" y1="80" x2="242" y2="120" marker-end="url(#ah3)"/>
+          <line x1="298" y1="130" x2="298" y2="82" marker-end="url(#ah3)"/><line x1="342" y1="80" x2="342" y2="120" marker-end="url(#ah3)"/>
+          <line x1="398" y1="130" x2="398" y2="82" marker-end="url(#ah3)"/><line x1="442" y1="80" x2="442" y2="120" marker-end="url(#ah3)"/>
+          <line x1="498" y1="130" x2="498" y2="82" marker-end="url(#ah3)"/><line x1="542" y1="80" x2="542" y2="120" marker-end="url(#ah3)"/>
+          <line x1="598" y1="130" x2="598" y2="82" marker-end="url(#ah3)"/><line x1="642" y1="80" x2="642" y2="120" marker-end="url(#ah3)"/>
+        </g>
+        <g fill="var(--surface)" stroke="var(--accent)" stroke-width="1.6">
+          <circle cx="142" cy="130" r="9"/><circle cx="242" cy="130" r="9"/><circle cx="342" cy="130" r="9"/><circle cx="442" cy="130" r="9"/><circle cx="542" cy="130" r="9"/><circle cx="642" cy="130" r="9"/>
+        </g>
+        <g fill="var(--accent)" font-family="var(--font-mono)" font-size="14" text-anchor="middle">
+          <text x="142" y="135">+</text><text x="242" y="135">+</text><text x="342" y="135">+</text><text x="442" y="135">+</text><text x="542" y="135">+</text><text x="642" y="135">+</text>
+        </g>
+        <g fill="currentColor" font-family="var(--font-mono)" font-size="15" text-anchor="middle">
+          <text x="120" y="60">F<tspan font-size="11" dy="4">0</tspan></text><text x="220" y="60">F<tspan font-size="11" dy="4">1</tspan></text><text x="320" y="60">F<tspan font-size="11" dy="4">2</tspan></text>
+          <text x="420" y="60">F<tspan font-size="11" dy="4">3</tspan></text><text x="520" y="60">F<tspan font-size="11" dy="4">4</tspan></text><text x="620" y="60">F<tspan font-size="11" dy="4">5</tspan></text>
+        </g>
+        <g fill="var(--muted)" font-family="var(--font-mono)" font-size="12" text-anchor="middle">
+          <text x="120" y="20">block 0</text><text x="220" y="20">block 1</text><text x="320" y="20">block 2</text><text x="420" y="20">block 3</text><text x="520" y="20">block 4</text><text x="620" y="20">block 5</text>
+          <text x="40" y="155">x</text>
+          <text x="170" y="155">h₀</text><text x="270" y="155">h₁</text><text x="370" y="155">h₂</text><text x="470" y="155">h₃</text><text x="570" y="155">h₄</text><text x="670" y="155">h₅</text>
+          <text x="40" y="178">T × 384</text><text x="670" y="178">T × 384</text>
+          <text x="706" y="118">para a saída</text>
+        </g>
+      </svg>
+      </div>
+      <figcaption><span class="pill real">arquitetura do GuppyLM</span> Cada block lê o stream e soma sua saída de volta no +. Nada é sobrescrito, então uma mudança em h<sub>ℓ</sub> chega a todos os blocks seguintes.</figcaption>
+    </figure>
+    <div class="facts">
+      <div class="fact"><b>6</b><span>transformer blocks, ℓ = 0, …, 5</span></div>
+      <div class="fact"><b>d = 384</b><span>números por token, em todas as etapas</span></div>
+      <div class="fact"><b>6 × 64</b><span>attention heads × tamanho de cada head</span></div>
+      <div class="fact"><b>384 → 768 → 384</b><span>larguras do MLP, ReLU no meio</span></div>
+      <div class="fact"><b>4096</b><span>linhas de E, e escores na saída</span></div>
+      <div class="fact"><b>128</b><span>tokens de contexto, no máximo</span></div>
+    </div>
+    <div class="eqs">
+      <div class="eq1">
+        <p class="math">h<sub>0</sub> = x + F<sub>0</sub>(x),&nbsp;&nbsp; h<sub>ℓ</sub> = h<sub>ℓ−1</sub> + F<sub>ℓ</sub>(h<sub>ℓ−1</sub>),&nbsp; ℓ = 1, …, 5</p>
+        <p class="gloss">x, h<sub>ℓ</sub> ∈ ℝ<sup>T × 384</sup>; a linha t de h<sub>ℓ</sub> é h<sub>ℓ,t</sub> ∈ ℝ<sup>384</sup>, a saída do block ℓ na posição t.</p>
+      </div>
+      <div class="eq1">
+        <p class="math">x′ = x + Attn(LN<sub>1</sub>x),&nbsp;&nbsp; h<sub>ℓ</sub> = x′ + MLP(LN<sub>2</sub>x′)</p>
+        <p class="gloss">um block, pre-LN sequencial: primeiro a attention (a linha t lê as linhas s ≤ t), depois o MLP em cada linha; logo F<sub>ℓ</sub>(x) = h<sub>ℓ</sub> − x.</p>
+      </div>
+      <div class="eq1">
+        <p class="math">z = E · LN<sub>f</sub>(h<sub>5,T−1</sub>) ∈ ℝ<sup>4096</sup>,&nbsp;&nbsp; p<sub>i</sub> = e<sup>z<sub>i</sub></sup> / Σ<sub>j</sub> e<sup>z<sub>j</sub></sup></p>
+        <p class="gloss">a cabeça de saída reutiliza E (pesos compartilhados, tied weights): escores z para a última posição; o softmax dá p.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · animation -->
+  <section class="panel" aria-labelledby="h-learn-4" id="learn-anim">
+    <h2 id="h-learn-4"><span class="num">4</span> O modelo escreve um token por passada e depois roda de novo</h2>
+    <p class="lead">Uma passada pelo modelo dá as probabilidades de um único próximo token. O token escolhido é anexado ao texto e o modelo inteiro roda de novo; uma resposta completa é esse laço repetido. O steering age dentro dessas passadas, então pode mudar o token escolhido a cada passo.</p>
+    <div class="anim-controls">
+      <button type="button" class="btn main" id="anim-play">Reproduzir</button>
+      <button type="button" class="btn" id="anim-step">Passo</button>
+      <button type="button" class="btn" id="anim-reset">Reiniciar</button>
+      <span class="muted" id="anim-count" style="font-size:var(--step--1)"></span>
+    </div>
+    <div class="pipe" id="anim-pipe" aria-hidden="true"></div>
+    <p class="stage-text" id="anim-text" aria-live="polite"></p>
+    <div class="anim-main">
+      <figure class="fig">
+        <div class="mat-head"><span id="anim-shape"></span><span class="scale">−<i></i>+</span></div>
+        <div class="mat" id="anim-mat" role="img" aria-label="A matriz de ativações: uma linha por token, 32 de suas 384 colunas desenhadas como células coloridas."></div>
+        <figcaption><span class="pill toy">matriz ilustrativa</span> Uma linha por token; 32 das 384 colunas desenhadas.</figcaption>
+      </figure>
+      <div class="prose">
+        <span class="label">Probabilidades do próximo token, top 5 de 4096 <span class="pill real">dados reais do GuppyLM</span></span>
+        <div class="bars" id="anim-bars" role="img" aria-label="Gráfico de barras dos cinco próximos tokens mais prováveis."></div>
+        <span class="label">Texto até agora</span>
+        <div class="gen-line" id="anim-gen"></div>
+        <p class="note" id="anim-src"></p>
+      </div>
+    </div>
+    <p class="try"><b>Experimente:</b> aperte Passo e veja qual linha as barras leem.</p>
+    <div class="eq1">
+      <p class="math">id<sub>T</sub> = argmax<sub>i</sub> p<sub>i</sub>,&nbsp;&nbsp; T ← T + 1</p>
+      <p class="gloss">escolha greedy; a implementação guarda as linhas anteriores em cache (Steering §4) em vez de recalculá-las, com o mesmo resultado.</p>
+    </div>
+  </section>
+  </div>
+
+  <div class="pane learn" id="pane-steer" role="tabpanel" aria-labelledby="tab-steer" hidden>
+
+  <!-- 0 · overview -->
+  <section class="panel" aria-labelledby="h-st-0" id="st-0">
+    <h2 id="h-st-0"><span class="num">0</span> Steering em quatro passos</h2>
+    <p class="lead">Fazer steering é mudar o que um modelo faz por dentro: achamos uma direção ligada a um conceito e a somamos às ativações enquanto o modelo escreve. Os quatro passos abaixo são o roteiro desta aba, e cada um leva à seção que o explica.</p>
+    <nav class="four" aria-label="Os quatro passos do steering">
+      <a href="#steering" data-goto="st-1"><svg viewBox="0 0 120 70" aria-hidden="true"><g fill-opacity="0.8"><circle cx="30" cy="22" r="5" fill="var(--neg)"/><circle cx="20" cy="36" r="5" fill="var(--neg)"/><circle cx="36" cy="42" r="5" fill="var(--neg)"/><circle cx="26" cy="54" r="5" fill="var(--neg)"/><circle cx="88" cy="18" r="5" fill="var(--pos)"/><circle cx="98" cy="32" r="5" fill="var(--pos)"/><circle cx="84" cy="40" r="5" fill="var(--pos)"/><circle cx="96" cy="52" r="5" fill="var(--pos)"/></g></svg><b>1 · Juntar exemplos</b><span>prompts rotulados · §1</span></a>
+      <a href="#steering" data-goto="st-2"><svg viewBox="0 0 120 70" aria-hidden="true"><g fill-opacity="0.35"><circle cx="24" cy="36" r="16" fill="var(--neg)"/><circle cx="94" cy="36" r="16" fill="var(--pos)"/></g><line x1="28" y1="36" x2="84" y2="36" stroke="var(--accent)" stroke-width="4" marker-end="url(#four-a)"/><defs><marker id="four-a" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs><text x="58" y="26" fill="var(--accent)" font-family="var(--font-mono)" font-size="13" text-anchor="middle">v</text></svg><b>2 · Achar a seta</b><span>DiffMeans ou RFM · §2</span></a>
+      <a href="#steering" data-goto="st-3"><svg viewBox="0 0 120 70" aria-hidden="true"><line x1="6" y1="46" x2="114" y2="46" stroke="var(--accent)" stroke-width="3"/><rect x="14" y="8" width="26" height="22" rx="4" fill="none" stroke="currentColor"/><rect x="48" y="8" width="26" height="22" rx="4" fill="none" stroke="currentColor"/><rect x="82" y="8" width="26" height="22" rx="4" fill="none" stroke="currentColor"/><circle cx="61" cy="46" r="8" fill="var(--accent)"/><text x="61" y="51" fill="var(--surface)" font-family="var(--font-mono)" font-size="13" text-anchor="middle">+</text><line x1="61" y1="68" x2="61" y2="56" stroke="var(--accent)" stroke-width="2"/></svg><b>3 · Somar por dentro</b><span>onde e com que força · §3–§5</span></a>
+      <a href="#demo"><svg viewBox="0 0 120 70" aria-hidden="true"><rect x="10" y="10" width="100" height="42" rx="10" fill="var(--accent-soft)" stroke="var(--accent)"/><path d="M30,52 L26,64 L42,52" fill="var(--accent-soft)" stroke="var(--accent)"/><line x1="22" y1="24" x2="96" y2="24" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity="0.5"/><line x1="22" y1="36" x2="76" y2="36" stroke="var(--pos)" stroke-width="3" stroke-linecap="round"/></svg><b>4 · Ler a resposta</b><span>§6 · Rode a Demo</span></a>
+    </nav>
+    <p class="caption">O steering muda o que o modelo escreve sem mudar seus pesos nem o prompt.</p>
+    <p class="try"><b>Experimente:</b> clique num passo para ir até ele.</p>
+  </section>
+
+  <!-- 1 · concepts are directions -->
+  <section class="panel" aria-labelledby="h-st-1" id="st-1">
+    <h2 id="h-st-1"><span class="num">1</span> Um conceito é uma seta no espaço das ativações <span class="pill hyp">hipótese</span></h2>
+    <p class="lead">Tudo aqui se apoia numa suposição, a linear representation hypothesis (hipótese da representação linear): num dado block, um conceito como food corresponde a uma direção v em ℝ<sup>384</sup>; o produto escalar com v lê o conceito, e andar ao longo de v o muda. É uma hipótese, não um fato provado, e não foi confirmada para o GuppyLM.</p>
+    <div class="two">
+      <figure class="fig">
+        <svg class="plot" id="st1-svg" viewBox="0 0 360 390" role="img" aria-label="Duas nuvens de pontos, azul para o rótulo 0 e laranja para o rótulo 1, com uma direção unitária v passando pela média delas. Um ponto arrastável h é projetado em v; uma faixa abaixo mostra a projeção de cada ponto."></svg>
+        <div class="st-row">
+          <label for="st1-ang">Direção de v <input type="range" id="st1-ang" min="0" max="359" step="1" value="90"></label>
+          <output id="st1-angv" for="st1-ang">90°</output>
+          <button type="button" class="btn" id="st1-reset">Voltar ao DiffMeans</button>
+        </div>
+        <figcaption><span class="pill toy">dados de brinquedo · esboço 2-D de ℝ<sup>384</sup></span> Azul: rótulo 0 (para food: clima, TV…); laranja: rótulo 1 (comida e sabor).</figcaption>
+      </figure>
+      <div class="eqs">
+        <span class="label">Escore <span class="label-plain">s(h) = ⟨h − μ, v⟩</span></span>
+        <div class="sbar" id="st1-bar" role="img" aria-label="Barra do escore"><i id="st1-fill"></i><b class="z"></b></div>
+        <div class="ends"><span style="color:var(--neg)">lado do rótulo 0</span><span style="color:var(--pos)">lado do rótulo 1</span></div>
+        <p class="live-read" id="st1-read" aria-live="polite"></p>
+        <div class="eq1">
+          <p class="math">h<sub>ℓ</sub> := h<sub>ℓ, T<sub>0</sub>−1</sub> ∈ ℝ<sup>384</sup></p>
+          <p class="gloss">saída do block ℓ ∈ {0, …, 5} no último token do prompt embrulhado em ChatML (comprimento T<sub>0</sub>).</p>
+        </div>
+        <div class="eq1">
+          <p class="math">s(h) = ⟨h − μ, v⟩,&nbsp;&nbsp; v ∈ ℝ<sup>384</sup>, ‖v‖<sub>2</sub> = 1</p>
+          <p class="gloss">μ ∈ ℝ<sup>384</sup>: ativação média; regra do sinal: rótulo 1 quando s(h) &gt; 0.</p>
+        </div>
+        <div class="eq1">
+          <p class="math wrap"><span class="pill hyp">hipótese</span> o conceito é lido por s, e h ↦ h + αv (α &gt; 0) o leva em direção ao rótulo 1</p>
+          <p class="gloss">linear representation hypothesis, com um v<sub>ℓ</sub><sup>(c,m)</sup> por block ℓ, conceito c e fonte m; suposta, não confirmada para o GuppyLM.</p>
+        </div>
+      </div>
+    </div>
+    <p class="try"><b>Experimente:</b> arraste h através da linha tracejada e depois gire v para longe do DiffMeans.</p>
+  </section>
+
+  <!-- 2 · extracting a direction -->
+  <section class="panel" aria-labelledby="h-st-2" id="st-2">
+    <h2 id="h-st-2"><span class="num">2</span> Dois jeitos de achar a seta: diferença das médias, ou RFM</h2>
+    <p class="lead">Para fazer steering precisamos da própria seta v. Rotulamos prompts por conceito, registramos suas ativações num block e calculamos uma direção unitária: a diferença das médias liga as médias das duas classes, enquanto o RFM ajusta um preditor e fica com a direção em que seus gradientes se concentram.</p>
+    <div class="st-row">
+      <label for="st2-stretch">Alongamento das nuvens <input type="range" id="st2-stretch" min="1" max="4" step="0.25" value="3"></label>
+      <output id="st2-stretchv" for="st2-stretch">3.00</output>
+      <button type="button" class="btn" id="st2-new">Nova amostra</button>
+      <span class="pill toy">dados de brinquedo, os mesmos 100 pontos nos dois painéis</span>
+    </div>
+    <div class="two">
+      <figure class="fig">
+        <span class="label">DiffMeans</span>
+        <svg class="plot" id="st2dm-svg" viewBox="0 0 360 360" role="img" aria-label="Dados de brinquedo com as duas médias de classe marcadas; uma seta cresce da média do rótulo 0 até a média do rótulo 1, e sua versão unitária v_DM é desenhada a partir do centro."></svg>
+        <div class="anim-controls"><button type="button" class="btn" id="st2dm-play">Repetir</button></div>
+        <figcaption>A seta liga os centros das duas nuvens.</figcaption>
+        <div class="eq1">
+          <p class="math">v<sub>DM</sub> = (μ̂<sub>+</sub> − μ̂<sub>−</sub>) / ‖μ̂<sub>+</sub> − μ̂<sub>−</sub>‖<sub>2</sub></p>
+          <p class="gloss">μ̂<sub>+</sub>, μ̂<sub>−</sub> ∈ ℝ<sup>384</sup>: ativação média no block ℓ dos prompts de rótulo 1 e de rótulo 0.</p>
+        </div>
+      </figure>
+      <figure class="fig">
+        <span class="label">RFM (Recursive Feature Machine)</span>
+        <svg class="plot" id="st2-svg" viewBox="0 0 360 360" role="img" aria-label="RFM de brinquedo em duas dimensões: duas nuvens gaussianas inclinadas, o fundo sombreado pelo preditor ajustado f, e três setas: DiffMeans, a direção de referência de Fisher e o autovetor principal do RFM. Um quadro menor mostra a elipse de M."></svg>
+        <div class="anim-controls">
+          <button type="button" class="btn main" id="st2-play">Rodar RFM</button>
+          <button type="button" class="btn" id="st2-step">Uma iteração</button>
+          <button type="button" class="btn" id="st2-reset">Reiniciar M = I</button>
+        </div>
+        <p class="live-read" id="st2-read" aria-live="polite"></p>
+        <figcaption>Fundo: o f ajustado. Quadro menor: a elipse de M. Tracejada: direção de Fisher Σ̂<sup>−1</sup>(μ̂<sub>+</sub> − μ̂<sub>−</sub>), como referência.</figcaption>
+        <div class="eq1">
+          <p class="math">f(h) = Σ<sub>i</sub> α<sub>i</sub> K<sub>M</sub>(h<sub>i</sub>, h),&nbsp; α = (K + λI)<sup>−1</sup>y,&nbsp; K<sub>M</sub>(x, z) = e<sup>−‖x − z‖<sub>M</sub> / L</sup></p>
+          <p class="gloss">kernel ridge regression, rótulos y<sub>i</sub> ∈ {0, 1}, ‖u‖<sub>M</sub> = √(u<sup>⊤</sup>Mu), M ⪰ 0, começando em M = I.</p>
+        </div>
+        <div class="eq1">
+          <p class="math">M ← (1/n) Σ<sub>i</sub> g<sub>i</sub>g<sub>i</sub><sup>⊤</sup>,&nbsp; g<sub>i</sub> = ∇f(h<sub>i</sub>) − ḡ</p>
+          <p class="gloss">o AGOP (gradientes centrados); alterne os dois passos T vezes.</p>
+        </div>
+        <div class="eq1">
+          <p class="math">v<sub>RFM</sub> = autovetor principal de M,&nbsp; Pearson(⟨h<sub>i</sub>, v⟩, y<sub>i</sub>) &gt; 0</p>
+          <p class="gloss">sinal fixado (também para v<sub>DM</sub>) de modo que +v aponte para o rótulo 1.</p>
+        </div>
+        <p class="pills"><span class="pill toy">brinquedo: L = 1, λ = 1, T ≤ 6</span> <span class="pill real">extração real: λ = 10<sup>−3</sup></span></p>
+      </figure>
+    </div>
+    <p class="try"><b>Experimente:</b> alongue até 4 e aperte Rodar RFM: a seta do RFM gira em direção à de Fisher, M se achata numa linha e o DiffMeans ignora a inclinação (uma observação sobre o brinquedo).</p>
+    <div class="two">
+      <figure class="fig">
+        <div class="st-row"><span class="label">Concordância por block <span class="label-plain">cos(v<sub>ℓ</sub><sup>RFM</sup>, v<sub>ℓ</sub><sup>DM</sup>)</span></span><span class="pill real">dados reais do GuppyLM</span><div class="seg" id="st2-concept" role="group" aria-label="Conceito para os painéis de dados reais"></div></div>
+        <div class="bars" id="st2-cos" role="img" aria-label="Cosseno entre as direções RFM e DiffMeans em cada block."><span class="muted">Carregando as direções do modelo…</span></div>
+      </figure>
+      <div class="eqs">
+        <div class="eq1">
+          <p class="math">cos(v<sup>RFM</sup><sub>ℓ</sub>, v<sup>DM</sup><sub>ℓ</sub>) = ⟨v<sup>RFM</sup><sub>ℓ</sub>, v<sup>DM</sup><sub>ℓ</sub>⟩</p>
+          <p class="gloss">os dois têm comprimento unitário; 1 = mesma direção, 0 = ortogonais.</p>
+        </div>
+        <div class="eq1">
+          <p class="math">u uniforme em S<sup>383</sup> ⇒ sd ⟨u, v⟩ = 1/√384 ≈ 0.051</p>
+          <p class="gloss">a escala da concordância por acaso (sd = desvio-padrão). <span id="st2-rand"></span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · steering = adding -->
+  <section class="panel" aria-labelledby="h-st-3" id="st-3">
+    <h2 id="h-st-3"><span class="num">3</span> Steering = empurrar h ao longo da seta, block a block</h2>
+    <p class="lead">O steering soma o vetor r · med<sub>ℓ</sub> · v<sub>ℓ</sub> ao stream nos blocks escolhidos; os pesos ficam intactos. Como os blocks só somam ao stream, o empurrão segue até a saída, e cada block seguinte reage à entrada deslocada. A dose efetiva ρ mede o empurrão total e permite comparar configurações.</p>
+    <figure class="fig">
+      <div class="scroll">
+        <svg id="st3-svg" viewBox="0 0 760 215" style="min-width:600px;max-width:820px" role="group" aria-label="O residual stream com os blocks 0 a 5; clique num block para fazer steering só nele. O vetor de steering entra depois de cada block escolhido e é levado pelo stream até a saída; os blocks seguintes leem o stream deslocado."></svg>
+      </div>
+      <div class="anim-controls"><button type="button" class="btn main" id="st3-play">Seguir o empurrão</button><span class="muted" style="font-size:var(--step--1)" id="st3-note"></span></div>
+      <figcaption>Clique num block para fazer steering só nele; cada block escolhido soma seu próprio ε<sub>ℓ</sub>v<sub>ℓ</sub> no + laranja. Blocks tracejados leem o stream deslocado e reagem.</figcaption>
+    </figure>
+    <div class="controls">
+      <div class="field"><span class="label" id="lbl-st3c">Conceito</span><div class="seg" id="st3-concept" role="group" aria-labelledby="lbl-st3c"></div></div>
+      <div class="field"><span class="label" id="lbl-st3m">Fonte do vetor</span><div class="seg" id="st3-source" role="group" aria-labelledby="lbl-st3m"></div></div>
+      <div class="field"><span class="label" id="lbl-st3s">Blocks S</span><div class="seg" id="st3-blocks" role="group" aria-labelledby="lbl-st3s"></div></div>
+      <div class="field"><label class="label" for="st3-r">Força <span class="label-plain">r</span></label>
+        <div class="st-row"><input type="range" id="st3-r" min="-0.5" max="0.5" step="0.01" value="0.1"><output id="st3-rv" for="st3-r">+0.10</output></div></div>
+    </div>
+    <p class="try"><b>Experimente:</b> clique no block 4, no block 0 e depois em “todos”, e compare ρ.</p>
+    <div class="two">
+      <div class="eqs">
+        <div class="eq1">
+          <p class="math">h<sub>ℓ,t</sub> ← h<sub>ℓ,t</sub> + 𝟙[t ∈ P] · r · med<sub>ℓ</sub> · v<sub>ℓ</sub>,&nbsp;&nbsp; ℓ ∈ S</p>
+          <p class="gloss">S ⊆ {0, …, 5} blocks, P posições (§4), r ∈ ℝ força, med<sub>ℓ</sub> &gt; 0 escala (§5), ‖v<sub>ℓ</sub>‖<sub>2</sub> = 1.</p>
+        </div>
+        <div class="eq1">
+          <p class="math">x′ = x + Attn(LN<sub>1</sub>x),&nbsp;&nbsp; h<sub>ℓ</sub> = x′ + MLP(LN<sub>2</sub>x′)</p>
+          <p class="gloss">pre-LN sequencial: a LN normaliza só a cópia que cada subcamada lê, então o vetor somado permanece no stream.</p>
+        </div>
+        <div class="eq1">
+          <p class="math">ρ = ‖Σ<sub>ℓ∈S</sub> ε<sub>ℓ</sub>v<sub>ℓ</sub>‖<sub>2</sub> / med<sub>5</sub>,&nbsp;&nbsp; ε<sub>ℓ</sub> = r · med<sub>ℓ</sub></p>
+          <p class="gloss">empurrão total em unidades de uma ativação típica do block 5; compare configurações por ρ, não por r.</p>
+        </div>
+      </div>
+      <div class="prose">
+        <span class="label">Dose efetiva <span class="label-plain">ρ</span></span>
+        <svg class="gauge" id="st3-gauge" viewBox="0 0 240 176" role="img" aria-label="Medidor da dose efetiva rho"></svg>
+        <div class="readouts" id="st3-read" aria-live="polite"></div>
+        <span class="label">Os comprimentos somados <span class="label-plain">ε<sub>ℓ</sub> = r · med<sub>ℓ</sub></span></span>
+        <div class="bars" id="st3-eps" role="img" aria-label="O comprimento do vetor somado em cada block."></div>
+        <p class="note" id="st3-src"></p>
+      </div>
+    </div>
+    <div class="two">
+      <figure class="fig">
+        <span class="label">Cossenos entre blocks <span class="label-plain">cos(v<sub>ℓ</sub>, v<sub>ℓ′</sub>)</span> <span class="pill real">dados reais do GuppyLM</span></span>
+        <div class="cosgrid" id="st3-cos" role="img" aria-label="Tabela 6 por 6 dos cossenos entre os vetores de steering de blocks diferentes."><span class="muted" style="grid-column:1/-1">Carregando…</span></div>
+      </figure>
+      <div class="eq1">
+        <p class="math">‖Σ<sub>ℓ</sub> ε<sub>ℓ</sub>v<sub>ℓ</sub>‖<sup>2</sup> = Σ<sub>ℓ</sub> Σ<sub>ℓ′</sub> ε<sub>ℓ</sub> ε<sub>ℓ′</sub> ⟨v<sub>ℓ</sub>, v<sub>ℓ′</sub>⟩</p>
+        <p class="gloss">vetores alinhados (cos ≈ 1) somam Σ<sub>ℓ</sub>|ε<sub>ℓ</sub>|; ortogonais, √(Σ<sub>ℓ</sub> ε<sub>ℓ</sub><sup>2</sup>); faz sentido porque todo h<sub>ℓ</sub> vive no mesmo ℝ<sup>384</sup>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · positions -->
+  <section class="panel" aria-labelledby="h-st-4" id="st-4">
+    <h2 id="h-st-4"><span class="num">4</span> Onde empurrar: o prompt, a resposta, ou os dois</h2>
+    <p class="lead">Além dos blocks, escolhemos quais posições de token recebem o vetor: o prompt, a resposta sendo escrita, ou ambos. O modelo guarda as keys e values das posições anteriores num cache, então essa escolha também molda o que cada token seguinte enxerga pela attention.</p>
+    <figure class="fig">
+      <div class="st-row">
+        <span class="label" id="lbl-st4p">Posições P</span>
+        <div class="seg" id="st4-pos" role="group" aria-labelledby="lbl-st4p"></div>
+      </div>
+      <p class="modecap" id="st4-modecap" aria-live="polite"></p>
+      <div class="scroll">
+        <svg id="st4-svg" viewBox="0 0 720 300" style="min-width:600px;max-width:820px" role="img" aria-label="Grade de passadas (linhas) por posições de token (colunas). Cada passada calcula o prompt inteiro ou só o token mais novo; as posições anteriores vêm do KV cache. As células que recebem o vetor de steering estão marcadas."></svg>
+      </div>
+      <div class="anim-controls">
+        <button type="button" class="btn main" id="st4-play">Reproduzir</button>
+        <button type="button" class="btn" id="st4-step">Próxima passada</button>
+        <button type="button" class="btn" id="st4-reset">Mostrar todas as passadas</button>
+        <span class="muted" id="st4-count" style="font-size:var(--step--1)"></span>
+      </div>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--accent)"></i>calculada agora, recebe o vetor</span>
+        <span><i class="sw" style="background:color-mix(in srgb, var(--ink) 30%, var(--surface))"></i>calculada agora, sem vetor</span>
+        <span><i class="sw" style="background:var(--accent-soft);border-color:var(--accent)"></i>do cache, recebeu steering</span>
+        <span><i class="sw" style="background:var(--surface)"></i>do cache, sem steering</span>
+      </div>
+      <p class="stage-text" id="st4-text" aria-live="polite"></p>
+      <figcaption><span class="pill real">tokens reais, resposta greedy</span> Linhas: passadas (forward passes); colunas: posições. As passadas seguintes calculam só o token mais novo e leem do KV cache as keys e values anteriores, então uma posição que recebeu steering continua com ele.</figcaption>
+    </figure>
+    <p class="try"><b>Experimente:</b> escolha “prompt”, aperte Próxima passada e siga os arcos laranja.</p>
+    <div class="eq1">
+      <p class="math">P<sub>prompt</sub> = {t : t &lt; T<sub>0</sub> − 1},&nbsp;&nbsp; P<sub>gen</sub> = {t : t ≥ T<sub>0</sub> − 1},&nbsp;&nbsp; P<sub>all</sub> = P<sub>prompt</sub> ∪ P<sub>gen</sub></p>
+      <p class="gloss">t = 0, 1, … são posições; T<sub>0</sub> é o comprimento do prompt depois do chat template (13 aqui). <span class="pill toy">só o mecanismo: qual P empurra mais não foi medido</span></p>
+    </div>
+  </section>
+
+  <!-- 5 · med -->
+  <section class="panel" aria-labelledby="h-st-5" id="st-5">
+    <h2 id="h-st-5"><span class="num">5</span> Por que r × mediana: o mesmo r dá o mesmo empurrão em todo block</h2>
+    <p class="lead">O vetor somado em cada block precisa de um comprimento, e um comprimento fixo não significaria a mesma coisa em todo lugar. Escalar por med<sub>ℓ</sub>, a mediana do comprimento das ativações no block ℓ, torna r uma força relativa: r = 0.1 soma um décimo de uma ativação típica em todo block.</p>
+    <div class="two">
+      <figure class="fig">
+        <span class="label">Escala e passo <span class="label-plain">med<sub>ℓ</sub> (cinza), ε<sub>ℓ</sub> (barra interna)</span> <span class="pill real">dados reais do GuppyLM</span></span>
+        <svg class="plot" id="st5-a" viewBox="0 0 360 230" role="img" aria-label="Gráfico de barras da norma mediana das ativações, med, em cada block, com o comprimento somado sobreposto."></svg>
+      </figure>
+      <figure class="fig">
+        <span class="label">Empurrão relativo <span class="label-plain">|ε<sub>ℓ</sub>| / med<sub>ℓ</sub></span></span>
+        <svg class="plot" id="st5-b" viewBox="0 0 360 230" role="img" aria-label="Gráfico de barras do empurrão relativo, comprimento somado dividido por med, em cada block."></svg>
+      </figure>
+    </div>
+    <div class="st-row">
+      <div class="seg" id="st5-mode" role="group" aria-label="Como o passo é definido">
+        <button type="button" data-v="fixed" aria-pressed="false">ε fixo</button>
+        <button type="button" data-v="scaled" aria-pressed="true">ε<sub>ℓ</sub> = r · med<sub>ℓ</sub></button>
+      </div>
+      <label for="st5-x" id="st5-xl">r</label><input type="range" id="st5-x" min="0" max="0.4" step="0.01" value="0.1" aria-labelledby="st5-xl"><output id="st5-xv" for="st5-x">0.10</output>
+    </div>
+    <p class="caption">As normas crescem ao longo do stream, então um ε fixo é um empurrão grande no block 0 e pequeno no block 4. <span id="st5-src"></span></p>
+    <p class="try"><b>Experimente:</b> troque para “ε fixo” e veja o gráfico da direita ficar desigual.</p>
+    <div class="eqs two">
+      <div class="eq1">
+        <p class="math">ε<sub>ℓ</sub> = r · med<sub>ℓ</sub>,&nbsp;&nbsp; ‖ε<sub>ℓ</sub>v<sub>ℓ</sub>‖<sub>2</sub> / med<sub>ℓ</sub> = |r|</p>
+        <p class="gloss">já que ‖v<sub>ℓ</sub>‖<sub>2</sub> = 1: a mesma fração de uma ativação típica em todo block.</p>
+      </div>
+      <div class="eq1">
+        <p class="math">med<sub>ℓ</sub> = median<sub>i</sub> ‖h<sub>ℓ</sub><sup>(i)</sup>‖<sub>2</sub></p>
+        <p class="gloss">sobre as ativações do último token nos conjuntos de dados dos três conceitos (independe do conceito); a mediana, por robustez, é uma escolha de projeto.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · decoding -->
+  <section class="panel" aria-labelledby="h-st-6" id="st-6">
+    <h2 id="h-st-6"><span class="num">6</span> Greedy pega o token do topo; sampling joga dados viciados</h2>
+    <p class="lead">O steering muda as probabilidades; uma regra de decodificação as transforma em texto. Greedy sempre pega o token mais provável; sampling sorteia entre os k tokens mais prováveis depois que uma temperature T os remodela. A Demo usa T = 0.7 e top-k = 50, com os mesmos sorteios nas duas respostas.</p>
+    <div class="two">
+      <figure class="fig">
+        <span class="label">Próximo token depois do prompt, os 10 mais prováveis de 4096 <span class="pill real">dados reais do GuppyLM</span></span>
+        <div class="bars" id="st6-bars" role="img" aria-label="Gráfico de barras das probabilidades do próximo token depois da temperature e do top-k."><span class="muted">Esperando o modelo carregar…</span></div>
+        <figcaption id="st6-cap">Calculado ao vivo pelo GuppyLM (sem steering) na última posição do prompt.</figcaption>
+      </figure>
+      <div class="prose">
+        <div class="anim-controls">
+          <button type="button" class="btn main" id="st6-draw" disabled>Sortear um token</button>
+          <button type="button" class="btn" id="st6-draw10" disabled>Sortear 10 amostras</button>
+          <button type="button" class="btn" id="st6-draw200" disabled>Sortear 200</button>
+        </div>
+        <span class="label">O sorteio: <span class="label-plain">u ∈ [0, 1)</span> escolhe uma fatia</span>
+        <div class="cdf" id="st6-cdf" role="img" aria-label="As probabilidades mantidas, postas lado a lado; um sorteio uniforme u cai numa fatia."></div>
+        <p class="live-read" id="st6-read" aria-live="polite"></p>
+        <p class="pills"><span class="pill toy">sorteios deste widget: números aleatórios do navegador, sem seed</span></p>
+      </div>
+    </div>
+    <div class="st-row">
+      <label for="st6-T">Temperature T <input type="range" id="st6-T" min="0.1" max="2" step="0.05" value="0.7"></label><output id="st6-Tv" for="st6-T">0.70</output>
+      <label for="st6-k">top-k <input type="range" id="st6-k" min="1" max="100" step="1" value="50"></label><output id="st6-kv" for="st6-k">50</output>
+    </div>
+    <div class="st-row">
+      <label for="st6-prompt" class="label label-plain">Prompt</label>
+      <input id="st6-prompt" type="text" value="how are you feeling today" spellcheck="false" autocomplete="off">
+    </div>
+    <p class="try"><b>Experimente:</b> sorteie 10 amostras com T = 0.1 e depois com T = 2.</p>
+    <div class="two">
+      <div class="eqs">
+        <div class="eq1">
+          <p class="math">p<sub>i</sub><sup>(T,k)</sup> = 𝟙[i ∈ K<sub>k</sub>] e<sup>z<sub>i</sub>/T</sup> / Σ<sub>j∈K<sub>k</sub></sub> e<sup>z<sub>j</sub>/T</sup></p>
+          <p class="gloss">z ∈ ℝ<sup>4096</sup>: logits na última posição; K<sub>k</sub>: os k índices com os maiores z<sub>i</sub>; T &gt; 0.</p>
+        </div>
+        <div class="eq1">
+          <p class="math">greedy: próximo = argmax<sub>i</sub> z<sub>i</sub></p>
+          <p class="gloss">determinístico, não muda com T nem com k, e coincide exatamente com a referência em PyTorch.</p>
+        </div>
+        <div class="eq1">
+          <p class="math wrap">Demo, com sampling: T = 0.7, k = 50, 64 tokens novos, uma seed para as duas colunas</p>
+          <p class="gloss">o paired design: as duas respostas usam os mesmos sorteios u<sub>1</sub>, u<sub>2</sub>, ….</p>
+        </div>
+      </div>
+      <figure class="fig">
+        <span class="label">Paired design <span class="pill toy">esquema</span></span>
+        <div class="pair" role="img" aria-label="Esquema: as duas colunas usam os mesmos sorteios u1 a u8. Os tokens coincidem até o passo 3 e diferem do passo 4 em diante.">
+          <span class="rl">sorteio</span><span class="u">u₁</span><span class="u">u₂</span><span class="u">u₃</span><span class="u">u₄</span><span class="u">u₅</span><span class="u">u₆</span><span class="u">u₇</span><span class="u">u₈</span>
+          <span class="rl">sem steering</span><span class="same">a</span><span class="same">b</span><span class="same">c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span>
+          <span class="rl">com steering</span><span class="same">a</span><span class="same">b</span><span class="same">c</span><span class="diff">x</span><span class="diff">y</span><span class="diff">z</span><span class="diff">w</span><span class="diff">q</span>
+        </div>
+        <figcaption>Com r = 0 as duas respostas são idênticas; depois do primeiro token diferente, os sorteios seguintes caem em distribuições diferentes.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 7 · reading the demo -->
+  <section class="panel" aria-labelledby="h-st-7" id="st-7">
+    <h2 id="h-st-7"><span class="num">7</span> Agora é a sua vez</h2>
+    <p class="lead">Você já conheceu todos os controles da Demo. O esboço abaixo liga cada controle à seção que o explica, para você conferir o que uma configuração faz antes de mudá-la.</p>
+    <div class="mock" role="group" aria-label="Esboço anotado dos controles da Demo; cada controle leva à seção que o explica">
+      <a href="#steering" data-goto="st-1"><span class="lab">Conceito <span class="pill real">§1</span></span><span class="fake"><i class="on">food</i><i>valence</i><i>env_social</i></span></a>
+      <a href="#steering" data-goto="st-2"><span class="lab">Fonte do vetor <span class="pill real">§2</span></span><span class="fake"><i class="on">RFM</i><i>DiffMeans</i><i>Random</i></span></a>
+      <a href="#steering" data-goto="st-3"><span class="lab">Blocks S → ρ <span class="pill real">§3</span></span><span class="fake"><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i class="on">todos</i></span></a>
+      <a href="#steering" data-goto="st-4"><span class="lab">Posições P <span class="pill real">§4</span></span><span class="fake"><i>prompt</i><i>gerados</i><i class="on">todas</i></span></a>
+      <a href="#steering" data-goto="st-5"><span class="lab">Controle r, tabela de ε <span class="pill real">§5</span></span><span class="fake rail"><i class="band"></i><i class="thumb"></i></span></a>
+      <a href="#steering" data-goto="st-6"><span class="lab">Greedy, seed <span class="pill real">§6</span></span><span class="fake"><i>☐ greedy</i><i>seed 42</i></span></a>
+    </div>
+    <p class="try"><b>Experimente:</b> abra a aba <a href="#demo">Rode a Demo</a>; clique num controle acima para ver sua seção, ou consulte o <a href="#dictionary">Dicionário</a>.</p>
+  </section>
+  </div>
+
+  <div class="pane" id="pane-demo" role="tabpanel" aria-labelledby="tab-demo" hidden>
+  <section class="panel" aria-label="Prompt e controles">
+    <div>
+      <div class="concept-guide" id="concept-guide">
+        <span class="label">O que cada conceito significa</span>
+        <ul class="muted">
+          <li data-c="food"><b>food</b> (comida): <span class="rp">r &gt; 0</span> leva o peixe a falar de comida e sabor; <span class="rn">r &lt; 0</span>, de clima, estações, TV, música, o vidro do aquário, chuva e o lado de fora.</li>
+          <li data-c="valence"><b>valence</b> (valência): <span class="rp">r &gt; 0</span> leva o peixe a soar feliz, animado, carinhoso e curioso; <span class="rn">r &lt; 0</span>, assustado, entediado e cansado.</li>
+          <li data-c="env_social"><b>env_social</b> (ambiente/social): <span class="rp">r &gt; 0</span> leva o peixe a falar do seu aquário (água, filtro, temperatura, algas); <span class="rn">r &lt; 0</span>, de conversa social (cumprimentos, despedidas, amigos, visitas, solidão).</li>
+        </ul>
+        <span class="caption">Isso vale para as fontes RFM e DiffMeans. Random é uma direção de controle sem significado de conceito, então o sinal dela não quer dizer nada.</span>
+      </div>
+      <div class="case-hint" id="case-hint" role="note">
+        <span class="glyph" aria-hidden="true">Aa</span>
+        <strong>Escreva em minúsculas<span class="alert" id="case-alert" hidden> — seu prompt tem maiúsculas</span></strong>
+        <span class="why">O GuppyLM só fala inglês; seu vocabulário quase não tem maiúsculas, vírgulas ou “!”, e ele descarta caracteres que não conhece.</span>
+      </div>
+      <div class="prompt-row">
+        <div>
+          <label class="label label-plain" for="prompt">Escreva seu prompt aqui</label>
+          <textarea id="prompt" rows="2">how are you feeling today</textarea>
+          <div class="prompt-meta"><span id="tokcount" class="mono muted">— / 56 tokens</span></div>
+        </div>
+        <button class="primary" id="go" disabled>Gerar</button>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="field"><span class="label" id="lbl-concept">Conceito <span id="badge"></span></span><div class="seg" id="concept" role="group" aria-labelledby="lbl-concept"></div></div>
+      <div class="field"><span class="label" id="lbl-source">Fonte do vetor</span><div class="seg" id="source" role="group" aria-labelledby="lbl-source"></div></div>
+      <div class="field"><span class="label" id="lbl-blocks">Blocks S</span><div class="seg" id="blocks" role="group" aria-labelledby="lbl-blocks"></div></div>
+      <div class="field"><span class="label" id="lbl-positions">Posições P</span><div class="seg" id="positions" role="group" aria-labelledby="lbl-positions"></div></div>
+      <div class="field"><span class="label">Decodificação</span>
+        <div class="decoding">
+          <label><input type="checkbox" id="greedy"> greedy</label>
+          <label>seed <input type="number" id="seed" value="42" step="1"></label>
+          <span class="muted">T = 0.7, top-k = 50, 64 tokens</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="label">Predefinições</span>
+      <div class="presets" id="presets"></div>
+      <p class="caption" id="caption"></p>
+    </div>
+  </section>
+
+  <section class="panel" aria-label="Força do steering">
+    <div class="slider-head">
+      <h2>Força do steering <var>r</var></h2>
+      <div class="rval" id="rval">r = +0.000<small id="rhoval">ρ = 0.000</small></div>
+    </div>
+    <div class="track" id="track">
+      <div class="rail"></div>
+      <div class="bandfill" id="bandfill" hidden></div>
+      <div class="zero" style="left:50%"></div>
+      <div class="star" id="star" hidden tabindex="0"></div>
+      <input type="range" id="slider" min="-1" max="1" step="0.001" value="0" aria-label="Força do steering r (escala cúbica)">
+      <div class="ticks" id="ticks"></div>
+    </div>
+    <div class="legend">
+      <span><i></i><span id="bandtext">faixa coerente, exploratória (7 prompts)</span></span>
+      <span id="startext"></span>
+      <span>Escala: r = sign(u) · 4 · |u|³, fina perto de 0.</span>
+    </div>
+
+    <details class="formula" id="formula" open>
+      <summary>Regra de atualização com os números atuais</summary>
+      <div class="eq" id="eq"></div>
+      <div class="tbl-wrap"><table id="epstable"></table></div>
+      <p class="readout" id="doseline"></p>
+    </details>
+  </section>
+
+  <p class="caption answers-caption">A resposta da esquerda é o modelo sem steering. A da direita soma
+      <span class="mono">r · med<sub>ℓ</sub> · v<sub>ℓ</sub></span> à saída dos blocks escolhidos, nas
+      posições escolhidas. As duas usam o mesmo prompt e a mesma seed aleatória, então qualquer diferença
+      vem do termo de steering.</p>
+
+  <section class="answers" aria-label="Respostas">
+    <article class="panel answer" id="col-left">
+      <header><h2>Sem steering</h2><span class="mono muted">r = 0</span></header>
+      <div class="text" id="text-left"></div>
+      <div><span class="label">Releitura limpa, block 5</span><div class="strip" id="strip-left"></div></div>
+      <div class="scoreblock" id="score-left"></div>
+    </article>
+    <article class="panel answer steered" id="col-right">
+      <header><h2>Com steering</h2><span class="mono muted" id="right-tag">r = 0</span></header>
+      <div class="text" id="text-right"></div>
+      <div><span class="label">Releitura limpa, block 5</span><div class="strip" id="strip-right"></div></div>
+      <div class="scoreblock" id="score-right"></div>
+    </article>
+  </section>
+
+  <footer>
+    <p><b>Releitura limpa.</b> O prompt e a resposta passam de novo pelo modelo <em>sem steering</em>; cada célula é um token gerado, colorido por p<sub>t</sub> = ⟨a<sub>5,t</sub> − μ<sub>5</sub>, v<sub>5</sub>⟩. Ela usa a direção do conceito mesmo quando você faz steering com a direção aleatória, então nunca lê de volta o vetor injetado. A escala de cores é a mesma nas duas respostas.</p>
+    <p><b>Juiz g<sub>c</sub></b> = 2 P(rótulo 1) − 1, um classificador TF-IDF + regressão logística que usa só o texto (Check III). Ele nunca vê ativações.</p>
+    <p><b>Faixa coerente.</b> Nos 7 prompts de exploração, o maior |r| tal que todo valor da grade até ele deu uma resposta coerente em pelo menos 4 dos 7 prompts. Um ▼ marca uma célula que passou na confirmação pré-registrada em 20 prompts novos.</p>
+    <p>O texto amostrado no navegador não coincide com o do PyTorch sorteio a sorteio (o gerador aleatório é outro); o texto greedy coincide.</p>
+  </footer>
+  </div>
+
+  <section class="pane dict" id="pane-dict" role="tabpanel" aria-labelledby="tab-dict" hidden>
+    <p>Os termos usados nesta página, na ordem em que aparecem. Os símbolos vêm ao lado de cada nome.</p>
+
+    <section class="panel">
+      <h2>O modelo</h2>
+      <dl>
+        <dt>GuppyLM</dt>
+        <dd>Um modelo de linguagem pequeno (um transformer com 6 blocks e largura d = 384, cerca de 35 MB) treinado para conversar como um peixe de estimação. Ele roda inteiro no seu navegador, e nada é enviado a um servidor.</dd>
+        <dt>Rede neural</dt>
+        <dd>Uma função construída compondo peças simples com parâmetros, f = f<sub>L</sub> ∘ ⋯ ∘ f<sub>1</sub>, cada uma um mapa afim seguido de uma não linearidade, f<sub>k</sub>(x) = σ(W<sub>k</sub> x + b<sub>k</sub>). O treino define os parâmetros W<sub>k</sub>, b<sub>k</sub>. O GuppyLM tem 8&#8239;726&#8239;016 parâmetros. O treino os ajusta para que f dê probabilidade alta ao token que de fato vem a seguir no texto de treino.</dd>
+        <dt>Teorema da aproximação universal</dt>
+        <dd>Por que essa família de funções: para uma ativação σ não polinomial (a ReLU serve), toda função contínua g num compacto K ⊂ ℝ<sup>n</sup> e todo ε &gt; 0, existe uma rede com uma camada oculta de largura finita N tal que sup<sub>x∈K</sub> |f(x) − g(x)| &lt; ε. O teorema diz que essa rede existe. Ele não diz quão grande N precisa ser, nem que o treino vai encontrá-la, e não diz nada sobre prever bem a linguagem.</dd>
+        <dd>Um transformer block é mais do que um mapa afim e uma σ: ele também usa normalização e attention, mas continua sendo uma composição de peças com parâmetros.</dd>
+        <dt>Token <span class="mono">t</span></dt>
+        <dd>A unidade que o modelo lê e escreve: uma palavra ou um pedaço de palavra, com um id inteiro. As posições na sequência são numeradas t = 0, 1, 2, …, contando primeiro o prompt e depois a resposta gerada.</dd>
+        <dt>Vocabulário</dt>
+        <dd>A lista de todos os tokens que o tokenizer conhece. O do GuppyLM tem 2&#8239;418 tokens, com ids de 0 a 2417, quase todos em minúsculas.</dd>
+        <dt>Embedding <span class="mono">E</span></dt>
+        <dd>Uma tabela de consulta aprendida E ∈ ℝ<sup>4096 × 384</sup>. A linha id de E é o vetor do token id. Só as linhas 0 a 2417 chegam a ser usadas. Soma-se uma tabela de posições aprendida Pos ∈ ℝ<sup>128 × 384</sup>, de modo que a entrada dos blocks na posição t é x<sub>t</sub> = E[id<sub>t</sub>] + Pos[t] ∈ ℝ<sup>384</sup>. Ela tem 128 linhas, então uma sequência comporta no máximo 128 tokens.</dd>
+        <dt>Prompt, comprimento do prompt <span class="mono">T<sub>0</sub></span></dt>
+        <dd>O texto que você digita. T<sub>0</sub> é o comprimento dele em tokens depois de aplicado o chat template do GuppyLM. O prompt é limitado a 56 tokens. O template põe três tokens (&lt;|im_start|&gt;, “user”, uma quebra de linha) antes do seu texto, então seu primeiro token fica na posição t = 3 da sequência completa.</dd>
+        <dt>Block <span class="mono">ℓ</span></dt>
+        <dd>Uma das 6 camadas do transformer, numeradas ℓ = 0, …, 5 da entrada para a saída. O block 5 é o último antes de o modelo escolher o próximo token.</dd>
+        <dt>Ativação, residual stream <span class="mono">h<sub>ℓ,t</sub></span></dt>
+        <dd>O vetor de 384 números que o block ℓ produz na posição t. Cada block soma sua saída ao stream que recebe, então uma mudança feita no block ℓ é levada adiante a todos os blocks seguintes.</dd>
+        <dt>Attention</dt>
+        <dd>O primeiro passo de cada block, em que os tokens trocam informação. A linha t faz uma média ponderada de (mapas lineares das) linhas nas posições s ≤ t, nunca das posteriores. O GuppyLM usa 6 heads de tamanho 64 em paralelo. A saída é somada ao stream.</dd>
+        <dt>MLP</dt>
+        <dd>O segundo passo de cada block. Cada posição é transformada sozinha: um mapa linear 384 → 768, ReLU, um mapa linear 768 → 384. A saída é somada ao stream. Os dois passos normalizam a entrada com uma LayerNorm antes.</dd>
+        <dt>Block pre-LN</dt>
+        <dd>Os blocks do GuppyLM são sequenciais e pre-LN: sendo x ∈ ℝ<sup>384</sup> a entrada do block numa posição, x′ = x + Attn(LN<sub>1</sub>(x)) e depois h = x′ + MLP(LN<sub>2</sub>(x′)). A LayerNorm age só sobre a cópia que cada subcamada lê; o stream em si nunca é normalizado. Assim, um vetor somado a h<sub>ℓ</sub> permanece no stream e chega a todos os blocks seguintes e à cabeça de saída. Cada block seguinte também reage: sua attention e seu MLP leem uma entrada deslocada e somam saídas diferentes. Por isso a mudança no block 5 é ε<sub>ℓ</sub>v<sub>ℓ</sub> mais essas reações, e não só ε<sub>ℓ</sub>v<sub>ℓ</sub>.</dd>
+        <dt>Unembedding, logits <span class="mono">z</span></dt>
+        <dd>Depois do block 5, uma LayerNorm final e a matriz E (a mesma do embedding: pesos compartilhados, tied weights) dão um escore por linha de E: z = E · LN(h<sub>5,t</sub>) ∈ ℝ<sup>4096</sup>. Esses escores são os logits.</dd>
+        <dt>Softmax</dt>
+        <dd>Transforma os logits em probabilidades, p<sub>i</sub> = e<sup>z<sub>i</sub></sup> / Σ<sub>j</sub> e<sup>z<sub>j</sub></sup>, de modo que p<sub>i</sub> ≥ 0 e a soma é 1. O próximo token é sorteado de p (ou se toma o maior p<sub>i</sub>), anexado, e o modelo roda de novo.</dd>
+        <dt>KV cache</dt>
+        <dd>Durante a geração, as keys e values da attention de cada posição, em cada block, são guardadas assim que essa posição é calculada. Cada passada seguinte (forward pass) calcula só o token mais novo e lê deste cache as keys e values anteriores. A attention só olha para trás, então o resultado é igual ao de recalcular a sequência inteira. Uma posição que recebeu steering quando foi calculada continua com steering no cache. A animação da aba Entendendo Modelos de Linguagem recalcula a matriz inteira a cada passo, por clareza; o cache da implementação dá o mesmo resultado.</dd>
+      </dl>
+    </section>
+
+    <section class="panel">
+      <h2>Steering</h2>
+      <dl>
+        <dt>Steering</dt>
+        <dd>Mudar o que o modelo escreve somando um vetor fixo às suas ativações durante a geração. Os pesos e o prompt continuam os mesmos.</dd>
+        <dt>Linear representation hypothesis (hipótese da representação linear)</dt>
+        <dd>A suposição por trás do steering ao longo de uma direção: no block ℓ, um conceito é lido, aproximadamente, por um único funcional linear h ↦ ⟨h − μ, v⟩ em ℝ<sup>384</sup>, com ‖v‖<sub>2</sub> = 1, e mover h ao longo de v muda o conceito. O método a supõe. Ela não é um fato provado, e a Demo não a confirmou para o GuppyLM.</dd>
+        <dt>Regra de atualização</dt>
+        <dd><span class="mono">h<sub>ℓ,t</sub> ← h<sub>ℓ,t</sub> + 𝟙[t ∈ P] · r · med<sub>ℓ</sub> · v<sub>ℓ</sub></span> para todo block ℓ em S. 𝟙[t ∈ P] vale 1 quando a posição t está no conjunto P e 0 caso contrário. A aba Rode a Demo imprime essa regra com os seus números atuais.</dd>
+        <dt>Conceito <span class="mono">c</span></dt>
+        <dd>Um par de temas opostos que a direção deve separar. r positivo empurra para o primeiro lado (rótulo 1); r negativo, para o segundo (rótulo 0).</dd>
+        <dd><b>food</b> (comida): comida e sabor contra clima, estações, TV, música, o vidro do aquário, chuva, lado de fora.<br>
+          <b>valence</b> (valência): feliz, animado, amor, curioso contra assustado, medo, entediado, cansado.<br>
+          <b>env_social</b> (ambiente/social): água, filtro, temperatura quente ou fria, algas contra cumprimentos, despedidas, amigos, visitas, solidão.</dd>
+        <dt>Rótulo 1 / Rótulo 0</dt>
+        <dd>Cada prompt de treino recebe o rótulo 1 (o primeiro lado do conceito, por exemplo comida e sabor) ou 0 (o segundo lado, por exemplo clima, estações, TV). As direções são estimadas a partir das ativações do último token, h<sub>ℓ,T<sub>0</sub>−1</sub>, desses prompts com chat template. Nesta página, laranja marca o rótulo 1 e azul o rótulo 0.</dd>
+        <dt>Direção do conceito <span class="mono">v<sub>ℓ</sub></span></dt>
+        <dd>Um vetor unitário (comprimento 1) no espaço de ativações de 384 dimensões do block ℓ, um por block. De onde ele vem é definido pela fonte do vetor. Seu sinal é fixado de modo que a projeção ⟨h, v⟩ tenha correlação positiva (Pearson) com o rótulo; assim +v aponta para o rótulo 1.</dd>
+        <dt>Fonte do vetor <span class="mono">m</span></dt>
+        <dd><b>RFM</b>: o autovetor principal do AGOP de uma Recursive Feature Machine treinada para separar os dois lados do conceito a partir das ativações do block ℓ. A máquina alterna kernel ridge regression com um Laplace kernel e uma atualização AGOP da matriz M do kernel. Este é o método de <em>Towards Universal Steering</em> (Beaglehole et al., arXiv:2502.03708), construído sobre a Recursive Feature Machine de Radhakrishnan et al. (<em>Science</em>, 2024). No ajuste real, a largura de banda L ∈ {1, 10, 100}, o número de iterações T ≤ 10 e a normalização das linhas (ligada ou não) foram escolhidos num conjunto de validação por |Pearson(⟨h, v⟩, y)|; o ridge padrão do código é λ = 10<sup>−3</sup>. O brinquedo 2-D da aba Entendendo Steering usa λ = 1, um ridge maior, para que um ajuste em 2-D não persiga ruído.</dd>
+        <dd><b>DiffMeans</b>: a ativação média nos textos de rótulo 1 menos a média nos textos de rótulo 0, escalada para comprimento 1. Uma linha de base simples.</dd>
+        <dd><b>Random</b>: uma direção sorteada ao acaso (com seed fixa), sem relação com nenhum conceito. É o controle: uma direção de conceito deveria fazer algo que uma aleatória não faz. Os seis u<sub>ℓ</sub> são sorteados de forma independente, então seus cossenos ficam perto de 0 e, com S = todos, eles se cancelam em parte em ρ.</dd>
+        <dt>Direção de Fisher</dt>
+        <dd>Σ̂<sup>−1</sup>(μ̂<sub>+</sub> − μ̂<sub>−</sub>), com Σ̂ a covariância intraclasse combinada. É a melhor direção linear quando as duas classes são gaussianas com uma mesma covariância. O brinquedo da aba Entendendo Steering a desenha só como referência. Nesse brinquedo, com as nuvens alongadas, a direção do RFM se alinha com a de Fisher nas primeiras iterações e M fica perto de posto um; é uma observação sobre o brinquedo, não um teorema sobre o RFM.</dd>
+        <dt>AGOP</dt>
+        <dd>Average Gradient Outer Product (média dos produtos externos dos gradientes): a matriz 384 × 384 (1/n) Σ<sub>i</sub> ∇f(h<sub>i</sub>) ∇f(h<sub>i</sub>)<sup>⊤</sup> sobre as n ativações de treino h<sub>i</sub>, onde f é o preditor treinado (o código subtrai antes o gradiente médio). Seu autovetor principal é a direção de entrada ao longo da qual o preditor mais muda, em média sobre os dados.</dd>
+        <dt>Kernel ridge regression</dt>
+        <dd>Ajusta um preditor f(h) = Σ<sub>i</sub> α<sub>i</sub> K(h<sub>i</sub>, h) aos rótulos y<sub>i</sub>, com α = (K + λI)<sup>−1</sup>y, K<sub>ij</sub> = K(h<sub>i</sub>, h<sub>j</sub>) e um ridge λ &gt; 0. No RFM as entradas são ativações do block ℓ, os alvos são os rótulos 1 e 0, e K é o Laplace kernel abaixo.</dd>
+        <dt>Laplace kernel, distância de Mahalanobis</dt>
+        <dd>K<sub>M</sub>(x, z) = exp(−‖x − z‖<sub>M</sub> / L), com largura de banda L &gt; 0 e a distância de Mahalanobis ‖x − z‖<sub>M</sub> = √((x − z)<sup>⊤</sup>M(x − z)) para uma matriz M ∈ ℝ<sup>384 × 384</sup>, M ⪰ 0. Com M = I, é o Laplace kernel comum. O RFM começa em M = I e troca M pelo AGOP a cada iteração, de modo que as distâncias pesam mais nas direções em que o preditor muda.</dd>
+        <dt>Escala das ativações <span class="mono">med<sub>ℓ</sub></span></dt>
+        <dd>A mediana do comprimento ‖h<sub>ℓ</sub>‖ das ativações do block ℓ, tomada sobre as ativações dos conjuntos de dados dos três conceitos, então ela não depende do conceito. As ativações são as do último token, as mesmas em que as direções são treinadas. As normas crescem ao longo do residual stream, então um passo fixo empurraria forte no block 0 e pouco no block 4. Multiplicar por med<sub>ℓ</sub> põe r na mesma escala em todo block: ‖ε<sub>ℓ</sub>v<sub>ℓ</sub>‖ / med<sub>ℓ</sub> = |r|, então r = 0.1 soma um vetor com um décimo do comprimento de uma ativação típica. Usar a mediana em vez da média é uma escolha de projeto, para ter robustez a algumas normas discrepantes.</dd>
+        <dt>Força do steering <span class="mono">r</span></dt>
+        <dd>O número no controle deslizante. O sinal escolhe o lado do conceito e o tamanho define a força do empurrão. O controle é cúbico, r = sign(u) · 4 · |u|³ para a posição u ∈ [−1, 1] do cursor, para que valores pequenos sejam fáceis de ajustar.</dd>
+        <dt>Passo por block <span class="mono">ε<sub>ℓ</sub></span></dt>
+        <dd>ε<sub>ℓ</sub> = r · med<sub>ℓ</sub>, o comprimento do vetor somado no block ℓ. Vale 0 para os blocks fora de S.</dd>
+        <dt>Blocks <span class="mono">S</span></dt>
+        <dd>O conjunto de blocks que recebem o vetor: um block (de 0 a 5) ou todos os seis. Com um block ℓ, o vetor somado atravessa os 5 − ℓ blocks seguintes, que o leem e reagem. Com todos, seis vetores diferentes v<sub>0</sub>, …, v<sub>5</sub> são somados e se acumulam no stream.</dd>
+        <dt>Posições <span class="mono">P</span></dt>
+        <dd>As posições de token que recebem o vetor. <b>prompt - todos os tokens menos o último</b>: t &lt; T<sub>0</sub> − 1, todo token do prompt exceto o último. <b>gerados - último token</b>: t ≥ T<sub>0</sub> − 1. O nome descreve cada passada. O modelo escreve um token por passada (forward pass) e guarda num cache as keys e values das posições anteriores. A primeira passada lê o prompt inteiro, mas soma o vetor só no último token dele, o que prevê o primeiro token da resposta. Cada passada seguinte calcula só o token mais novo, o token da resposta que acabou de ser realimentado, e soma o vetor ali. Então, em toda passada, o vetor vai só para o último token, e ao longo da execução inteira isso cobre t ≥ T<sub>0</sub> − 1. <b>todas</b>: todas as posições. Isso são mecanismos: qual conjunto empurra mais com um dado r não foi medido. Os dois primeiros dividem a sequência sem sobreposição. Com <b>prompt - todos os tokens menos o último</b>, os tokens gerados nunca recebem steering diretamente: eles só sentem o empurrão pela attention às keys e values com steering no KV cache.</dd>
+        <dt>Dose efetiva <span class="mono">ρ</span></dt>
+        <dd>ρ = ‖Σ<sub>ℓ∈S</sub> ε<sub>ℓ</sub> v<sub>ℓ</sub>‖ / med<sub>5</sub>: o vetor somado total, medido em unidades de uma ativação típica do block 5. Fazer steering em seis blocks com o mesmo r soma mais do que em um, então compare configurações por ρ e não por r. Como ‖Σ<sub>ℓ</sub> ε<sub>ℓ</sub>v<sub>ℓ</sub>‖<sup>2</sup> = Σ<sub>ℓ</sub>Σ<sub>ℓ′</sub> ε<sub>ℓ</sub>ε<sub>ℓ′</sub>⟨v<sub>ℓ</sub>, v<sub>ℓ′</sub>⟩, o numerador é igual a Σ<sub>ℓ</sub>|ε<sub>ℓ</sub>| quando todo cosseno vale 1, e a √(Σ<sub>ℓ</sub> ε<sub>ℓ</sub><sup>2</sup>) quando os vetores são ortogonais.</dd>
+      </dl>
+    </section>
+
+    <section class="panel">
+      <h2>Decodificação</h2>
+      <dl>
+        <dt>Sampling</dt>
+        <dd>A cada passo, o próximo token é sorteado ao acaso segundo as probabilidades do modelo, então o mesmo prompt pode dar respostas diferentes. Receita: dividir os logits z por T, manter os k maiores, renormalizar com softmax, sortear um token. O sampler do navegador usa um gerador aleatório diferente do PyTorch, então o texto amostrado não coincide com o da execução em Python sorteio a sorteio; o texto greedy coincide.</dd>
+        <dt>Temperature <span class="mono">T = 0.7</span></dt>
+        <dd>Divide os logits z por T antes do softmax. Abaixo de 1, torna os tokens prováveis mais prováveis e o texto menos aleatório. Ela não muda qual token é o mais provável.</dd>
+        <dt>Top-k <span class="mono">k = 50</span></dt>
+        <dd>Só os 50 tokens mais prováveis podem ser sorteados a cada passo. Suas probabilidades são renormalizadas para somar 1.</dd>
+        <dt>Seed</dt>
+        <dd>Fixa os sorteios aleatórios. As duas respostas usam a mesma seed, então com r = 0 elas são idênticas, e qualquer diferença entre elas vem do termo de steering.</dd>
+        <dt>Paired design</dt>
+        <dd>As duas respostas compartilham o prompt, as configurações e a seed, então usam os mesmos sorteios e diferem só pelo termo de steering. Com r = 0 elas são idênticas. Quando o texto com steering escolhe um token diferente, os sorteios seguintes caem em distribuições diferentes, e os dois textos deixam de ser comparáveis token a token.</dd>
+        <dt>Greedy</dt>
+        <dd>Sempre pega o token mais provável, em vez de sortear. A resposta fica então totalmente determinada pelo prompt e pelas configurações, e coincide exatamente com a referência em Python.</dd>
+      </dl>
+    </section>
+
+    <section class="panel">
+      <h2>Lendo as respostas</h2>
+      <dl>
+        <dt>Sem steering e Com steering</dt>
+        <dd>A resposta da esquerda usa r = 0. A da direita usa as suas configurações atuais.</dd>
+        <dt>Releitura limpa, block 5 <span class="mono">p<sub>t</sub></span></dt>
+        <dd>O prompt e a resposta passam de novo pelo modelo sem steering, e cada token gerado recebe o escore p<sub>t</sub> = ⟨h<sub>5,t</sub> − μ<sub>5</sub>, v<sub>5</sub>⟩. Células laranja pendem para o rótulo 1, células azuis para o rótulo 0, e a escala de cores é a mesma nas duas respostas.</dd>
+        <dd>Ler as ativações com steering seria circular: elas contêm o vetor somado, então o escore subiria cerca de ε independentemente do que o texto diz. Com a fonte Random, a faixa continua usando a direção RFM do conceito, então ela sempre mede o conceito.</dd>
+        <dt>Média do conceito <span class="mono">μ<sub>5</sub></span></dt>
+        <dd>A ativação média no block 5 sobre os textos de treino do conceito. Subtraí-la centraliza a projeção.</dd>
+        <dt>Média da releitura</dt>
+        <dd>A média de p<sub>t</sub> sobre os tokens gerados de uma resposta.</dd>
+        <dt>Juiz <span class="mono">g<sub>c</sub></span></dt>
+        <dd>Um classificador de texto para o conceito (contagens de palavras e de pares de palavras, TF-IDF, alimentando uma regressão logística). g<sub>c</sub> = 2 P(rótulo 1) − 1 vai de −1 (claramente rótulo 0) a +1 (claramente rótulo 1). Ele lê só o texto e nunca vê ativações, então confere a releitura de fora do modelo.</dd>
+        <dt>Juiz não validado</dt>
+        <dd>Aparece para <b>valence</b>. O juiz dele falhou na verificação de acurácia definida de antemão (AUROC com validação cruzada de 0.78), então seu g<sub>c</sub> fica acinzentado e não deve ser interpretado.</dd>
+        <dt>O que se sabe até agora</dt>
+        <dd>A calibração pré-registrada perguntou se alguma configuração dá texto fluente e no conceito, que se sustenta em prompts novos e supera uma direção aleatória. A resposta foi não para todos os 6 pares conceito × fonte testados (para valence o resultado não é interpretado, porque seu juiz falhou na validação com AUROC 0.78). Nas faixas exploradas, |r| maior tende a transformar o texto numa salada de palavras. A faixa sombreada da Demo mostra a faixa coerente de cada configuração.</dd>
+      </dl>
+    </section>
+  </section>
+</div>
+
+<script type="module">
+import * as E from "./engine.js";
+
+const R_MAX = 4, MAX_PROMPT = 56, NEW_TOKENS = 64;
+const CONCEPT_NAMES = { food: "food", valence: "valence", env_social: "env_social" };
+const SOURCE_NAMES = { rfm: "RFM", dm: "DiffMeans", random: "Random" };
+const BLOCK_NAMES = { 0: "0", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", all: "todos" };
+// Display labels for the position sets; the keys are the ids used by engine.js and the data files.
+const POS_NAMES = { prompt: "prompt - todos os tokens menos o último", gen: "gerados - último token", all: "todas" };
+// Data captions name position sets as P_prompt / P_gen / P_all; show the display label instead.
+const posText = (s) => s.replace(/\bP_(prompt|gen|all)\b/g, (_, k) => `P = “${POS_NAMES[k]}”`);
+const $ = (id) => document.getElementById(id);
+// pt-BR display layer for the English strings stored in data/concept_*.json (badge, band label, preset
+// labels and captions, judge end labels). The data files and their keys are unchanged; unknown strings pass through.
+const PT_DATA = {
+  "exploratory (7 prompts)": "exploratória (7 prompts)",
+  "judge not validated (G1 failed: CV AUROC 0.78)": "juiz não validado (G1 falhou: AUROC com validação cruzada 0.78)",
+  "Best regime": "Melhor regime",
+  "Check III setup": "Configuração do Check III",
+  "Random control": "Controle Random",
+  "The regime Check III ran: all 6 blocks, every position, r = +0.25. It produced no coherent generation.":
+    "O regime que o Check III rodou: os 6 blocks, todas as posições, r = +0.25. Ele não produziu nenhuma geração coerente.",
+  "Same blocks, positions and r as “Best regime”, along a random unit direction instead of the concept.":
+    "Mesmos blocks, posições e r do “Melhor regime”, ao longo de uma direção unitária aleatória em vez da do conceito.",
+  "food / taste": "comida / sabor",
+  "weather / seasons / tv / music / glass / rain / outside": "clima / estações / tv / música / aquário / chuva / lá fora",
+  "happy / excited / love / curious": "feliz / animado / amor / curioso",
+  "scared / fear / bored / tired": "assustado / medo / tédio / cansado",
+  "water / filter / temp_hot / temp_cold / algae": "água / filtro / temp. quente / temp. fria / algas",
+  "greeting / bye / friends / visitors / lonely": "cumprimento / tchau / amigos / visitas / solidão",
+};
+const ptd = (x) => {
+  if (x == null || x === "") return x;
+  if (PT_DATA[x]) return PT_DATA[x];
+  const m = x.match(/^Widest coherent band found \(exploratory, 7 prompts\): (.+), block (\d), (P_\w+), r = (\S+)\. No cell was confirmed on new prompts\.$/);
+  if (m) return `Faixa coerente mais larga encontrada (exploratória, 7 prompts): ${m[1]}, block ${m[2]}, ${m[3]}, r = ${m[4]}. Nenhuma célula foi confirmada em prompts novos.`;
+  return x;
+};
+
+const state = { concept: "food", source: "rfm", blocks: "all", positions: "all", u: 0, preset: null };
+let ready = false, runId = 0, leftCache = null, lastLeft = null, lastRight = null;
+let ctrl = new AbortController();
+
+const rOf = (u) => Math.sign(u) * R_MAX * Math.abs(u) ** 3;
+const uOf = (r) => Math.sign(r) * Math.cbrt(Math.abs(r) / R_MAX);
+const pct = (r) => ((uOf(r) + 1) / 2) * 100;
+const fmtR = (r) => (r >= 0 ? "+" : "−") + Math.abs(r).toFixed(Math.abs(r) < 0.1 ? 3 : 2);
+const fmt = (x, d = 3) => (x < 0 ? "−" : "") + Math.abs(x).toFixed(d);
+const cellKey = () => `${state.source}|${state.blocks}|${state.positions}`;
+
+// ── controls ──────────────────────────────────────────────────────────────
+function seg(id, names, key) {
+  const el = $(id);
+  el.innerHTML = "";
+  for (const [v, label] of Object.entries(names)) {
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = label; b.dataset.v = v;
+    b.addEventListener("click", () => { state[key] = v; state.preset = null; sync(); run(); });
+    el.append(b);
+  }
+}
+seg("concept", CONCEPT_NAMES, "concept");
+seg("source", SOURCE_NAMES, "source");
+seg("blocks", BLOCK_NAMES, "blocks");
+seg("positions", POS_NAMES, "positions");
+
+for (const r of [-4, -1, -0.25, -0.05, 0, 0.05, 0.25, 1, 4]) {
+  const s = document.createElement("span");
+  s.style.left = pct(r) + "%";
+  s.textContent = r === 0 ? "0" : (r > 0 ? "+" : "−") + Math.abs(r);
+  $("ticks").append(s);
+}
+
+function sync() {
+  for (const k of ["concept", "source", "blocks", "positions"])
+    for (const b of $(k).children) b.setAttribute("aria-pressed", String(b.dataset.v === state[k]));
+  for (const li of $("concept-guide").querySelectorAll("li")) li.classList.toggle("on", li.dataset.c === state.concept);
+  $("slider").value = state.u;
+  const r = rOf(state.u);
+  $("right-tag").textContent = `r = ${fmtR(r)}`;
+  if (!ready) return;
+
+  const B = E.bundle(state.concept);
+  $("badge").innerHTML = B.badge ? `<span class="badge">${ptd(B.badge)}</span>` : "";
+  const rho = E.dose(state.concept, state.source, state.blocks, r);
+  $("rval").innerHTML = `r = ${fmtR(r)}<small>ρ = ${rho.toFixed(3)}</small>`;
+
+  // band and tick for the current (c, m, S, P)
+  const band = B.bands[cellKey()];
+  const bf = $("bandfill");
+  if (band && (band[0] !== 0 || band[1] !== 0)) {
+    bf.hidden = false;
+    bf.style.left = pct(band[0]) + "%";
+    bf.style.width = (pct(band[1]) - pct(band[0])) + "%";
+    $("bandtext").textContent = `faixa coerente [${fmtR(band[0])}, ${fmtR(band[1])}], ${ptd(B.band_label)}`;
+  } else {
+    bf.hidden = true;
+    $("bandtext").textContent = `nenhuma faixa coerente medida para esta configuração, ${ptd(B.band_label)}`;
+  }
+  const tick = B.ticks[cellKey()];
+  const star = $("star");
+  if (tick) {
+    star.hidden = false;
+    star.style.left = pct(tick.r_star) + "%";
+    star.title = `Confirmado: r* = ${fmtR(tick.r_star)}, coerente e no conceito em ${tick.k_of_20}/20 prompts novos, McNemar p = ${tick.p_mcnemar.toPrecision(2)}`;
+    $("startext").textContent = `▼ r* confirmado = ${fmtR(tick.r_star)} (${tick.k_of_20}/20, p = ${tick.p_mcnemar.toPrecision(2)})`;
+  } else {
+    star.hidden = true;
+    $("startext").textContent = "nenhuma célula confirmada para esta configuração";
+  }
+
+  // presets
+  const pr = $("presets");
+  pr.innerHTML = "";
+  for (const p of B.presets.filter((p) => p.id === "best")) {
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = ptd(p.label);
+    b.setAttribute("aria-pressed", String(state.preset === p.id));
+    b.addEventListener("click", () => applyPreset(p));
+    pr.append(b);
+  }
+  const cur = B.presets.find((p) => p.id === state.preset);
+  $("caption").textContent = cur ? posText(ptd(cur.caption)) : "";
+
+  formula(r, rho);
+  tokenCount();
+}
+
+function formula(r, rho) {
+  const sh = E.shared(), eps = E.epsilon(state.blocks, r);
+  const T0 = E.promptIds($("prompt").value).length;
+  const P = { all: "toda posição t", prompt: `t < T<sub>0</sub> − 1 = ${T0 - 1}`, gen: `t ≥ T<sub>0</sub> − 1 = ${T0 - 1}` }[state.positions];
+  const vname = state.source === "random" ? "u<sub>ℓ</sub>" : `v<sub>ℓ</sub><sup>(${state.concept}, ${SOURCE_NAMES[state.source]})</sup>`;
+  $("eq").innerHTML = `<var>h</var><sub>ℓ,t</sub> ← <var>h</var><sub>ℓ,t</sub> + 𝟙[${P}] · ${fmtR(r)} · med<sub>ℓ</sub> · ${vname},&nbsp;&nbsp; ℓ ∈ S = ${state.blocks === "all" ? "{0,…,5}" : "{" + state.blocks + "}"}`;
+  let rows = "<tr><th>block ℓ</th>" + sh.med.map((_, l) => `<th>${l}</th>`).join("") + "</tr>";
+  rows += "<tr><td>med<sub>ℓ</sub></td>" + sh.med.map((m) => `<td>${m.toFixed(2)}</td>`).join("") + "</tr>";
+  rows += "<tr><td>ε<sub>ℓ</sub> = r · med<sub>ℓ</sub></td>" + eps.map((e) => `<td${e === 0 ? ' class="muted"' : ""}>${fmt(e)}</td>`).join("") + "</tr>";
+  $("epstable").innerHTML = rows;
+  $("doseline").innerHTML = `Dose efetiva ρ = ‖Σ<sub>ℓ∈S</sub> ε<sub>ℓ</sub> v<sub>ℓ</sub>‖ / med<sub>5</sub> = <b class="mono">${rho.toFixed(4)}</b>. Fazer steering em todos os blocks com o mesmo r se acumula no residual stream, então compare configurações por ρ, não por r. T<sub>0</sub> = ${T0} tokens de prompt.`;
+}
+
+// Flag capitals in the prompt (the text itself is never changed).
+function caseHint() {
+  const caps = /\p{Lu}/u.test($("prompt").value);
+  $("case-hint").classList.toggle("warn", caps);
+  $("case-alert").hidden = !caps;
+}
+
+function tokenCount() {
+  caseHint();
+  if (!ready) return;
+  const n = E.tokenize($("prompt").value).length;
+  const el = $("tokcount");
+  el.textContent = `${n} / ${MAX_PROMPT} tokens`;
+  el.classList.toggle("over", n > MAX_PROMPT);
+  $("go").disabled = n > MAX_PROMPT || n === 0;
+}
+
+function applyPreset(p) {
+  Object.assign(state, { source: p.m, blocks: p.S, positions: p.P, u: uOf(p.r), preset: p.id });
+  sync(); run();
+}
+
+$("slider").addEventListener("input", (e) => { state.u = +e.target.value; state.preset = null; sync(); });
+$("slider").addEventListener("change", () => run());
+$("prompt").addEventListener("input", () => { tokenCount(); if (ready) formula(rOf(state.u), E.dose(state.concept, state.source, state.blocks, rOf(state.u))); });
+$("go").addEventListener("click", () => run());
+$("greedy").addEventListener("change", () => run());
+$("seed").addEventListener("change", () => run());
+
+// ── understanding tab ─────────────────────────────────────────────────────
+// Special ids from tokenizer.json added_tokens; tokenStrings() decodes them to "".
+const SPECIAL = { 0: "<pad>", 1: "<|im_start|>", 2: "<|im_end|>" };
+const showTok = (id, s) => SPECIAL[id] ?? s.replace(/\n/g, "↵");
+// The default text tokenized offline with engine.js and data/tokenizer.json; shown until the engine loads.
+const LEARN_DEFAULT = { text: "how are you feeling today", ids: [246, 165, 100, 1829, 277], strs: ["how", " are", " you", " feeling", " today"] };
+// Greedy trace on the chat-template prompt: top 5 of softmax(E.logits) at the last position (temperature 1),
+// precomputed offline with engine.js and replaced by the same computation live once the engine loads.
+const TRACE_OFFLINE = {
+  ids: [1, 88, 64, 246, 165, 100, 1829, 277, 2, 64, 1, 89, 64],
+  strs: ["", "user", "\n", "how", " are", " you", " feeling", " today", "", "\n", "", "assistant", "\n"],
+  steps: [
+    [[43, "i", 0.4928], [1274, "pretty", 0.2957], [35, "a", 0.0126], [149, "the", 0.0063], [1601, "happy", 0.0051]],
+    [[166, "'m", 0.4335], [231, " feel", 0.3043], [374, " am", 0.2527], [176, " don", 0.0016], [217, " think", 0.0008]],
+    [[83, " a", 0.1178], [268, " good", 0.1004], [468, " fine", 0.0931], [483, " happy", 0.0762], [656, " normal", 0.0737]],
+    [[288, " little", 0.8118], [959, " bit", 0.1835], [148, " fish", 0.0006], [268, " good", 0.0005], [995, " simple", 0.0004]],
+    [[1009, " hungry", 0.9939], [148, " fish", 0.0014], [923, " cloudy", 0.001], [7, ".", 0.0004], [446, " scared", 0.0002]],
+    [[7, ".", 1], [77, " i", 0], [95, " the", 0], [1009, " hungry", 0], [251, " now", 0]],
+  ],
+};
+const TOKCOL = ["var(--accent)", "var(--pos)", "var(--neg)"];
+const NCOL = 32, STAGES = 8, STAGE_MS = 1100, MAX_CHIPS = 16;
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// deterministic noise in [−1, 1): the illustrative cell values
+function hn(a, b, c) {
+  let h = Math.imul(a ^ 0x9e3779b9, 0x85ebca6b) ^ Math.imul(b + 0x632be5ab, 0xc2b2ae35) ^ Math.imul(c + 0x27d4eb2f, 0x165667b1);
+  h = Math.imul(h ^ (h >>> 15), 0x2c1b3c6d); h = Math.imul(h ^ (h >>> 12), 0x297a2d39); h ^= h >>> 15;
+  return (h >>> 0) / 2147483648 - 1;
+}
+const cellColor = (v) => `color-mix(in srgb, ${v >= 0 ? "var(--pos)" : "var(--neg)"} ${Math.round(Math.min(1, Math.abs(v)) * 85)}%, var(--surface))`;
+
+// section 2: text → chips → ids → embedding strips
+function renderTokens(ids, strs) {
+  const box = $("learn-toks");
+  box.innerHTML = "";
+  if (!ids.length) { box.textContent = "Nenhum token: o tokenizer do GuppyLM descarta caracteres que não conhece."; return; }
+  ids.slice(0, MAX_CHIPS).forEach((id, t) => {
+    const d = document.createElement("div");
+    d.className = "tok";
+    d.style.setProperty("--c", TOKCOL[t % TOKCOL.length]);
+    let cells = "";
+    for (let j = 0; j < 24; j++) cells += `<i style="background:${cellColor(hn(id, j, 7))}"></i>`;
+    d.innerHTML = `<span class="t">t = ${t}</span><span class="chip"></span><span class="ar">↓</span><span>id ${id}</span><span class="ar">↓ E[${id}]</span><span class="vec">${cells}</span>`;
+    d.querySelector(".chip").textContent = showTok(id, strs[t]);
+    box.append(d);
+  });
+  if (ids.length > MAX_CHIPS) {
+    const more = document.createElement("span");
+    more.className = "muted"; more.textContent = `+ ${ids.length - MAX_CHIPS} tokens a mais`;
+    box.append(more);
+  }
+}
+function learnTokenize() {
+  const s = $("learn-text").value;
+  if (ready) { const ids = E.tokenize(s); renderTokens(ids, E.tokenStrings(ids)); }
+  else if (s === LEARN_DEFAULT.text) renderTokens(LEARN_DEFAULT.ids, LEARN_DEFAULT.strs);
+  else $("learn-toks").textContent = "O tokenizer ainda está carregando. Seu texto será dividido assim que ele estiver pronto.";
+}
+$("learn-text").addEventListener("input", learnTokenize);
+learnTokenize();
+
+// section 4: the animation. pos = STAGES · k + s: k tokens generated so far, s the stage
+// (0 embed, 1…6 block s − 1, 7 unembedding). pos = STAGES · N is the end state.
+const anim = { trace: TRACE_OFFLINE, live: false, pos: 0, playing: false, last: 0, raf: 0 };
+const PIPE = ["<span>E[id] + Pos[t]</span>",
+  ...[0, 1, 2, 3, 4, 5].map((l) => `<span>F<sub>${l}</sub></span><span class="plus">+</span>`),
+  "<span>unembed → softmax</span>"];
+PIPE.forEach((h, i) => {
+  if (i) $("anim-pipe").insertAdjacentHTML("beforeend", '<span class="arr">→</span>');
+  $("anim-pipe").insertAdjacentHTML("beforeend", `<span class="node">${h}</span>`);
+});
+const animEnd = () => STAGES * anim.trace.steps.length;
+
+// Illustrative activations: embedding noise plus a position term; each block mixes in the mean of the
+// rows above (as attention reads earlier rows) and adds a row-wise term (as the MLP does), then squashes.
+function illustrative(ids, s) {
+  let H = ids.map((id, t) => Array.from({ length: NCOL }, (_, j) => 0.75 * hn(id, j, 1) + 0.25 * hn(t, j, 2)));
+  for (let l = 0; l < Math.min(s, 6); l++) {
+    const sum = new Array(NCOL).fill(0);
+    H = H.map((row, t) => {
+      for (let j = 0; j < NCOL; j++) sum[j] += row[j];
+      return row.map((v, j) => Math.tanh(v + 0.35 * sum[j] / (t + 1) + 0.45 * hn(ids[t] * 7 + l, j, 3 + l)));
+    });
+  }
+  return H;
+}
+
+function renderBars(top, pick, faded) {
+  const box = $("anim-bars");
+  box.innerHTML = "";
+  box.style.opacity = faded ? "0.45" : "1";
+  if (!top) { box.innerHTML = '<span class="muted" style="font-size:var(--step--1)">As barras aparecem quando o stream chega ao unembedding.</span>'; return; }
+  for (const [id, s, p] of top) {
+    const row = document.createElement("div");
+    row.className = "bar" + (pick && id === top[0][0] ? " pick" : "");
+    row.innerHTML = '<span class="w"></span><span class="b"><i></i></span><span class="p"></span>';
+    row.querySelector(".w").textContent = JSON.stringify(showTok(id, s));
+    row.querySelector(".b i").style.width = (p * 100).toFixed(1) + "%";
+    row.querySelector(".p").textContent = (p * 100).toFixed(1) + "%";
+    box.append(row);
+  }
+  box.setAttribute("aria-label", "Top 5 próximos tokens: " + top.map(([id, s, p]) => `${JSON.stringify(showTok(id, s))} ${(p * 100).toFixed(1)}%`).join(", "));
+}
+
+function renderAnim() {
+  const tr = anim.trace, N = tr.steps.length, T0 = tr.ids.length;
+  const k = Math.floor(anim.pos / STAGES), s = anim.pos % STAGES, end = anim.pos >= animEnd();
+  const chosen = tr.steps.slice(0, k).map((st) => st[0]);
+  const ids = tr.ids.concat(chosen.map((c) => c[0])), strs = tr.strs.concat(chosen.map((c) => c[1]));
+  const T = ids.length;
+
+  // matrix: rebuild the rows when T changes, otherwise only recolour (so the colours transition)
+  const mat = $("anim-mat");
+  if (mat.childElementCount !== 3 * T) {
+    mat.innerHTML = "";
+    ids.forEach((id, t) => {
+      mat.insertAdjacentHTML("beforeend", `<span class="ti">${t}</span><span class="rl${t >= T0 ? " gen" : ""}"></span><span class="row">${"<i></i>".repeat(NCOL)}</span>`);
+      mat.children[3 * t + 1].textContent = showTok(id, strs[t]);
+    });
+  }
+  const H = illustrative(ids, end ? 0 : s);
+  mat.querySelectorAll(".row").forEach((r, t) => { for (let j = 0; j < NCOL; j++) r.children[j].style.backgroundColor = cellColor(H[t][j]); });
+  const stageName = end || s === 0 ? "x (embeddings)" : `h${"₀₁₂₃₄₅"[Math.min(s, 6) - 1]}`;
+  $("anim-shape").textContent = `${stageName}: T = ${T} linhas × 384 colunas`;
+
+  [...$("anim-pipe").querySelectorAll(".node")].forEach((n, i) => {
+    n.classList.toggle("on", !end && i === s);
+    n.classList.toggle("done", !end && i < s);
+  });
+
+  const q = (c) => `“${showTok(c[0], c[1])}”`;
+  let msg;
+  if (end) msg = `Pronto: ${N} tokens gerados, um por passada. Aperte Reiniciar para rodar de novo.`;
+  else if (s === 0 && k === 0) msg = `Os ${T} tokens do prompt, com o chat template incluído, são buscados na tabela: a linha t é x<sub>t</sub> = E[id<sub>t</sub>] + Pos[t] ∈ ℝ<sup>384</sup>. Juntos, formam uma matriz ${T} × 384.`;
+  else if (s === 0) msg = `O token escolhido ${q(chosen[k - 1])} é anexado como linha t = ${T - 1}. A matriz ${T} × 384 entra de novo nos blocks.`;
+  else if (s < 7) msg = `Block ${s - 1}: a attention deixa cada linha ler as linhas acima dela, o MLP transforma cada linha sozinha, e as duas saídas são somadas ao stream. A forma continua ${T} × 384.`;
+  else msg = `Unembedding: a última linha h<sub>5,${T - 1}</sub> é normalizada e multiplicada por E, dando 4096 escores. O softmax os transforma em probabilidades. Escolha greedy: ${q(tr.steps[k][0])}, ${(tr.steps[k][0][2] * 100).toFixed(1)}%.`;
+  $("anim-text").innerHTML = msg;
+  $("anim-count").textContent = end ? `${N} de ${N} tokens` : `token ${k + 1} de ${N} · etapa ${s + 1} de ${STAGES}`;
+
+  if (!end && s === 7) renderBars(tr.steps[k], true, false);
+  else if (k > 0) renderBars(tr.steps[k - 1], true, true);
+  else renderBars(null);
+
+  const gen = $("anim-gen");
+  gen.textContent = "";
+  gen.append(LEARN_DEFAULT.text + " → ");
+  const g = document.createElement("span");
+  g.className = "g"; g.textContent = chosen.map((c) => c[1]).join("");
+  gen.append(g);
+
+  $("anim-src").textContent = anim.live
+    ? "Ao vivo no seu navegador: sem steering, temperature 1, greedy. (A Demo amostra com T = 0.7.)"
+    : "Pré-calculado com este modelo (sem steering, temperature 1, greedy); recalculado ao vivo quando o modelo carregar.";
+  $("anim-step").disabled = end;
+}
+
+function frame(ts) {
+  if (!anim.playing) return;
+  if (!anim.last) anim.last = ts;
+  if (ts - anim.last >= STAGE_MS) { anim.last = ts; stepAnim(); }
+  if (anim.playing) anim.raf = requestAnimationFrame(frame);
+}
+function setPlaying(on) {
+  cancelAnimationFrame(anim.raf);
+  anim.playing = on && !REDUCED;
+  $("anim-play").textContent = anim.playing ? "Pausar" : "Reproduzir";
+  if (anim.playing) { anim.last = 0; anim.raf = requestAnimationFrame(frame); }
+}
+function stepAnim() {
+  if (anim.pos < animEnd()) anim.pos++;
+  renderAnim();
+  if (anim.pos >= animEnd()) setPlaying(false);
+}
+let animTouched = false;
+$("anim-play").addEventListener("click", () => {
+  animTouched = true;
+  if (!anim.playing && anim.pos >= animEnd()) { anim.pos = 0; renderAnim(); }
+  setPlaying(!anim.playing);
+});
+$("anim-step").addEventListener("click", () => { animTouched = true; setPlaying(false); stepAnim(); });
+$("anim-reset").addEventListener("click", () => { animTouched = true; setPlaying(false); anim.pos = 0; renderAnim(); });
+if (REDUCED) {
+  $("anim-play").hidden = true;
+  $("anim-count").insertAdjacentHTML("afterend", '<span class="muted" style="font-size:var(--step--1)">O movimento reduzido está ativado: use Passo.</span>');
+}
+renderAnim();
+// Autoplay once, the first time the animation is on screen (never with reduced motion); pause when it leaves.
+if ("IntersectionObserver" in window) {
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting && !animTouched && !REDUCED && anim.pos === 0) { animTouched = true; setPlaying(true); }
+    else if (!e.isIntersecting && anim.playing) setPlaying(false);
+  }, { threshold: 0.35 }).observe($("learn-anim"));
+}
+
+// After the engine loads: tokenize live and recompute the trace with the real model (E.logits, unsteered).
+async function learnLive() {
+  $("learn-tokstatus").textContent = "tokenizado ao vivo no seu navegador";
+  learnTokenize();
+  const ids = E.promptIds(LEARN_DEFAULT.text), steps = [];
+  let all = ids.slice();
+  for (let i = 0; i < TRACE_OFFLINE.steps.length; i++) {
+    await new Promise((r) => setTimeout(r, 0));
+    const z = E.logits(all), V = z.length / all.length, row = z.subarray((all.length - 1) * V);
+    let mx = -Infinity;
+    for (const v of row) if (v > mx) mx = v;
+    let Z = 0;
+    const p = Array.from(row, (v) => { const e = Math.exp(v - mx); Z += e; return e; });
+    const top = p.map((v, id) => [id, v / Z]).sort((a, b) => b[1] - a[1]).slice(0, 5)
+      .map(([id, q]) => [id, E.tokenStrings([id])[0], q]);
+    steps.push(top);
+    all = all.concat([top[0][0]]);
+    if (top[0][0] === 2) break;                 // <|im_end|>: the answer is over
+  }
+  anim.trace = { ids, strs: E.tokenStrings(ids), steps };
+  anim.live = true;
+  anim.pos = Math.min(anim.pos, animEnd());
+  $("anim-mat").innerHTML = "";
+  renderAnim();
+}
+
+// ── understanding steering tab ────────────────────────────────────────────
+// med_ℓ from data/shared.json, rounded; shown until the engine loads, then read live from E.shared().med.
+const MED_OFFLINE = [11.8508, 22.7661, 27.5516, 30.7157, 30.8577, 29.7145];
+const sst = { concept: "food", source: "rfm", S: "all", r: 0.1, P: "prompt", live: false };
+const medNow = () => (sst.live ? E.shared().med : MED_OFFLINE);
+const SUB = (n) => String(n).replace(/\d/g, (c) => "₀₁₂₃₄₅₆₇₈₉"[c]);
+const sgn = (x, d = 2) => (x < 0 ? "−" : "+") + Math.abs(x).toFixed(d);
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+// toy data: two Gaussian clouds in ℝ², means ±(sep/2)·(0, 1), shared covariance stretched along the
+// 45° diagonal by `stretch`, the whole picture rotated by `rot` degrees; centred at the origin.
+function toyRng(seed) {
+  let s = seed >>> 0;
+  return () => { s = (s + 0x6d2b79f5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+function toyData(n, stretch, seed, sep, rot) {
+  const r = toyRng(seed), g = () => { let u = 0; while (!u) u = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * r()); };
+  const c = Math.SQRT1_2, cr = Math.cos(rot * Math.PI / 180), sr = Math.sin(rot * Math.PI / 180), X = [], y = [];
+  for (let i = 0; i < n; i++) {
+    const lab = i % 2, a = g() * stretch * 0.5, b = g() * 0.5;
+    const p = [c * a - c * b, c * a + c * b + (lab ? sep / 2 : -sep / 2)];
+    X.push([cr * p[0] - sr * p[1], sr * p[0] + cr * p[1]]); y.push(lab);
+  }
+  const m = [0, 0];
+  X.forEach((p) => { m[0] += p[0] / n; m[1] += p[1] / n; });
+  X.forEach((p) => { p[0] -= m[0]; p[1] -= m[1]; });
+  return { X, y };
+}
+const dot2 = (a, b) => a[0] * b[0] + a[1] * b[1];
+const unit2 = (v) => { const n = Math.hypot(v[0], v[1]) || 1; return [v[0] / n, v[1] / n]; };
+function classMeans({ X, y }) {
+  const p = [0, 0], q = [0, 0]; let np = 0, nq = 0;
+  X.forEach((x, i) => { if (y[i]) { p[0] += x[0]; p[1] += x[1]; np++; } else { q[0] += x[0]; q[1] += x[1]; nq++; } });
+  return [[p[0] / np, p[1] / np], [q[0] / nq, q[1] / nq]];
+}
+const dmDir = (D) => { const [p, q] = classMeans(D); return unit2([p[0] - q[0], p[1] - q[1]]); };
+function fisherDir(D) {
+  const [p, q] = classMeans(D), S = [[0, 0], [0, 0]], n = D.X.length;
+  D.X.forEach((x, i) => { const m = D.y[i] ? p : q, a = x[0] - m[0], b = x[1] - m[1]; S[0][0] += a * a / n; S[0][1] += a * b / n; S[1][1] += b * b / n; });
+  const det = S[0][0] * S[1][1] - S[0][1] ** 2, d = [p[0] - q[0], p[1] - q[1]];
+  return unit2([(S[1][1] * d[0] - S[0][1] * d[1]) / det, (-S[0][1] * d[0] + S[0][0] * d[1]) / det]);
+}
+// orient v so that Pearson(⟨x_i, v⟩, y_i) > 0 (the sign of the covariance is enough)
+function orient(v, D) {
+  const n = D.X.length, pr = D.X.map((x) => dot2(x, v)), mp = pr.reduce((s, a) => s + a, 0) / n, my = D.y.reduce((s, a) => s + a, 0) / n;
+  const cov = pr.reduce((s, a, i) => s + (a - mp) * (D.y[i] - my), 0);
+  return cov < 0 ? [-v[0], -v[1]] : v;
+}
+
+// plotting helpers for the two toy plots: data box ±R mapped to a square of side `side` at (ox, oy)
+const mkMap = (R, ox, oy, side) => ({ x: (u) => ox + (u / R + 1) * side / 2, y: (v) => oy + (1 - v / R) * side / 2, k: side / (2 * R) });
+const arrowDefs = (id) => "<defs>" + [["", "currentColor"], ["-a", "var(--accent)"], ["-m", "var(--muted)"]].map(([k, c]) =>
+  `<marker id="${id}${k}" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="${c}"/></marker>`).join("") + "</defs>";
+const mk = (id, col) => `url(#${id}${col.includes("accent") ? "-a" : col.includes("muted") ? "-m" : ""})`;
+const dots = (D, P, rad = 3.4) => D.X.map((x, i) => `<circle cx="${P.x(x[0]).toFixed(1)}" cy="${P.y(x[1]).toFixed(1)}" r="${rad}" fill="${D.y[i] ? "var(--pos)" : "var(--neg)"}" fill-opacity="0.75"/>`).join("");
+
+// ── §1 concepts are directions ──
+const s1 = { D: toyData(80, 1.3, 11, 2.0, -25), h: [1.1, 0.5] };
+s1.dm = dmDir(s1.D);
+s1.dmAng = Math.round(((Math.atan2(s1.dm[1], s1.dm[0]) * 180 / Math.PI) + 360) % 360);
+s1.ang = s1.dmAng;
+const S1R = 3.2, P1 = mkMap(S1R, 30, 0, 300);
+const s1v = () => [Math.cos(s1.ang * Math.PI / 180), Math.sin(s1.ang * Math.PI / 180)];
+function s1Static() {
+  const v = s1v(), w = [-v[1], v[0]], L = S1R * 1.5;
+  const sx = (p) => P1.x(p[0]).toFixed(1), sy = (p) => P1.y(p[1]).toFixed(1);
+  const strip = s1.D.X.map((x, i) => {
+    const p = dot2(x, v), X = 30 + (Math.max(-S1R, Math.min(S1R, p)) / S1R + 1) * 150, j = ((i * 37) % 11 - 5) * 1.4;
+    return `<circle cx="${X.toFixed(1)}" cy="${(352 + j).toFixed(1)}" r="3" fill="${s1.D.y[i] ? "var(--pos)" : "var(--neg)"}" fill-opacity="0.7"/>`;
+  }).join("");
+  $("st1-svg").innerHTML = `${arrowDefs("st1a")}
+    <clipPath id="st1clip"><rect x="0" y="0" width="360" height="300"/></clipPath>
+    <rect x="0.5" y="0.5" width="359" height="299" rx="8" fill="var(--bg)" stroke="var(--line)"/>
+    <g clip-path="url(#st1clip)">
+      <line x1="${sx([-w[0] * L, 0])}" y1="${sy([0, -w[1] * L])}" x2="${sx([w[0] * L, 0])}" y2="${sy([0, w[1] * L])}" stroke="var(--muted)" stroke-dasharray="4 4"/>
+      <line x1="${sx([-v[0] * L, 0])}" y1="${sy([0, -v[1] * L])}" x2="${sx([v[0] * L, 0])}" y2="${sy([0, v[1] * L])}" stroke="var(--accent)" stroke-opacity="0.35" stroke-width="2"/>
+      ${dots(s1.D, P1)}
+      <line id="st1-perp" stroke="currentColor" stroke-dasharray="3 3"/>
+      <line id="st1-foot" stroke="var(--accent)" stroke-width="5" stroke-opacity="0.55" stroke-linecap="round"/>
+      <line x1="${P1.x(0)}" y1="${P1.y(0)}" x2="${sx([v[0] * 1.6, 0])}" y2="${sy([0, v[1] * 1.6])}" stroke="var(--accent)" stroke-width="2.6" marker-end="url(#st1a-a)"/>
+      <text x="${sx([v[0] * 1.85, 0])}" y="${(+sy([0, v[1] * 1.85]) + 5).toFixed(1)}" fill="var(--accent)" font-family="var(--font-mono)" font-size="15" text-anchor="middle">v</text>
+      <circle cx="${P1.x(0)}" cy="${P1.y(0)}" r="3" fill="currentColor"/>
+      <text x="${P1.x(0) - 8}" y="${P1.y(0) + 16}" fill="currentColor" font-family="var(--font-mono)" font-size="12">μ</text>
+      <text x="${sx([w[0] * 2.6, 0])}" y="${sy([0, w[1] * 2.6])}" fill="var(--muted)" font-family="var(--font-mono)" font-size="11" text-anchor="middle">⟨h − μ, v⟩ = 0</text>
+      <circle id="st1-h" class="drag" r="8" fill="currentColor" stroke="var(--surface)" stroke-width="2" tabindex="0" aria-label="Ponto h: as setas do teclado o movem"/>
+      <text id="st1-hl" fill="currentColor" font-family="var(--font-mono)" font-size="14" font-weight="600">h</text>
+    </g>
+    <line x1="30" y1="352" x2="330" y2="352" stroke="var(--line)" stroke-width="2"/>
+    <line x1="180" y1="340" x2="180" y2="364" stroke="var(--muted)"/>
+    ${strip}
+    <path id="st1-hs" fill="currentColor" stroke="var(--surface)"/>
+    <text x="180" y="384" fill="var(--muted)" font-family="var(--font-mono)" font-size="11" text-anchor="middle">0</text>
+    <text x="30" y="327" fill="var(--muted)" font-family="var(--font-body)" font-size="11">projeção ⟨h − μ, v⟩ de cada ponto</text>
+    <text x="30" y="384" fill="var(--neg)" font-family="var(--font-body)" font-size="11">← lado do rótulo 0</text>
+    <text x="330" y="384" fill="var(--pos)" font-family="var(--font-body)" font-size="11" text-anchor="end">lado do rótulo 1 →</text>`;
+  s1Dyn();
+}
+function s1Dyn() {
+  const v = s1v(), h = s1.h, p = dot2(h, v), f = [p * v[0], p * v[1]];
+  const set = (id, a) => { const el = $(id); for (const k in a) el.setAttribute(k, a[k]); };
+  set("st1-h", { cx: P1.x(h[0]), cy: P1.y(h[1]) });
+  set("st1-hl", { x: P1.x(h[0]) + 11, y: P1.y(h[1]) - 9 });
+  set("st1-perp", { x1: P1.x(h[0]), y1: P1.y(h[1]), x2: P1.x(f[0]), y2: P1.y(f[1]) });
+  set("st1-foot", { x1: P1.x(0), y1: P1.y(0), x2: P1.x(f[0]), y2: P1.y(f[1]) });
+  const X = 30 + (Math.max(-S1R, Math.min(S1R, p)) / S1R + 1) * 150;
+  set("st1-hs", { d: `M${X},341 l6,6 l-6,6 l-6,-6 z` });
+  // score bar: fill from the centre (score 0) to the score, clamped to ±S1R
+  const fr = Math.max(-1, Math.min(1, p / S1R)) * 50, fill = $("st1-fill");
+  fill.style.left = (fr >= 0 ? 50 : 50 + fr) + "%";
+  fill.style.width = Math.abs(fr) + "%";
+  fill.style.background = p >= 0 ? "var(--pos)" : "var(--neg)";
+  $("st1-bar").setAttribute("aria-label", `Escore de h ao longo de v: ${sgn(p)}`);
+  const acc = s1.D.X.filter((x, i) => (dot2(x, v) > 0) === (s1.D.y[i] === 1)).length / s1.D.X.length;
+  $("st1-angv").textContent = `${s1.ang}°`;
+  $("st1-read").innerHTML = `s(h) = <b class="mono">${sgn(p)}</b> → ${p > 0 ? '<span style="color:var(--pos)">rótulo 1</span>' : '<span style="color:var(--neg)">rótulo 0</span>'}. Acurácia da regra do sinal ao longo deste v: <b class="mono">${Math.round(acc * 100)}%</b>${s1.ang === s1.dmAng ? " (v = DiffMeans)" : ""}.`;
+}
+{
+  const svg = $("st1-svg");
+  let dragging = false;
+  const toData = (e) => {
+    const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+    const q = pt.matrixTransform(svg.getScreenCTM().inverse());
+    const cl = (u) => Math.max(-S1R, Math.min(S1R, u));
+    return [cl((q.x - 180) / P1.k), cl((150 - q.y) / P1.k)];
+  };
+  svg.addEventListener("pointerdown", (e) => { if (!e.target.classList.contains("drag")) return; dragging = true; svg.setPointerCapture(e.pointerId); e.preventDefault(); });
+  svg.addEventListener("pointermove", (e) => { if (!dragging) return; s1.h = toData(e); s1Dyn(); });
+  const stop = () => { dragging = false; };
+  svg.addEventListener("pointerup", stop); svg.addEventListener("pointercancel", stop);
+  svg.addEventListener("keydown", (e) => {
+    if (!e.target.classList.contains("drag")) return;
+    const d = { ArrowLeft: [-0.1, 0], ArrowRight: [0.1, 0], ArrowUp: [0, 0.1], ArrowDown: [0, -0.1] }[e.key];
+    if (!d) return;
+    e.preventDefault();
+    s1.h = [Math.max(-S1R, Math.min(S1R, s1.h[0] + d[0])), Math.max(-S1R, Math.min(S1R, s1.h[1] + d[1]))];
+    s1Dyn();
+  });
+  $("st1-ang").value = s1.ang;
+  $("st1-ang").addEventListener("input", (e) => { s1.ang = +e.target.value; s1Static(); });
+  $("st1-reset").addEventListener("click", () => { s1.ang = s1.dmAng; $("st1-ang").value = s1.ang; s1Static(); });
+  s1Static();
+}
+
+// ── §2 toy RFM: kernel ridge regression with K_M(x, z) = exp(−‖x − z‖_M / L), then the centred AGOP ──
+const RFM_L = 1, RFM_LAM = 1, RFM_T = 6;
+const s2 = { stretch: 3, seed: 7, D: null, M: [[1, 0], [0, 1]], t: 0, fit: null, playing: false, timer: 0 };
+const mdist = (M, a, b) => Math.sqrt(Math.max(0, M[0][0] * a * a + 2 * M[0][1] * a * b + M[1][1] * b * b));
+function solveLin(A, b) {
+  const n = b.length;
+  for (let i = 0; i < n; i++) {
+    let p = i;
+    for (let k = i + 1; k < n; k++) if (Math.abs(A[k][i]) > Math.abs(A[p][i])) p = k;
+    [A[i], A[p]] = [A[p], A[i]]; [b[i], b[p]] = [b[p], b[i]];
+    for (let k = i + 1; k < n; k++) { const f = A[k][i] / A[i][i]; if (f) { for (let j = i; j < n; j++) A[k][j] -= f * A[i][j]; b[k] -= f * b[i]; } }
+  }
+  const x = new Array(n);
+  for (let i = n - 1; i >= 0; i--) { let s = b[i]; for (let j = i + 1; j < n; j++) s -= A[i][j] * x[j]; x[i] = s / A[i][i]; }
+  return x;
+}
+function rfmStep(D, M) {
+  const X = D.X, n = X.length;
+  const A = X.map((a, i) => X.map((b, j) => Math.exp(-mdist(M, a[0] - b[0], a[1] - b[1]) / RFM_L) + (i === j ? RFM_LAM : 0)));
+  const al = solveLin(A, D.y.slice());
+  // ∇_x K_M(x, x_j) = −K_M(x, x_j) · M(x − x_j) / (L ‖x − x_j‖_M); the j = i term is skipped, as in the code
+  const G = X.map((a) => {
+    let g0 = 0, g1 = 0;
+    for (let j = 0; j < n; j++) {
+      const d0 = a[0] - X[j][0], d1 = a[1] - X[j][1], r = mdist(M, d0, d1);
+      if (r < 1e-12) continue;
+      const w = al[j] * Math.exp(-r / RFM_L) / (RFM_L * r);
+      g0 -= w * (M[0][0] * d0 + M[0][1] * d1); g1 -= w * (M[1][0] * d0 + M[1][1] * d1);
+    }
+    return [g0, g1];
+  });
+  const gm = [0, 0];
+  G.forEach((g) => { gm[0] += g[0] / n; gm[1] += g[1] / n; });
+  const N = [[0, 0], [0, 0]];
+  G.forEach((g) => { const a = g[0] - gm[0], b = g[1] - gm[1]; N[0][0] += a * a / n; N[0][1] += a * b / n; N[1][1] += b * b / n; });
+  N[1][0] = N[0][1];
+  return { M: N, fit: { M, al } };
+}
+function eig2(M) {
+  const a = M[0][0], b = M[0][1], d = M[1][1], tr = a + d, disc = Math.sqrt(Math.max(0, tr * tr / 4 - (a * d - b * b)));
+  const l1 = tr / 2 + disc, l2 = tr / 2 - disc;
+  const v = Math.abs(b) > 1e-15 ? unit2([l1 - d, b]) : (a >= d ? [1, 0] : [0, 1]);
+  return { l1, l2, v };
+}
+const fAt = (fit, x) => { let s = 0; s2.D.X.forEach((z, j) => { s += fit.al[j] * Math.exp(-mdist(fit.M, x[0] - z[0], x[1] - z[1]) / RFM_L); }); return s; };
+function s2Reset() { s2.D = toyData(100, s2.stretch, s2.seed, 1.8, 0); s2.M = [[1, 0], [0, 1]]; s2.t = 0; s2.fit = null; s2Render(); s2dmPlay(false); }
+// DiffMeans panel: the same toy data, an arrow growing from μ̂₋ to μ̂₊ (k ∈ [0, 1]), then the unit v_DM from the centre
+const s2dm = { raf: 0, t0: 0 };
+function s2dmDraw(k) {
+  const D = s2.D, R = Math.max(2.2, ...D.X.map((x) => Math.max(Math.abs(x[0]), Math.abs(x[1])))) * 1.08, P = mkMap(R, 0, 0, 360);
+  const [mp, mn] = classMeans(D), dm = dmDir(D), len = R * 0.62;
+  const tip = [mn[0] + k * (mp[0] - mn[0]), mn[1] + k * (mp[1] - mn[1])];
+  const X = (m) => P.x(m[0]).toFixed(1), Y = (m) => P.y(m[1]).toFixed(1);
+  const cross = (m, col, lab, dy) => `<g stroke="${col}" stroke-width="3" stroke-linecap="round"><line x1="${+X(m) - 7}" y1="${+Y(m) - 7}" x2="${+X(m) + 7}" y2="${+Y(m) + 7}"/><line x1="${+X(m) - 7}" y1="${+Y(m) + 7}" x2="${+X(m) + 7}" y2="${+Y(m) - 7}"/></g>
+    <text x="${+X(m) + 12}" y="${+Y(m) + dy}" fill="${col}" font-family="var(--font-mono)" font-size="14" font-weight="600" stroke="var(--bg)" stroke-width="3" paint-order="stroke">${lab}</text>`;
+  let g = `${arrowDefs("st2d")}<rect x="0.5" y="0.5" width="359" height="359" rx="8" fill="var(--bg)" stroke="var(--line)"/>
+    <g opacity="0.55">${dots(D, P, 3)}</g>${cross(mn, "var(--neg)", "μ̂₋", 18)}${cross(mp, "var(--pos)", "μ̂₊", -8)}`;
+  if (k > 0.02) g += `<line x1="${X(mn)}" y1="${Y(mn)}" x2="${X(tip)}" y2="${Y(tip)}" stroke="currentColor" stroke-width="3" marker-end="url(#st2d)"/>`;
+  if (k >= 1) g += `<g transform="translate(48 52)"><rect x="-40" y="-44" width="80" height="94" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+    <line x1="${(-dm[0] * 26).toFixed(1)}" y1="${(dm[1] * 26).toFixed(1)}" x2="${(dm[0] * 26).toFixed(1)}" y2="${(-dm[1] * 26).toFixed(1)}" stroke="var(--accent)" stroke-width="3" marker-end="url(#st2d-a)"/>
+    <text y="42" fill="var(--accent)" font-family="var(--font-mono)" font-size="11" text-anchor="middle">v_DM, ‖·‖ = 1</text></g>`;
+  $("st2dm-svg").innerHTML = g;
+}
+function s2dmPlay(on) {
+  cancelAnimationFrame(s2dm.raf);
+  if (!on || REDUCED) { s2dmDraw(1); return; }
+  s2dm.t0 = 0;
+  const fr = (ts) => { if (!s2dm.t0) s2dm.t0 = ts; const k = Math.min(1, (ts - s2dm.t0) / 1400); s2dmDraw(k); if (k < 1) s2dm.raf = requestAnimationFrame(fr); };
+  s2dm.raf = requestAnimationFrame(fr);
+}
+$("st2dm-play").addEventListener("click", () => s2dmPlay(true));
+function s2Step() { if (s2.t >= RFM_T) return; const o = rfmStep(s2.D, s2.M); s2.M = o.M; s2.fit = o.fit; s2.t++; s2Render(); }
+function s2Render() {
+  const D = s2.D, R = Math.max(2.2, ...D.X.map((x) => Math.max(Math.abs(x[0]), Math.abs(x[1])))) * 1.08, P = mkMap(R, 0, 0, 360);
+  let heat = "";
+  if (s2.fit) {
+    const N = 26, c = 360 / N;
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+      const x = [-R + (i + 0.5) * 2 * R / N, R - (j + 0.5) * 2 * R / N], f = fAt(s2.fit, x), s = Math.max(-1, Math.min(1, 2 * (f - 0.5)));
+      heat += `<rect x="${(i * c).toFixed(1)}" y="${(j * c).toFixed(1)}" width="${(c + 0.4).toFixed(1)}" height="${(c + 0.4).toFixed(1)}" fill="color-mix(in srgb, ${s >= 0 ? "var(--pos)" : "var(--neg)"} ${Math.round(Math.abs(s) * 30)}%, var(--bg))"/>`;
+    }
+  }
+  const dm = dmDir(D), fi = orient(fisherDir(D), D), e = eig2(s2.M), vr = s2.t ? orient(e.v, D) : null, len = R * 0.62;
+  const arrow = (v, col, wdt, dash, lab, off) => `<line x1="${P.x(0)}" y1="${P.y(0)}" x2="${P.x(v[0] * len).toFixed(1)}" y2="${P.y(v[1] * len).toFixed(1)}" stroke="${col}" stroke-width="${wdt}" ${dash ? 'stroke-dasharray="6 4"' : ""} marker-end="${mk("st2a", col)}"/>
+    <text x="${(P.x(v[0] * len * 1.12) + off * v[1]).toFixed(1)}" y="${(P.y(v[1] * len * 1.12) + 4 + off * v[0]).toFixed(1)}" fill="${col}" font-family="var(--font-mono)" font-size="12" text-anchor="middle" stroke="var(--bg)" stroke-width="3" paint-order="stroke">${lab}</text>`;
+  const ang = Math.atan2(e.v[1], e.v[0]) * 180 / Math.PI, rb = 32 * Math.sqrt(Math.max(e.l2, 0) / e.l1);
+  $("st2-svg").innerHTML = `${arrowDefs("st2a")}
+    <rect x="0.5" y="0.5" width="359" height="359" rx="8" fill="var(--bg)" stroke="var(--line)"/>
+    <g>${heat}</g>
+    ${dots(D, P, 3)}
+    ${arrow(dm, "currentColor", 2, false, "DiffMeans", 0)}
+    ${arrow(fi, "var(--muted)", 2, true, "Fisher", 22)}
+    ${vr ? arrow(vr, "var(--accent)", 3.4, false, "RFM", -22) : ""}
+    <g transform="translate(312 48)">
+      <rect x="-44" y="-42" width="88" height="96" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+      <ellipse rx="32" ry="${Math.max(1.5, rb).toFixed(1)}" transform="rotate(${(-ang).toFixed(1)})" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+      <text y="48" fill="currentColor" font-family="var(--font-mono)" font-size="11" text-anchor="middle">M, t = ${s2.t}</text>
+    </g>`;
+  const c = (a, b) => Math.abs(dot2(a, b)).toFixed(2);
+  $("st2-stretchv").textContent = s2.stretch.toFixed(2);
+  $("st2-read").innerHTML = s2.t === 0
+    ? `t = 0: M = I, então o kernel é o Laplace kernel comum e ainda não há direção RFM. cos(DiffMeans, Fisher) = <b class="mono">${c(dm, fi)}</b>. Aperte “Uma iteração”.`
+    : `t = ${s2.t} de ${RFM_T}: razão de autovalores λ<sub>1</sub>/λ<sub>2</sub> = <b class="mono">${(e.l1 / Math.max(e.l2, 1e-12)).toFixed(1)}</b>. cos(RFM, DiffMeans) = <b class="mono">${c(vr, dm)}</b>, cos(RFM, Fisher) = <b class="mono">${c(vr, fi)}</b>, cos(DiffMeans, Fisher) = <b class="mono">${c(dm, fi)}</b>.`;
+  $("st2-step").disabled = s2.t >= RFM_T;
+  if (s2.t >= RFM_T) s2Play(false);
+}
+function s2Play(on) {
+  clearInterval(s2.timer);
+  s2.playing = on && !REDUCED;
+  $("st2-play").textContent = s2.playing ? "Pausar" : "Rodar RFM";
+  if (s2.playing) s2.timer = setInterval(s2Step, 850);
+}
+$("st2-play").addEventListener("click", () => { if (!s2.playing && s2.t >= RFM_T) s2Reset(); s2Play(!s2.playing); });
+$("st2-step").addEventListener("click", () => { s2Play(false); s2Step(); });
+$("st2-reset").addEventListener("click", () => { s2Play(false); s2Reset(); });
+$("st2-stretch").addEventListener("input", (e) => { s2Play(false); s2.stretch = +e.target.value; s2Reset(); });
+$("st2-new").addEventListener("click", () => { s2Play(false); s2.seed++; s2Reset(); s2dmPlay(true); });
+s2Reset();
+// grow the DiffMeans arrow once, the first time the panel is on screen
+if ("IntersectionObserver" in window) {
+  let seen = false;
+  new IntersectionObserver(([e]) => { if (e.isIntersecting && !seen) { seen = true; s2dmPlay(true); } }, { threshold: 0.4 }).observe($("st2dm-svg"));
+}
+
+// segmented controls of this tab, bound to sst
+function stSeg(id, names, key, after) {
+  const el = $(id);
+  el.innerHTML = "";
+  for (const [v, label] of Object.entries(names)) {
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = label; b.dataset.v = v;
+    b.addEventListener("click", () => { sst[key] = v; after(); });
+    el.append(b);
+  }
+}
+function stSyncSegs() {
+  for (const [id, key] of [["st2-concept", "concept"], ["st3-concept", "concept"], ["st3-source", "source"], ["st3-blocks", "S"], ["st4-pos", "P"]])
+    for (const b of $(id).children) b.setAttribute("aria-pressed", String(b.dataset.v === sst[key]));
+}
+const vecs = (concept, source) => source === "random" ? E.shared().u : E.bundle(concept).blocks.map((b) => b[`v_${source}`]);
+const vdot = (a, b) => { let s = 0; for (let j = 0; j < a.length; j++) s += a[j] * b[j]; return s; };
+
+function s2Real() {
+  if (!sst.live) return;
+  const B = E.bundle(sst.concept).blocks, U = E.shared().u, box = $("st2-cos");
+  box.innerHTML = "";
+  const cs = B.map((b) => vdot(b.v_rfm, b.v_dm));
+  cs.forEach((c, l) => {
+    const row = document.createElement("div");
+    row.className = "bar";
+    row.innerHTML = `<span class="w">block ${l}</span><span class="b"><i style="width:${(Math.max(0, c) * 100).toFixed(1)}%;background:var(--accent)"></i></span><span class="p">${c.toFixed(2)}</span>`;
+    box.append(row);
+  });
+  box.setAttribute("aria-label", `Cosseno entre as direções RFM e DiffMeans para ${sst.concept}, blocks 0 a 5: ${cs.map((c) => c.toFixed(2)).join(", ")}.`);
+  const ru = Math.max(...B.map((b, l) => Math.abs(vdot(b.v_rfm, U[l]))));
+  $("st2-rand").innerHTML = `Para ${sst.concept}, o maior |cos(v<sub>ℓ</sub><sup>RFM</sup>, u<sub>ℓ</sub>)| entre os seis blocks, com os vetores Random u<sub>ℓ</sub> da página, é ${ru.toFixed(3)}.`;
+}
+
+// ── §3 steering = adding ──
+const BX = (l) => 50 + 110 * l;            // left edge of block ℓ
+const SY = 140;                            // the stream's y
+const st3 = { playing: false, raf: 0, t0: 0 };
+const blocksOf = (S) => (S === "all" ? [0, 1, 2, 3, 4, 5] : [Number(S)]);
+function s3Svg(dotX) {
+  const on = blocksOf(sst.S), first = Math.min(...on), x0 = BX(first) + 92;
+  const med = medNow(), r = sst.r;
+  let g = `<line x1="10" y1="${SY}" x2="748" y2="${SY}" stroke="var(--line)" stroke-width="3"/>`;
+  g += `<rect x="${x0}" y="${SY - 6}" width="${748 - x0}" height="12" rx="6" fill="var(--accent)" fill-opacity="${r === 0 ? 0.08 : 0.28}"/>`;
+  g += `<line x1="10" y1="${SY}" x2="748" y2="${SY}" stroke="var(--accent)" stroke-width="2"/><polygon points="748,${SY - 6} 758,${SY} 748,${SY + 6}" fill="var(--accent)"/>`;
+  for (let l = 0; l < 6; l++) {
+    const x = BX(l), react = l > first && r !== 0, lit = dotX != null && dotX >= x + 14;
+    const inS = on.includes(l);
+    g += `<g class="st3-blk" data-l="${l}" role="button" tabindex="0" aria-pressed="${sst.S === String(l)}" aria-label="Fazer steering só no block ${l}">`;
+    g += `<rect x="${x}" y="30" width="70" height="50" rx="8" fill="${react && lit ? "var(--accent-soft)" : "var(--surface)"}" stroke="${react || inS ? "var(--accent)" : "currentColor"}" stroke-width="${inS ? 2.6 : 1.4}" ${react && !inS ? 'stroke-dasharray="5 3"' : ""}/>`;
+    g += `<text x="${x + 35}" y="60" fill="currentColor" font-family="var(--font-mono)" font-size="15" text-anchor="middle">F<tspan font-size="11" dy="4">${l}</tspan></text>`;
+    g += `<text x="${x + 35}" y="20" fill="${inS ? "var(--accent)" : "var(--muted)"}" font-family="var(--font-mono)" font-size="12" font-weight="${inS ? 600 : 400}" text-anchor="middle">block ${l}${inS ? " ∈ S" : ""}</text></g>`;
+    if (react) g += `<text x="${x + 35}" y="96" fill="var(--accent)" font-family="var(--font-body)" font-size="11" text-anchor="middle">reage</text>`;
+    g += `<line x1="${x + 14}" y1="${SY}" x2="${x + 14}" y2="82" stroke="currentColor" stroke-width="1.2" marker-end="url(#st3a)"/><line x1="${x + 56}" y1="80" x2="${x + 56}" y2="${SY - 10}" stroke="currentColor" stroke-width="1.2" marker-end="url(#st3a)"/>`;
+    g += `<circle cx="${x + 56}" cy="${SY}" r="8" fill="var(--surface)" stroke="currentColor" stroke-width="1.2"/><text x="${x + 56}" y="${SY + 5}" fill="currentColor" font-family="var(--font-mono)" font-size="13" text-anchor="middle">+</text>`;
+    if (on.includes(l)) {
+      const e = r * med[l];
+      g += `<line x1="${x + 92}" y1="190" x2="${x + 92}" y2="${SY + 12}" stroke="var(--accent)" stroke-width="2" marker-end="url(#st3a-a)"/>`;
+      g += `<circle cx="${x + 92}" cy="${SY}" r="9" fill="var(--accent)"/><text x="${x + 92}" y="${SY + 5}" fill="var(--surface)" font-family="var(--font-mono)" font-size="14" text-anchor="middle">+</text>`;
+      g += `<text x="${x + 92}" y="204" fill="var(--accent)" font-family="var(--font-mono)" font-size="11" text-anchor="middle">${sgn(e, 1)}·v${SUB(l)}</text>`;
+    }
+    g += `<text x="${x + 78}" y="${SY - 12}" fill="var(--muted)" font-family="var(--font-mono)" font-size="11" text-anchor="middle">h${SUB(l)}</text>`;
+  }
+  g += `<text x="20" y="${SY + 24}" fill="var(--muted)" font-family="var(--font-mono)" font-size="11">x</text><text x="756" y="${SY + 26}" fill="var(--muted)" font-family="var(--font-body)" font-size="11" text-anchor="end">saída</text>`;
+  if (dotX != null) g += `<circle cx="${dotX}" cy="${SY}" r="7" fill="var(--pos)" stroke="var(--surface)" stroke-width="2"/>`;
+  $("st3-svg").innerHTML = arrowDefs("st3a") + g;
+}
+function s3Render() {
+  stSyncSegs();
+  $("st3-rv").textContent = sgn(sst.r);
+  s3Svg(null);
+  const med = medNow(), on = blocksOf(sst.S), eps = med.map((m, l) => (on.includes(l) ? sst.r * m : 0));
+  const box = $("st3-eps"), mx = 0.5 * Math.max(...med);
+  box.innerHTML = "";
+  eps.forEach((e, l) => {
+    const row = document.createElement("div");
+    row.className = "bar";
+    row.innerHTML = `<span class="w">block ${l}</span><span class="b"><i style="width:${(Math.abs(e) / mx * 100).toFixed(1)}%;background:var(--accent)"></i></span><span class="p">${e === 0 ? "0" : sgn(e)}</span>`;
+    box.append(row);
+  });
+  box.setAttribute("aria-label", "Comprimento somado por block: " + eps.map((e, l) => `block ${l} ${e.toFixed(2)}`).join(", "));
+  const sumAbs = eps.reduce((s, e) => s + Math.abs(e), 0);
+  let rd = `<div class="fact"><b>${sumAbs.toFixed(2)}</b><span>Σ‖ε<sub>ℓ</sub>v<sub>ℓ</sub>‖ = Σ|ε<sub>ℓ</sub>|</span></div>`;
+  if (sst.live) {
+    const rho = E.dose(sst.concept, sst.source, sst.S, sst.r), nrm = rho * med[5];
+    rd = `<div class="fact"><b>ρ = ${rho.toFixed(3)}</b><span>dose efetiva, ao vivo da implementação</span></div>
+      <div class="fact"><b>${nrm.toFixed(2)}</b><span>‖Σ<sub>ℓ∈S</sub> ε<sub>ℓ</sub>v<sub>ℓ</sub>‖ = ρ · med<sub>5</sub></span></div>` + rd +
+      `<div class="fact"><b>${sumAbs ? (nrm / sumAbs).toFixed(3) : "—"}</b><span>‖Σ‖ / Σ‖·‖: 1 = totalmente alinhados</span></div>`;
+    $("st3-src").textContent = "ρ vem de E.dose e med vem do shared.json da implementação: os mesmos números que a Demo imprime.";
+  } else {
+    rd = `<div class="fact"><b>ρ = …</b><span>precisa dos vetores; carregando</span></div>` + rd;
+    $("st3-src").textContent = "valores de med pré-calculados a partir dos dados desta página; ρ aparece quando o modelo carregar.";
+  }
+  $("st3-read").innerHTML = rd;
+  s3Gauge(sst.live ? E.dose(sst.concept, sst.source, sst.S, sst.r) : null, sumAbs / med[5]);
+  if (sst.live) {
+    const V = vecs(sst.concept, sst.source), grid = $("st3-cos");
+    let h = `<span class="hd"></span>` + [0, 1, 2, 3, 4, 5].map((l) => `<span class="hd">${l}</span>`).join("");
+    for (let a = 0; a < 6; a++) {
+      h += `<span class="hd">${a}</span>`;
+      for (let b = 0; b < 6; b++) {
+        const c = vdot(V[a], V[b]);
+        h += `<span style="background:color-mix(in srgb, ${c >= 0 ? "var(--accent)" : "var(--neg)"} ${Math.round(Math.min(1, Math.abs(c)) * 70)}%, var(--surface));color:${Math.abs(c) > 0.6 ? "var(--surface)" : "var(--ink)"}">${c.toFixed(2)}</span>`;
+      }
+    }
+    grid.innerHTML = h;
+    grid.setAttribute("aria-label", `Cossenos entre os seis vetores ${SOURCE_NAMES[sst.source]}${sst.source === "random" ? "" : " de " + sst.concept}; blocks vizinhos: ` + [0, 1, 2, 3, 4].map((l) => vdot(V[l], V[l + 1]).toFixed(2)).join(", "));
+  }
+  const firstB = Math.min(...on);
+  $("st3-note").textContent = sst.r === 0 ? "r = 0: nada é somado." : `O empurrão entra no block ${firstB} e passa por ${5 - firstB} ${5 - firstB === 1 ? "block seguinte" : "blocks seguintes"}.`;
+}
+function s3Frame(ts) {
+  if (!st3.playing) return;
+  if (!st3.t0) st3.t0 = ts;
+  const x0 = BX(Math.min(...blocksOf(sst.S))) + 92, x = x0 + (ts - st3.t0) / 2600 * (750 - x0);
+  if (x >= 750) { s3Play(false); return; }
+  s3Svg(x);
+  st3.raf = requestAnimationFrame(s3Frame);
+}
+function s3Play(on) {
+  cancelAnimationFrame(st3.raf);
+  st3.playing = on && !REDUCED;
+  st3.t0 = 0;
+  if (st3.playing) st3.raf = requestAnimationFrame(s3Frame); else s3Svg(null);
+}
+$("st3-play").addEventListener("click", () => s3Play(!st3.playing));
+// clicking (or Enter/Space on) a block in the hero picture sets S to that block
+function s3PickBlock(el) { sst.S = el.dataset.l; s3Play(false); s3Render(); const f = $("st3-svg").querySelector(`[data-l="${sst.S}"]`); if (f) f.focus(); }
+$("st3-svg").addEventListener("click", (e) => { const el = e.target.closest(".st3-blk"); if (el) s3PickBlock(el); });
+$("st3-svg").addEventListener("keydown", (e) => { const el = e.target.closest(".st3-blk"); if (el && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); s3PickBlock(el); } });
+// ρ gauge: a half dial from 0 to GMAX = 0.5 · Σ_ℓ med_ℓ / med_5, the largest ρ the r slider (|r| ≤ 0.5) can give
+function s3Gauge(rho, bound) {
+  const med = medNow(), GMAX = 0.5 * med.reduce((a, b) => a + b, 0) / med[5];
+  const cx = 120, cy = 122, R = 86, ang = (v) => Math.PI * (1 - Math.min(1, Math.max(0, v / GMAX)));
+  const pt = (v, rr) => [cx + rr * Math.cos(ang(v)), cy - rr * Math.sin(ang(v))];
+  const arc = (v0, v1, col, w) => { const [a, b] = pt(v0, R), [c, d] = pt(v1, R); return `<path d="M${a.toFixed(1)},${b.toFixed(1)} A${R},${R} 0 0 1 ${c.toFixed(1)},${d.toFixed(1)}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`; };
+  let g = arc(0, GMAX, "var(--line)", 14);
+  if (rho != null && rho > 0) g += arc(0, rho, "var(--accent)", 14);
+  for (const v of [0, 0.5, 1, 1.5, 2, 2.5].filter((v) => v <= GMAX)) { const [a, b] = pt(v, R + 17); g += `<text x="${a.toFixed(1)}" y="${(b + 4).toFixed(1)}" fill="var(--muted)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">${v}</text>`; }
+  if (bound > 0) { const [a, b] = pt(bound, R - 9), [c, d] = pt(bound, R + 11); g += `<line x1="${a.toFixed(1)}" y1="${b.toFixed(1)}" x2="${c.toFixed(1)}" y2="${d.toFixed(1)}" stroke="var(--pos)" stroke-width="2.5"/>`; }
+  if (rho != null) { const [a, b] = pt(rho, R - 26); g += `<line x1="${cx}" y1="${cy}" x2="${a.toFixed(1)}" y2="${b.toFixed(1)}" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>`; }
+  g += `<circle cx="${cx}" cy="${cy}" r="5" fill="currentColor"/><text x="${cx}" y="${cy + 28}" fill="var(--accent)" font-family="var(--font-mono)" font-size="20" text-anchor="middle">ρ = ${rho == null ? "…" : rho.toFixed(3)}</text>`;
+  g += `<text x="${cx}" y="${cy + 46}" fill="var(--muted)" font-family="var(--font-body)" font-size="10" text-anchor="middle"><tspan fill="var(--pos)">▮</tspan> limite alinhado Σ|ε<tspan font-size="8" dy="2">ℓ</tspan><tspan dy="-2">| / med₅</tspan></text>`;
+  const svg = $("st3-gauge");
+  svg.innerHTML = g;
+  svg.setAttribute("aria-label", rho == null ? "Medidor da dose efetiva: carregando" : `Dose efetiva rho = ${rho.toFixed(3)}; limite alinhado ${bound.toFixed(3)}; máximo do mostrador ${GMAX.toFixed(2)}`);
+}
+$("st3-r").addEventListener("input", (e) => { sst.r = +e.target.value; s3Play(false); s3Render(); });
+stSeg("st2-concept", CONCEPT_NAMES, "concept", () => { s2Real(); s3Render(); });
+stSeg("st3-concept", CONCEPT_NAMES, "concept", () => { s2Real(); s3Render(); });
+stSeg("st3-source", SOURCE_NAMES, "source", () => s3Render());
+stSeg("st3-blocks", BLOCK_NAMES, "S", () => { s3Play(false); s3Render(); });
+
+// ── §4 positions × forward passes, with the KV cache ──
+const SHORT = { 1: "<s>", 2: "</s>" };
+const shortTok = (id, s) => SHORT[id] ?? (s.replace(/\n/g, "↵").trim() || "␣");
+const S4 = (() => {
+  const T0 = TRACE_OFFLINE.ids.length, NP = 6;
+  const gen = TRACE_OFFLINE.steps.map((s) => s[0]);
+  const ids = TRACE_OFFLINE.ids.concat(gen.slice(0, NP - 1).map((g) => g[0]));
+  const strs = TRACE_OFFLINE.strs.concat(gen.slice(0, NP - 1).map((g) => g[1]));
+  return { T0, NP, ids, strs, out: gen.slice(0, NP) };
+})();
+const st4 = { cur: null, playing: false, timer: 0 };
+const inPos = (t, P, T0) => (P === "all" ? true : P === "prompt" ? t < T0 - 1 : t >= T0 - 1);
+function s4Render() {
+  stSyncSegs();
+  const { T0, NP, ids, strs, out } = S4, P = sst.P, cw = 30, x0 = 86, y0 = 102, rh = 32, cs = 22;
+  const first = (j) => (j === 0 ? 0 : T0 - 1 + j), last = (j) => (j === 0 ? T0 - 1 : T0 - 1 + j);
+  const cx = (t) => x0 + t * cw + cw / 2;
+  let g = "";
+  g += `<text x="${cx(0) - 10}" y="11" fill="var(--muted)" font-family="var(--font-body)" font-size="11">prompt, t = 0 … T₀ − 1 = ${T0 - 1}</text>`;
+  g += `<line x1="${x0 + 2}" y1="16" x2="${x0 + T0 * cw - 2}" y2="16" stroke="var(--muted)"/>`;
+  g += `<text x="${x0 + T0 * cw + 4}" y="11" fill="var(--accent)" font-family="var(--font-body)" font-size="11">resposta</text>`;
+  g += `<line x1="${x0 + T0 * cw + 2}" y1="16" x2="${x0 + ids.length * cw - 2}" y2="16" stroke="var(--accent)"/>`;
+  ids.forEach((id, t) => {
+    g += `<text transform="translate(${cx(t) + 3} 74) rotate(-55)" fill="${t >= T0 ? "var(--accent)" : "currentColor"}" font-family="var(--font-mono)" font-size="11">${esc(shortTok(id, strs[t]))}</text>`;
+    g += `<text x="${cx(t)}" y="90" fill="var(--muted)" font-family="var(--font-mono)" font-size="9.5" text-anchor="middle">${t}</text>`;
+  });
+  g += `<text x="${x0 - 8}" y="90" fill="var(--muted)" font-family="var(--font-mono)" font-size="9.5" text-anchor="end">t</text>`;
+  for (let j = 0; j < NP; j++) {
+    const y = y0 + j * rh, dim = st4.cur != null && j !== st4.cur ? (j < st4.cur ? 0.45 : 0.15) : 1;
+    let row = `<text x="${x0 - 8}" y="${y + 15}" fill="currentColor" font-family="var(--font-body)" font-size="12" text-anchor="end">passada ${j + 1}</text>`;
+    for (let t = 0; t <= last(j); t++) {
+      const now = t >= first(j), p = inPos(t, P, T0);
+      const fill = now ? (p ? "var(--accent)" : "color-mix(in srgb, var(--ink) 30%, var(--surface))") : (p ? "var(--accent-soft)" : "var(--surface)");
+      const stroke = now ? "none" : (p ? "var(--accent)" : "var(--line)");
+      row += `<rect x="${cx(t) - cs / 2}" y="${y + 2}" width="${cs}" height="${cs}" rx="4" fill="${fill}" stroke="${stroke}"/>`;
+    }
+    row += `<text x="${cx(last(j)) + 20}" y="${y + 17}" fill="currentColor" font-family="var(--font-mono)" font-size="11">→ ${esc(shortTok(out[j][0], out[j][1]))}</text>`;
+    if (st4.cur === j && j > 0) {
+      const xs = cx(last(j));
+      for (let t = 0; t < first(j); t++) {
+        const p = inPos(t, P, T0), xm = (xs + cx(t)) / 2, hgt = Math.min(26, 6 + (xs - cx(t)) / 20);
+        row += `<path d="M${xs},${y + 2} Q${xm},${y - hgt} ${cx(t)},${y + 2}" fill="none" stroke="${p ? "var(--pos)" : "var(--muted)"}" stroke-opacity="${p ? 0.9 : 0.45}" stroke-width="${p ? 1.4 : 1}"/>`;
+      }
+    }
+    g += `<g opacity="${dim}">${row}</g>`;
+  }
+  $("st4-svg").innerHTML = g;
+  const pname = `P = “${POS_NAMES[P]}”`;
+  let msg;
+  if (st4.cur == null) msg = `Todas as ${NP} passadas de uma vez, para ${pname}. Células preenchidas são calculadas naquela passada; células só com contorno são lidas do KV cache. Aperte Próxima passada para percorrê-las.`;
+  else if (st4.cur === 0) {
+    const n = [...Array(T0).keys()].filter((t) => inPos(t, P, T0)).length;
+    msg = `A passada 1 calcula todas as ${T0} posições do prompt, t = 0 … ${T0 - 1}. ${n === T0 ? "Todas elas" : n === 0 ? "Nenhuma delas" : n === 1 ? `Só t = ${T0 - 1}, o último token do prompt,` : `t = 0 … ${T0 - 2}, todas menos a última,`} ${n <= 1 ? "recebe" : "recebem"} o vetor. A última linha, t = ${T0 - 1}, prevê o primeiro token da resposta, “${esc(shortTok(S4.out[0][0], S4.out[0][1]))}”${inPos(T0 - 1, P, T0) ? ", a partir de um estado com steering" : ", e ela não recebe steering"}.`;
+  } else {
+    const t = T0 - 1 + st4.cur, p = inPos(t, P, T0), cached = [...Array(t).keys()].filter((s) => inPos(s, P, T0)).length;
+    msg = `A passada ${st4.cur + 1} calcula só t = ${t}, o token “${esc(shortTok(S4.ids[t], S4.strs[t]))}” que acabou de ser realimentado. ${p ? "Ele recebe o vetor." : "Ele não recebe o vetor."} As posições 0 … ${t - 1} vêm do KV cache; ${cached ? `${cached} delas ${cached === 1 ? "recebeu" : "receberam"} steering quando ${cached === 1 ? "foi calculada" : "foram calculadas"}, então a attention em t = ${t} lê keys e values com steering nos blocks posteriores aos que receberam steering (arcos laranja)` : "nenhuma delas recebeu steering"}.`;
+  }
+  $("st4-text").innerHTML = msg;
+  $("st4-modecap").textContent = {
+    prompt: "prompt: todo token do prompt menos o último recebe steering; a resposta só sente o empurrão pela attention às keys e values deles no cache.",
+    gen: "gerados: o último token do prompt e cada token novo recebem steering, um por passada.",
+    all: "todas: toda posição recebe steering.",
+  }[P];
+  $("st4-count").textContent = st4.cur == null ? "" : `passada ${st4.cur + 1} de ${NP}`;
+  $("st4-step").disabled = st4.cur === NP - 1;
+}
+function s4Step() { st4.cur = st4.cur == null ? 0 : Math.min(S4.NP - 1, st4.cur + 1); s4Render(); if (st4.cur === S4.NP - 1) s4Play(false); }
+function s4Play(on) {
+  clearInterval(st4.timer);
+  st4.playing = on && !REDUCED;
+  $("st4-play").textContent = st4.playing ? "Pausar" : "Reproduzir";
+  if (st4.playing) st4.timer = setInterval(s4Step, 1600);
+}
+$("st4-play").addEventListener("click", () => {
+  if (!st4.playing) { st4.cur = null; s4Step(); }
+  s4Play(!st4.playing);
+});
+$("st4-step").addEventListener("click", () => { s4Play(false); s4Step(); });
+$("st4-reset").addEventListener("click", () => { s4Play(false); st4.cur = null; s4Render(); });
+stSeg("st4-pos", POS_NAMES, "P", () => s4Render());
+
+// ── §5 why med_ℓ ──
+const st5 = { mode: "scaled", r: 0.1, eps: 3, shown: null, raf: 0 };
+function barChart(svgId, vals, over, fmtV, yMax, refLine) {
+  const W = 360, H = 230, l = 40, b = 192, t = 18, cw = (W - l - 10) / 6, sy = (v) => b - (v / yMax) * (b - t);
+  let g = "";
+  const ticks = yMax > 2 ? [0, 10, 20, 30].filter((v) => v <= yMax) : [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1].filter((v) => v <= yMax);
+  for (const v of ticks) g += `<line x1="${l}" x2="${W - 6}" y1="${sy(v)}" y2="${sy(v)}" stroke="var(--line)"/><text x="${l - 6}" y="${sy(v) + 4}" fill="var(--muted)" font-family="var(--font-mono)" font-size="10" text-anchor="end">${yMax > 2 ? v : Math.round(v * 100) + "%"}</text>`;
+  vals.forEach((v, i) => {
+    const x = l + i * cw + cw * 0.18, w = cw * 0.64;
+    g += `<rect x="${x}" y="${sy(v)}" width="${w}" height="${b - sy(v)}" rx="3" fill="${over ? "color-mix(in srgb, var(--muted) 35%, var(--surface))" : "var(--accent)"}"/>`;
+    if (over) { const o = Math.min(over[i], yMax); g += `<rect x="${x + w * 0.25}" y="${sy(o)}" width="${w * 0.5}" height="${b - sy(o)}" rx="2" fill="var(--accent)"/>`; }
+    const top = Math.max(v, over ? Math.min(over[i], yMax) : 0);
+    g += `<text x="${x + w / 2}" y="${sy(top) - 5}" fill="${over ? "var(--accent)" : "currentColor"}" font-family="var(--font-mono)" font-size="10.5" text-anchor="middle">${fmtV(over ? over[i] : v, v)}</text>`;
+    g += `<text x="${x + w / 2}" y="${b + 14}" fill="var(--muted)" font-family="var(--font-mono)" font-size="11" text-anchor="middle">ℓ = ${i}</text>`;
+    if (over) g += `<text x="${x + w / 2}" y="${b + 27}" fill="var(--muted)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">${v.toFixed(1)}</text>`;
+  });
+  if (refLine != null) g += `<line x1="${l}" x2="${W - 6}" y1="${sy(refLine)}" y2="${sy(refLine)}" stroke="var(--pos)" stroke-dasharray="5 4"/>`;
+  $(svgId).innerHTML = g;
+}
+function s5Render(animate) {
+  const med = medNow(), sc = st5.mode === "scaled";
+  for (const b of $("st5-mode").children) b.setAttribute("aria-pressed", String(b.dataset.v === st5.mode));
+  const x = $("st5-x");
+  if (sc) { x.min = "0"; x.max = "0.4"; x.step = "0.01"; x.value = st5.r; $("st5-xl").textContent = "r"; $("st5-xv").textContent = st5.r.toFixed(2); }
+  else { x.min = "0"; x.max = "12"; x.step = "0.25"; x.value = st5.eps; $("st5-xl").textContent = "ε, o mesmo em todo block"; $("st5-xv").textContent = st5.eps.toFixed(2); }
+  const target = med.map((m) => (sc ? st5.r * m : st5.eps)), from = st5.shown || target;
+  cancelAnimationFrame(st5.raf);
+  const draw = (eps) => {
+    const rel = eps.map((e, l) => e / med[l]);
+    barChart("st5-a", med, eps, (e) => `ε ${e.toFixed(2)}`, Math.max(35, ...eps) * 1.08, null);
+    barChart("st5-b", rel, null, (v) => `${(v * 100).toFixed(1)}%`, Math.max(0.1, ...rel) * 1.15, sc ? st5.r : null);
+    st5.shown = eps;
+  };
+  if (animate && !REDUCED) {
+    let t0 = 0;
+    const fr = (ts) => { if (!t0) t0 = ts; const k = Math.min(1, (ts - t0) / 600), e = k * (2 - k); draw(target.map((v, l) => from[l] + e * (v - from[l]))); if (k < 1) st5.raf = requestAnimationFrame(fr); };
+    st5.raf = requestAnimationFrame(fr);
+  } else draw(target);
+  const eps = target, rel = eps.map((e, l) => e / med[l]);
+  $("st5-a").setAttribute("aria-label", "med por block: " + med.map((m, l) => `block ${l} ${m.toFixed(2)}`).join(", ") + ". Comprimento somado: " + eps.map((e) => e.toFixed(2)).join(", ") + ".");
+  $("st5-b").setAttribute("aria-label", "Empurrão relativo por block: " + rel.map((v, l) => `block ${l} ${(v * 100).toFixed(1)}%`).join(", ") + ".");
+  $("st5-src").textContent = sst.live
+    ? `Valores lidos ao vivo da implementação (E.shared().med): ${med.map((m) => m.toFixed(1)).join(", ")}.`
+    : `Valores pré-calculados a partir dos dados desta página: ${med.map((m) => m.toFixed(1)).join(", ")}.`;
+}
+for (const b of $("st5-mode").children) b.addEventListener("click", () => { st5.mode = b.dataset.v; s5Render(true); });
+$("st5-x").addEventListener("input", (e) => { if (st5.mode === "scaled") st5.r = +e.target.value; else st5.eps = +e.target.value; s5Render(); });
+
+// ── §6 greedy or sampled ──
+const st6 = { z: null, order: null, draws: null, last: null, timer: 0 };
+function s6Compute() {
+  if (!sst.live) return;
+  const s = $("st6-prompt").value, n = E.tokenize(s).length;
+  if (n === 0 || n > MAX_PROMPT) {
+    st6.z = null;
+    $("st6-bars").innerHTML = `<span class="muted">${n === 0 ? "Nenhum token: o tokenizer do GuppyLM descarta caracteres que não conhece." : `O prompt tem ${n} tokens; o limite é ${MAX_PROMPT}.`}</span>`;
+    $("st6-cdf").innerHTML = ""; $("st6-draw").disabled = $("st6-draw10").disabled = $("st6-draw200").disabled = true;
+    return;
+  }
+  const ids = E.promptIds(s), z = E.logits(ids), V = z.length / ids.length;
+  st6.z = Array.from(z.subarray((ids.length - 1) * V));
+  st6.order = st6.z.map((_, i) => i).sort((a, b) => st6.z[b] - st6.z[a]);
+  st6.draws = null; st6.last = null;
+  $("st6-draw").disabled = $("st6-draw10").disabled = $("st6-draw200").disabled = false;
+  s6Render();
+}
+function s6Dist() {
+  const T = +$("st6-T").value, k = +$("st6-k").value, keep = st6.order.slice(0, k), mx = st6.z[keep[0]] / T;
+  let Z = 0;
+  const p = keep.map((i) => { const e = Math.exp(st6.z[i] / T - mx); Z += e; return e; });
+  return { T, k, keep, p: p.map((e) => e / Z) };
+}
+function s6Render() {
+  $("st6-Tv").textContent = (+$("st6-T").value).toFixed(2);
+  $("st6-kv").textContent = $("st6-k").value;
+  if (!st6.z) return;
+  const { T, k, keep, p } = s6Dist(), box = $("st6-bars"), toks = E.tokenStrings(st6.order.slice(0, 10));
+  box.innerHTML = "";
+  const nD = st6.draws ? st6.draws.reduce((a, b) => a + b, 0) : 0;
+  st6.order.slice(0, 10).forEach((id, rank) => {
+    const pr = rank < k ? p[rank] : 0, row = document.createElement("div");
+    row.className = "bar" + (rank === 0 ? " pick" : "") + (rank >= k ? " cut" : "") + (st6.last === rank ? " drawn" : "");
+    row.innerHTML = '<span class="w"></span><span class="b"><i></i></span><span class="p"></span>';
+    row.querySelector(".w").textContent = JSON.stringify(showTok(id, toks[rank]));
+    row.querySelector(".b i").style.width = (pr * 100).toFixed(1) + "%";
+    if (nD && rank < k) { const f = document.createElement("span"); f.className = "f"; f.style.left = (st6.draws[rank] / nD * 100).toFixed(1) + "%"; row.querySelector(".b").append(f); }
+    row.querySelector(".p").textContent = (pr * 100).toFixed(1) + "%";
+    if (rank === 0) row.querySelector(".w").title = "escolha greedy";
+    box.append(row);
+  });
+  box.setAttribute("aria-label", `Probabilidades do próximo token com T = ${T}, top-k = ${k}: ` + st6.order.slice(0, 10).map((id, r) => `${JSON.stringify(showTok(id, toks[r]))} ${((r < k ? p[r] : 0) * 100).toFixed(1)}%`).join(", ") + ". Escolha greedy: a primeira.");
+  const top = toks[0];
+  $("st6-cap").innerHTML = `Ao vivo, sem steering, última posição do prompt (T<sub>0</sub> = ${E.promptIds($("st6-prompt").value).length}). Destacada: a escolha greedy ${esc(JSON.stringify(showTok(st6.order[0], top)))}; em cinza: fora do top k${nD ? `; marcas pretas: fração dos últimos ${nD} sorteios` : ""}.`;
+  const shown = p.slice(0, 10).reduce((a, b) => a + b, 0);
+  $("st6-cdf").innerHTML = p.map((q, r) => `<i style="width:${(q * 100).toFixed(3)}%"${st6.last === r ? ' class="hit"' : ""}></i>`).join("") + (st6.u != null && st6.last != null ? `<b style="left:calc(${(st6.u * 100).toFixed(2)}% - 1px)"></b>` : "");
+  if (st6.last == null) $("st6-read").innerHTML = `Os ${k} tokens mantidos preenchem [0, 1) em ordem de probabilidade. As 10 linhas mostradas somam ${(shown * 100).toFixed(1)}% da massa mantida. Aperte Sortear.`;
+}
+function s6Draw(n) {
+  if (!st6.z) return;
+  const { p } = s6Dist();
+  const one = () => { const u = Math.random(); let acc = 0; for (let r = 0; r < p.length; r++) { acc += p[r]; if (u < acc) return [r, u]; } return [p.length - 1, u]; };
+  if (n === 1) {
+    const [r, u] = one(); st6.last = r; st6.u = u;
+    const id = st6.order[r];
+    s6Render();
+    $("st6-read").innerHTML = `u = <b class="mono">${u.toFixed(3)}</b> cai na fatia de ${esc(JSON.stringify(showTok(id, E.tokenStrings([id])[0])))} (${r + 1}º no ranking, p = ${(p[r] * 100).toFixed(1)}%).${r === 0 ? " Essa também é a escolha greedy." : " Greedy teria pego a primeira linha."}`;
+  } else if (n === 10) {
+    const got = Array.from({ length: 10 }, () => one()[0]);
+    st6.draws = new Array(p.length).fill(0);
+    got.forEach((r) => st6.draws[r]++);
+    st6.last = null; st6.u = null;
+    s6Render();
+    const toks = E.tokenStrings(got.map((r) => st6.order[r]));
+    $("st6-read").innerHTML = `10 amostras: ` + got.map((r, i) => `<span class="mono" style="${r === 0 ? "color:var(--accent);font-weight:600" : ""}">${esc(JSON.stringify(showTok(st6.order[r], toks[i])))}</span>`).join(" · ") + `. Greedy daria o token destacado todas as vezes.`;
+  } else {
+    st6.draws = new Array(p.length).fill(0);
+    for (let i = 0; i < n; i++) st6.draws[one()[0]]++;
+    st6.last = null; st6.u = null;
+    s6Render();
+    const g = st6.draws[0];
+    $("st6-read").innerHTML = `${n} sorteios: o token greedy saiu ${g} vezes (${(g / n * 100).toFixed(0)}%), contra p = ${(p[0] * 100).toFixed(1)}%. Apareceram ${st6.draws.filter((c) => c > 0).length} tokens diferentes.`;
+  }
+}
+$("st6-T").addEventListener("input", () => { st6.draws = null; st6.last = null; s6Render(); });
+$("st6-k").addEventListener("input", () => { st6.draws = null; st6.last = null; s6Render(); });
+$("st6-prompt").addEventListener("input", () => { clearTimeout(st6.timer); st6.timer = setTimeout(s6Compute, 300); });
+$("st6-draw").addEventListener("click", () => s6Draw(1));
+$("st6-draw200").addEventListener("click", () => s6Draw(200));
+$("st6-draw10").addEventListener("click", () => s6Draw(10));
+
+// §7 links inside the tab scroll to the section instead of changing the hash
+for (const a of document.querySelectorAll("#pane-steer a[data-goto]"))
+  a.addEventListener("click", (e) => { e.preventDefault(); $(a.dataset.goto).scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "start" }); });
+
+function stopSteerAnims() { s2Play(false); s2dmPlay(false); s3Play(false); s4Play(false); }
+if (REDUCED) for (const id of ["st2-play", "st2dm-play", "st3-play", "st4-play"]) $(id).hidden = true;
+s3Render(); s4Render(); s5Render(); s6Render();
+
+// after the engine loads: real vectors, live ρ, live med, live next-token distribution
+function steerLive() {
+  sst.live = true;
+  s2Real(); s3Render(); s5Render(); s6Compute();
+}
+
+// ── tabs ──────────────────────────────────────────────────────────────────
+const TABS = ["learn", "steer", "demo", "dict"];
+const TAB_HASH = { learn: "", steer: "#steering", demo: "#demo", dict: "#dictionary" };
+function showTab(name) {
+  for (const t of TABS) {
+    const on = t === name;
+    $("tab-" + t).setAttribute("aria-selected", String(on));
+    $("tab-" + t).tabIndex = on ? 0 : -1;
+    $("pane-" + t).hidden = !on;
+  }
+  if (name !== "learn" && anim.playing) setPlaying(false);
+  if (name !== "steer") stopSteerAnims();
+}
+const tabOfHash = () => ({ "#steering": "steer", "#demo": "demo", "#dictionary": "dict" })[location.hash] || "learn";
+const setHash = (t) => history.replaceState(null, "", TAB_HASH[t] || location.pathname + location.search);
+showTab(tabOfHash());
+addEventListener("hashchange", () => showTab(tabOfHash()));
+$("lede-demo").addEventListener("click", (e) => { e.preventDefault(); $("tab-demo").click(); $("tab-demo").focus(); });
+for (const t of TABS) {
+  $("tab-" + t).addEventListener("click", () => { showTab(t); setHash(t); });
+  $("tab-" + t).addEventListener("keydown", (e) => {
+    const i = TABS.indexOf(t), n = TABS.length;
+    const j = { ArrowRight: (i + 1) % n, ArrowLeft: (i - 1 + n) % n, Home: 0, End: n - 1 }[e.key];
+    if (j === undefined) return;
+    e.preventDefault();
+    const next = TABS[j];
+    showTab(next); setHash(next); $("tab-" + next).focus();
+  });
+}
+
+// ── generation ────────────────────────────────────────────────────────────
+async function column(side, prompt, opts, id) {
+  const el = $("text-" + side);
+  el.textContent = ""; el.classList.add("pending");
+  $("strip-" + side).innerHTML = ""; $("score-" + side).innerHTML = "";
+  const out = await E.generate(prompt, { ...opts, maxNewTokens: NEW_TOKENS, signal: ctrl.signal,
+    onToken: ({ text }) => { if (id === runId) el.textContent = text; } });
+  if (id === runId) { el.textContent = out.text; el.classList.remove("pending"); }
+  return out;
+}
+
+async function run() {
+  if (!ready) return;
+  const prompt = $("prompt").value;
+  if ($("go").disabled) return;
+  const id = ++runId;
+  ctrl.abort(); ctrl = new AbortController();
+  const seed = Math.trunc(+$("seed").value || 0), greedy = $("greedy").checked;
+  const r = rOf(state.u);
+  const base = { concept: state.concept, source: state.source, blocks: state.blocks, positions: state.positions, seed, greedy };
+  const lkey = JSON.stringify([prompt, seed, greedy]);
+  const left = leftCache && leftCache.key === lkey
+    ? Promise.resolve(leftCache.out).then((o) => { $("text-left").textContent = o.text; return o; })
+    : column("left", prompt, { ...base, r: 0 }, id).then((o) => { if (id === runId) leftCache = { key: lkey, out: o }; return o; });
+  const right = column("right", prompt, { ...base, r }, id);
+  const [L, R] = await Promise.all([left, right]);
+  if (id !== runId) return;
+  lastLeft = { prompt, out: L }; lastRight = { prompt, out: R };
+  scores();
+}
+
+function scores() {
+  if (!lastLeft || !lastRight) return;
+  const B = E.bundle(state.concept);
+  const reads = [lastLeft, lastRight].map((x) => E.cleanReread(state.concept, state.source, x.prompt, x.out.ids));
+  const scale = Math.max(1e-6, ...reads.flat().map(Math.abs));
+  [["left", lastLeft, reads[0]], ["right", lastRight, reads[1]]].forEach(([side, x, p]) => {
+    const toks = E.tokenStrings(x.out.ids);
+    const strip = $("strip-" + side);
+    strip.innerHTML = "";
+    p.forEach((v, i) => {
+      const s = document.createElement("span");
+      const a = Math.min(1, Math.abs(v) / scale);
+      s.style.background = `color-mix(in srgb, ${v >= 0 ? "var(--pos)" : "var(--neg)"} ${Math.round(a * 100)}%, var(--line))`;
+      s.title = `${JSON.stringify(toks[i] ?? "")}  p = ${v.toFixed(3)}`;
+      strip.append(s);
+    });
+    const g = E.judge(state.concept, x.out.text);
+    $("score-" + side).innerHTML = `
+      <div class="score${B.validated ? "" : " invalid"}" title="${B.validated ? "" : ptd(B.badge)}">
+        <span class="label">Juiz g<sub>c</sub></span>
+        <div><div class="gbar"><b style="left:${((g + 1) / 2) * 100}%"></b></div>
+          <div class="ends"><span>${ptd(B.neg_label)}</span><span>${ptd(B.pos_label)}</span></div></div>
+        <span class="mono">${fmt(g, 2)}</span>
+      </div>
+      <p class="readout">média da releitura p = ${fmt(p.reduce((s, v) => s + v, 0) / Math.max(1, p.length), 2)} · escala de cores ±${scale.toFixed(2)}</p>`;
+  });
+}
+
+// ── boot ──────────────────────────────────────────────────────────────────
+sync();
+caseHint();
+try {
+  await E.load("./data/", { onProgress: (f) => { $("loadbar").value = f; } });
+  ready = true;
+  $("status").hidden = true;
+  learnLive().catch((err) => console.error(err));
+  try { steerLive(); } catch (err) { console.error(err); }
+  const B = E.bundle(state.concept);
+  if (B.any_supported_global) {
+    $("message").textContent = "Uma direção de conceito pode inclinar a resposta para o conceito sem perder fluência, nas configurações confirmadas marcadas com ▼. Longe delas, o steering troca intensidade do conceito por fluência.";
+    $("message").hidden = false;
+  }
+  const best = B.presets.find((p) => p.id === "best");
+  if (best) applyPreset(best); else { sync(); run(); }
+} catch (err) {
+  $("loadtext").textContent = `O modelo não carregou: ${err.message}. Recarregue a página para tentar de novo.`;
+  console.error(err);
+}
+</script>
