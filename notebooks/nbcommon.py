@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -16,25 +17,12 @@ import numpy as np
 
 # ── paths ─────────────────────────────────────────────────────────────────────
 
-def find_root(start: str | None = None) -> str:
-    """Walk upward from `start` (default: cwd) until the project root is found."""
-    p = os.path.abspath(start or os.getcwd())
-    while True:
-        if (os.path.isdir(os.path.join(p, "rfm_guppy"))
-                and os.path.isfile(os.path.join(p, "requirements.txt"))):
-            return p
-        parent = os.path.dirname(p)
-        if parent == p:
-            raise RuntimeError(
-                "Project root not found — run this notebook from inside the repository."
-            )
-        p = parent
-
-
-ROOT        = find_root()
-CACHE_DIR   = os.path.join(ROOT, "rfm_guppy", "cache")
-RESULTS_DIR = os.path.join(ROOT, "results")
-CKPT_DIR    = os.path.join(ROOT, "checkpoints", "guppylm-9M")
+_r = os.path.dirname(os.path.abspath(__file__))   # walk up to the repo root (holds rfm_guppy/paths.py)
+while not os.path.isfile(os.path.join(_r, "rfm_guppy", "paths.py")):
+    if _r == os.path.dirname(_r): raise RuntimeError("rfm_guppy/paths.py not found above " + __file__)
+    _r = os.path.dirname(_r)
+sys.path.insert(0, _r)
+from rfm_guppy.paths import ROOT, CACHE_DIR, RESULTS_DIR, CKPT_DIR  # noqa: E402,F401  (re-exported)
 
 
 # ── model ─────────────────────────────────────────────────────────────────────

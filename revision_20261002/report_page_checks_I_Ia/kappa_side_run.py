@@ -1,9 +1,14 @@
 import sys,os,json,time
 import numpy as np, pandas as pd
-ROOT='/Users/msc/Documents/Remake-Paper-Towards'; sys.path.insert(0,ROOT)
+_r = os.path.dirname(os.path.abspath(__file__))   # walk up to the repo root (holds rfm_guppy/paths.py)
+while not os.path.isfile(os.path.join(_r, "rfm_guppy", "paths.py")):
+    if _r == os.path.dirname(_r): raise RuntimeError("rfm_guppy/paths.py not found above " + __file__)
+    _r = os.path.dirname(_r)
+sys.path.insert(0, _r)
+from rfm_guppy.paths import CACHE_DIR, CHECKS_RUN_2026_10_09
 from rfm_guppy.rfm import _agop_step,_preprocess
-C=f'{ROOT}/rfm_guppy/cache'; CON=['food','valence','env_social']; B,TMAX,LAM,SEED=20,10,1e-3,20261002
-Z0=np.load(f'{ROOT}/revision_20261002/run_20261009/Ia-shuffle-label-on-blocks_sT.npz')
+C=CACHE_DIR; CON=['food','valence','env_social']; B,TMAX,LAM,SEED=20,10,1e-3,20261002
+Z0=np.load(os.path.join(CHECKS_RUN_2026_10_09,'Ia-shuffle-label-on-blocks_sT.npz'))
 rng=np.random.default_rng(SEED); rows=[]; gate=0; t0=time.time()
 for c in CON:
     X=np.load(f'{C}/{c}_train_activations.npy').astype(float)

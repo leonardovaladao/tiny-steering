@@ -24,15 +24,16 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, ROOT)
-sys.path.insert(0, os.path.join(ROOT, "guppylm"))
+_r = os.path.dirname(os.path.abspath(__file__))   # walk up to the repo root (holds rfm_guppy/paths.py)
+while not os.path.isfile(os.path.join(_r, "rfm_guppy", "paths.py")):
+    if _r == os.path.dirname(_r): raise RuntimeError("rfm_guppy/paths.py not found above " + __file__)
+    _r = os.path.dirname(_r)
+sys.path.insert(0, _r)
+from rfm_guppy.paths import ROOT, GUPPYLM_DIR, CKPT_DIR, CACHE_DIR  # noqa: E402  (re-exported)
+sys.path.insert(0, GUPPYLM_DIR)
 
 from guppylm import GuppyLM, GuppyConfig   # noqa: E402
 from tokenizers import Tokenizer            # noqa: E402
-
-CKPT_DIR  = os.path.join(ROOT, ".trash", "guppylm-9M")
-CACHE_DIR = os.path.join(ROOT, "rfm_guppy", "cache")
 
 CONCEPTS      = ("food", "valence", "env_social")
 SOURCES       = ("rfm", "dm", "random")

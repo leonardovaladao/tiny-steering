@@ -30,11 +30,11 @@ from datasets import load_dataset
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import steer_ref                                  # noqa: E402
 from steer_ref import ROOT                        # noqa: E402
+from rfm_guppy.paths import CHECKS_RUN_2026_10_09, RESULTS_DIR   # noqa: E402
 from rfm_guppy.concepts import CONCEPTS           # noqa: E402
 
 OUT = os.path.join(ROOT, "demo-ui-guppy-steer", "prompts_frozen.json")
-CALIB_CSV = os.path.join(ROOT, "revision_20261002", "run_20261009",
-                         "III-steering-metric_calibration.csv")
+CALIB_CSV = os.path.join(CHECKS_RUN_2026_10_09, "III-steering-metric_calibration.csv")
 CONFIRM_SEED = 20261020        # date the calibration was pre-registered
 N_CONFIRM = 20
 PAGE_NEW_TOKENS = 64
@@ -55,7 +55,7 @@ calib = [str(p) for p in np.random.default_rng(0).choice(pool, size=100, replace
 assert calib == list(pd.read_csv(CALIB_CSV).prompt), "Check III calibration draw does not reproduce"
 
 # ── exploration: the 7 Check III prompts ─────────────────────────────────────
-stored0 = json.load(open(os.path.join(ROOT, "results", "steer_food.json")))["results_per_r"]["0.0"]
+stored0 = json.load(open(os.path.join(RESULTS_DIR, "steer_food.json")))["results_per_r"]["0.0"]
 explore = [o["prompt"] for o in stored0["outputs"]]
 assert len(explore) == 7
 

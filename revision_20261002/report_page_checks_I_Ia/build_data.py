@@ -1,6 +1,12 @@
 """Collect the numbers charted by the Checks I/Ia page into data.json. Run from report_page_checks_I_Ia/."""
-import json, numpy as np, pandas as pd
-R='../run_20261009/'
+import json, os, sys, numpy as np, pandas as pd
+_r = os.path.dirname(os.path.abspath(__file__))   # walk up to the repo root (holds rfm_guppy/paths.py)
+while not os.path.isfile(os.path.join(_r, "rfm_guppy", "paths.py")):
+    if _r == os.path.dirname(_r): raise RuntimeError("rfm_guppy/paths.py not found above " + __file__)
+    _r = os.path.dirname(_r)
+sys.path.insert(0, _r)
+from rfm_guppy.paths import CHECKS_RUN_2026_10_09
+R=os.path.join(CHECKS_RUN_2026_10_09,'')
 csv=lambda f: pd.read_csv(R+f+'.csv')
 def recs(df,n=4): return json.loads(df.round(n).to_json(orient='records'))
 D={}

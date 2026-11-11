@@ -28,7 +28,7 @@ except ImportError:
     _HF_AVAILABLE = False
 
 
-CACHE_DIR = os.path.join(os.path.dirname(__file__), "cache")
+from .paths import CACHE_DIR, GUPPYLM_DIR  # noqa: E402
 
 CONCEPTS = {
     # C1: food/eating topics vs. abstract inanimate topics
@@ -96,7 +96,7 @@ def load_raw_dataset() -> list[dict]:
         except Exception as e:
             print(f"[concepts] HF load failed ({e}), trying local data.")
 
-    local_path = os.path.join(os.path.dirname(__file__), "..", "guppylm", "data", "train.jsonl")
+    local_path = os.path.join(GUPPYLM_DIR, "data", "train.jsonl")
     if os.path.exists(local_path):
         rows = []
         with open(local_path) as f:

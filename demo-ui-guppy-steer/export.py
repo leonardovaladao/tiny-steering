@@ -28,6 +28,7 @@ sys.path.insert(0, HERE)
 import steer_ref                                                  # noqa: E402
 from steer_ref import ROOT, CKPT_DIR, CACHE_DIR, CONCEPTS         # noqa: E402
 import metrics                                                    # noqa: E402
+from rfm_guppy.paths import CHECKS_RUN_2026_10_09                 # noqa: E402
 from rfm_guppy.concepts import CONCEPTS as CONCEPT_DEFS           # noqa: E402
 
 OUT = os.path.join(HERE, "web", "data")
@@ -116,7 +117,7 @@ def main():
 
     # ── concept bundles ─────────────────────────────────────────────────────
     cal = json.load(open(os.path.join(HERE, "calibration.json")))
-    validity = pd.read_csv(os.path.join(ROOT, "revision_20261002", "run_20261009",
+    validity = pd.read_csv(os.path.join(CHECKS_RUN_2026_10_09,
                                         "III-steering-metric_judge_validity.csv")).set_index("concept")
     judges = metrics.fit_judges()
     texts = pd.read_csv(os.path.join(HERE, "calibration_generations.csv"), keep_default_na=False).text

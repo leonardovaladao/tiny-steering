@@ -21,19 +21,24 @@ import numpy as np
 import torch
 from tokenizers import Tokenizer
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, ROOT)
-sys.path.insert(0, os.path.join(ROOT, "guppylm"))
+_r = os.path.dirname(os.path.abspath(__file__))   # walk up to the repo root (holds rfm_guppy/paths.py)
+while not os.path.isfile(os.path.join(_r, "rfm_guppy", "paths.py")):
+    if _r == os.path.dirname(_r): raise RuntimeError("rfm_guppy/paths.py not found above " + __file__)
+    _r = os.path.dirname(_r)
+sys.path.insert(0, _r)
+from rfm_guppy import paths  # noqa: E402
+ROOT = paths.ROOT
+sys.path.insert(0, paths.GUPPYLM_DIR)
 
 from guppylm import GuppyLM, GuppyConfig  # noqa: E402
 from rfm_guppy.activations import extract_activations  # noqa: E402
 from rfm_guppy.concepts import load_concept_dataset, CONCEPTS  # noqa: E402
 from rfm_guppy.rfm import extract_concept_vector, rfm_synthetic_test  # noqa: E402
 
-CACHE_DIR   = os.path.join(ROOT, "rfm_guppy", "cache")
-CHECKPOINT  = os.path.join(ROOT, "checkpoints", "guppylm-9M", "pytorch_model.bin")
-TOKENIZER   = os.path.join(ROOT, "checkpoints", "guppylm-9M", "tokenizer.json")
-CFG_JSON    = os.path.join(ROOT, "checkpoints", "guppylm-9M", "config.json")
+CACHE_DIR   = paths.CACHE_DIR
+CHECKPOINT  = os.path.join(paths.CKPT_DIR, "pytorch_model.bin")
+TOKENIZER   = os.path.join(paths.CKPT_DIR, "tokenizer.json")
+CFG_JSON    = os.path.join(paths.CKPT_DIR, "config.json")
 
 N_BLOCKS = 6
 P = 3  # number of eigenvectors to keep per block for monitoring

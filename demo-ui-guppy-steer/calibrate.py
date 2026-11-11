@@ -34,6 +34,7 @@ sys.path.insert(0, HERE)
 import steer_ref                                                     # noqa: E402
 from steer_ref import ROOT, CACHE_DIR, CONCEPTS, BLOCK_SETS, POSITION_SETS, CONTROL_SEEDS  # noqa: E402
 import metrics                                                       # noqa: E402
+from rfm_guppy.paths import CHECKS_RUN_2026_10_09, RESULTS_DIR      # noqa: E402
 
 GEN_KW = dict(max_new_tokens=60, seed=42, temperature=0.7, top_k=50)   # Check III
 R_GRID = sorted([s * r for r in (0.005, 0.01, 0.02, 0.05, 0.1, 0.15, 0.25) for s in (-1, 1)])
@@ -43,8 +44,7 @@ BAND_MIN = 4               # coherent on ≥ 4/7 exploration prompts
 X_MIN = 10                 # Σ X_i ≥ 10 of 20
 JACC_MAX = 0.5
 ALPHA = 0.05 / 6           # Bonferroni over the 6 selected cells
-CALIB_CSV = os.path.join(ROOT, "revision_20261002", "run_20261009",
-                         "III-steering-metric_calibration.csv")
+CALIB_CSV = os.path.join(CHECKS_RUN_2026_10_09, "III-steering-metric_calibration.csv")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -147,8 +147,7 @@ def main():
               for c in CONCEPTS)
     check(gates, "J0 judges reproduce Check III g_c on its 100 calibration texts", err < 1e-9,
           f"max |Δg| = {err:.1e}")
-    validity = pd.read_csv(os.path.join(ROOT, "revision_20261002", "run_20261009",
-                                        "III-steering-metric_judge_validity.csv"))
+    validity = pd.read_csv(os.path.join(CHECKS_RUN_2026_10_09, "III-steering-metric_judge_validity.csv"))
     validated = {r.concept: bool(r.G1_pass) for r in validity.itertuples()}
 
     ctx = get_context("spawn")
@@ -178,7 +177,7 @@ def main():
 
         # ── exploration: r = 0 references ───────────────────────────────────
         y0_txt = pool.map(_gen, [(p, zero, "all", "all", 0.0) for p in explore])
-        stored0 = json.load(open(os.path.join(ROOT, "results", "steer_food.json")))
+        stored0 = json.load(open(os.path.join(RESULTS_DIR, "steer_food.json")))
         stored0 = [o["text"] for o in stored0["results_per_r"]["0.0"]["outputs"]]
         check(gates, "E0 r = 0 exploration texts equal the stored Check III texts",
               y0_txt == stored0, f"{sum(a == b for a, b in zip(y0_txt, stored0))}/7")

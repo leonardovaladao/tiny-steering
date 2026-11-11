@@ -22,6 +22,7 @@ import torch
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import steer_ref                                               # noqa: E402
 from steer_ref import ROOT, CACHE_DIR, POSITION_SETS          # noqa: E402
+from rfm_guppy.paths import RESULTS_DIR                        # noqa: E402
 from rfm_guppy.steering import generate_steered, measure_activation_norms   # noqa: E402
 
 CONCEPTS = ["food", "valence", "env_social"]
@@ -41,7 +42,7 @@ L, k = model.config.n_layers, model.config.d_model
 
 # ── A1, A2 ───────────────────────────────────────────────────────────────────
 for c in CONCEPTS:
-    stored = json.load(open(os.path.join(ROOT, "results", f"steer_{c}.json")))
+    stored = json.load(open(os.path.join(RESULTS_DIR, f"steer_{c}.json")))
     check(f"{c}: med_ℓ equals the stored block_norms",
           np.allclose(med, stored["block_norms"], rtol=0, atol=1e-9))
     V = np.load(os.path.join(CACHE_DIR, f"{c}_vectors.npz"))["v_per_block"].astype(np.float64)
@@ -64,7 +65,7 @@ for c in CONCEPTS:
 
 # ── A3 ───────────────────────────────────────────────────────────────────────
 Z_V, Z_EPS = np.zeros((L, k)), np.zeros(L)
-stored0 = json.load(open(os.path.join(ROOT, "results", "steer_food.json")))["results_per_r"]["0.0"]
+stored0 = json.load(open(os.path.join(RESULTS_DIR, "steer_food.json")))["results_per_r"]["0.0"]
 V_food = np.load(os.path.join(CACHE_DIR, "food_vectors.npz"))["v_per_block"]
 for P in POSITION_SETS:
     ok = all(
