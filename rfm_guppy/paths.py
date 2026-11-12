@@ -14,7 +14,7 @@ DATA_DIR      = os.path.join(ROOT, "data")                   # git-ignored; rege
 CKPT_DIR      = os.path.join(DATA_DIR, "checkpoints", "guppylm-9M")  # pretrained GuppyLM-9M checkpoint
 CACHE_DIR     = os.path.join(DATA_DIR, "cache")              # activations, datasets, vectors
 RESULTS_DIR   = os.path.join(ROOT, "replication", "runs", "2026-08-27")  # outputs of replication/0*.py (pinned run)
-CHECKS_DIR    = os.path.join(ROOT, "revision_20261002")      # revision checks I–IV
+CHECKS_DIR    = os.path.join(ROOT, "rfm_checks")             # RFM/AGOP limitation checks I–IV
 
 # Pinned run (not "latest"): the demo was calibrated on it and the report pages chart it.
-CHECKS_RUN_2026_10_09 = os.path.join(CHECKS_DIR, "run_20261009")
+CHECKS_RUN_2026_10_09 = os.path.join(CHECKS_DIR, "runs", "2026-10-09")

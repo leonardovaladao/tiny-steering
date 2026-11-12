@@ -516,7 +516,7 @@ menos de erro de ponto flutuante. Notebook, sementes e hiperparâmetros ficaram 
 
 **Evidência de que nada mais mudou.** Os Checks I, II e III foram reexecutados com o código
 novo:
-- todos os CSVs são byte a byte idênticos aos de `run_20261009/`;
+- todos os CSVs são byte a byte idênticos aos de `runs/2026-10-09/`;
 - os NPZ do Check I têm diferença máxima igual a $0$;
 - o gate de reprodução do Check I passou (as 18 *shares* e direções coincidem com o cache);
 - os gates (a) e (b) do Check II passaram.

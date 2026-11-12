@@ -28,5 +28,5 @@ for c in CON:
                 gate=max(gate,abs(s-Z0[f'{c}|{l}|{nz}|{L}'][b,t-1]))
                 rows.append(dict(c=c,l=l,L=L,nz=nz,Ts=Ts,b=b,t=t,s=s,l1=ev[0],l2=ev[1],l3=ev[2],tr=tr,top2=ev[:2].sum()/tr,top3=ev[:3].sum()/tr,top5=ev[:5].sum()/tr))
     print(c,round(time.time()-t0),flush=True)
-pd.DataFrame(rows).to_csv(f'{os.path.dirname(__file__)}/kappa.csv',index=False)
+pd.DataFrame(rows).to_csv(os.path.join(CHECKS_RUN_2026_10_09,'kappa.csv'),index=False)
 print('gate max |s-stored|',gate)

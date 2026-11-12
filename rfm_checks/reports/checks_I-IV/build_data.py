@@ -1,4 +1,4 @@
-"""Collect every number the page charts from run_20261009/ into data.json. Run from report_page/."""
+"""Collect every number the page charts from runs/2026-10-09/ into data.json. Run from rfm_checks/reports/checks_I-IV/."""
 import json, os, sys, numpy as np, pandas as pd
 _r = os.path.dirname(os.path.abspath(__file__))   # walk up to the repo root (holds rfm_guppy/paths.py)
 while not os.path.isfile(os.path.join(_r, "rfm_guppy", "paths.py")):

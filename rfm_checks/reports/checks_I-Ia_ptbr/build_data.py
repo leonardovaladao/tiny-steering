@@ -1,4 +1,4 @@
-"""Collect the numbers charted by the Checks I/Ia page into data.json. Run from report_page_checks_I_Ia/."""
+"""Collect the numbers charted by the Checks I/Ia page into data.json. Run from rfm_checks/reports/checks_I-Ia_ptbr/."""
 import json, os, sys, numpy as np, pandas as pd
 _r = os.path.dirname(os.path.abspath(__file__))   # walk up to the repo root (holds rfm_guppy/paths.py)
 while not os.path.isfile(os.path.join(_r, "rfm_guppy", "paths.py")):
