@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Phase 8 — Baseline comparison: PCA / DiffMeans / LogReg vs RFM.
 
-For each concept × method:
+For each selected concept × method (default concepts: every concept in rfm_guppy.concepts, i.e.
+food, valence, env_social; the "Overall" columns average over the selected concepts):
   (a) Extract concept vectors per block using the baseline method.
   (b) Monitoring: project test activations onto those vectors, train an LR
       probe, evaluate AUROC. Compare to RFM's Phase-7 AUROC.
@@ -9,15 +10,20 @@ For each concept × method:
       {0, ±0.25, ±0.5, ±1, ±2} × median_norms, score with the existing
       Phase-7 RFM probe (same scoring function as Phase 6) plus lexicon hit.
 
-Outputs (saved to replication/runs/2026-08-27/):
+Inputs: monitor_auroc.json and eval6_<concept>.json from the run folder (--run DIR, required;
+written by 03_monitor.py), and data/cache/<concept>_{split}_activations.npy, _vectors.npz,
+_probe.pkl.
+
+Outputs (saved to the run folder; never overwritten unless --force is given):
   baselines_monitoring.json   — AUROC table: {method × concept}
   baselines_steering.json     — success-rate table: {method × concept}
   baselines_comparison.md     — human-readable comparison tables
 
-Usage:
-    source .venv/bin/activate && PYTHONPATH=. python replication/04_baselines.py
+Usage (from project root):
+    .venv/bin/python replication/04_baselines.py --run DIR [--concepts NAME ...] [--force]
 """
 
+import argparse
 import json
 import os
 import pickle
@@ -43,7 +49,13 @@ from rfm_guppy.baselines import (                   # noqa: E402
     extract_all_baseline_vectors,
     baseline_monitoring_auroc,
 )
-from rfm_guppy.concepts import load_concept_dataset, CONCEPT_LEXICONS  # noqa: E402
+from rfm_guppy.concepts import (                   # noqa: E402
+    load_concept_dataset,
+    resolve_concepts,
+    CONCEPT_LEXICONS,
+    CONCEPT_NAMES,
+)
+from rfm_guppy import runs                          # noqa: E402
 from rfm_guppy.steering import (                    # noqa: E402
     generate_steered,
     measure_activation_norms,
@@ -51,12 +63,10 @@ from rfm_guppy.steering import (                    # noqa: E402
 from rfm_guppy.monitoring import predict_probe_probs  # noqa: E402
 
 CACHE_DIR   = paths.CACHE_DIR
-RESULTS_DIR = paths.RESULTS_DIR
 CHECKPOINT  = os.path.join(paths.CKPT_DIR, "pytorch_model.bin")
 TOKENIZER   = os.path.join(paths.CKPT_DIR, "tokenizer.json")
 CFG_JSON    = os.path.join(paths.CKPT_DIR, "config.json")
 
-CONCEPTS = ["food", "valence", "env_social"]
 METHODS  = ["pca", "diffmeans", "logreg"]   # RFM handled separately (already computed)
 
 PROBE_PROMPTS = [
@@ -264,7 +274,14 @@ def run_steering_method(
 
 # ── comparison tables ──────────────────────────────────────────────────────────
 
-def _monitoring_table_md(monitoring_results: dict) -> str:
+def _md_header(first: str, cols: list[str]) -> list[str]:
+    """Markdown header + separator rows; each separator cell is len(name)+2 dashes."""
+    heads = [first, *cols]
+    return ["| " + " | ".join(heads) + " |",
+            "|" + "|".join("-" * (len(h) + 2) for h in heads) + "|"]
+
+
+def _monitoring_table_md(monitoring_results: dict, concepts: list[str]) -> str:
     """monitoring_results[concept][method] = {val_auroc, test_auroc}"""
     methods_ordered = ["pca", "diffmeans", "logreg", "rfm"]
     method_labels   = {"pca": "PCA", "diffmeans": "DiffMeans", "logreg": "LogReg", "rfm": "RFM"}
@@ -274,13 +291,12 @@ def _monitoring_table_md(monitoring_results: dict) -> str:
         "",
         "*(Aggregate probe; test split)*",
         "",
-        "| Method | food | valence | env_social | Overall |",
-        "|--------|------|---------|------------|---------|",
+        *_md_header("Method", [*concepts, "Overall"]),
     ]
     overall_by_method = {m: [] for m in methods_ordered}
     for method in methods_ordered:
         row_vals = []
-        for concept in CONCEPTS:
+        for concept in concepts:
             auroc = monitoring_results[concept][method]["test_auroc"]
             row_vals.append(auroc)
             overall_by_method[method].append(auroc)
@@ -291,7 +307,8 @@ def _monitoring_table_md(monitoring_results: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-def _steering_table_md(steering_results: dict, phase6_results: dict) -> str:
+def _steering_table_md(steering_results: dict, phase6_results: dict,
+                       concepts: list[str]) -> str:
     """steering_results[concept][method] = steer dict; phase6_results[concept] = {best_success_rate}"""
     methods_ordered = ["pca", "diffmeans", "logreg", "rfm"]
     method_labels   = {"pca": "PCA", "diffmeans": "DiffMeans", "logreg": "LogReg", "rfm": "RFM"}
@@ -301,13 +318,12 @@ def _steering_table_md(steering_results: dict, phase6_results: dict) -> str:
         "",
         "*(Best-over-positive-ε; probe-score > 0.5 OR lexicon hit)*",
         "",
-        "| Method | food | valence | env_social | Overall |",
-        "|--------|------|---------|------------|---------|",
+        *_md_header("Method", [*concepts, "Overall"]),
     ]
 
     for method in methods_ordered:
         row_vals = []
-        for concept in CONCEPTS:
+        for concept in concepts:
             if method == "rfm":
                 val = phase6_results[concept]
             else:
@@ -320,17 +336,16 @@ def _steering_table_md(steering_results: dict, phase6_results: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-def _val_rho_table_md(concept_baseline_vecs: dict) -> str:
+def _val_rho_table_md(concept_baseline_vecs: dict, concepts: list[str]) -> str:
     """concept_baseline_vecs[concept][method]['val_abs_rho'] = [L]"""
     lines = [
         "## Concept Vector Quality: Val |Pearson| (best block)",
         "",
-        "| Method | food | valence | env_social |",
-        "|--------|------|---------|------------|",
+        *_md_header("Method", concepts),
     ]
     for method in ["pca", "diffmeans", "logreg"]:
         row = []
-        for concept in CONCEPTS:
+        for concept in concepts:
             rho_arr = concept_baseline_vecs[concept][method]["val_abs_rho"]
             row.append(float(np.max(rho_arr)))
         cells = " | ".join(f"{v:.4f}" for v in row)
@@ -340,32 +355,80 @@ def _val_rho_table_md(concept_baseline_vecs: dict) -> str:
 
 # ── main ───────────────────────────────────────────────────────────────────────
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Phase 8: PCA / DiffMeans / LogReg vs RFM. Reads monitor_auroc.json and "
+                    "eval6_<c>.json from the run folder; writes baselines_monitoring.json, "
+                    "baselines_steering.json and baselines_comparison.md there.")
+    parser.add_argument("--concepts", nargs="+", metavar="NAME",
+                        help=f"concepts to compare (default: all, {' '.join(CONCEPT_NAMES)})")
+    parser.add_argument("--run", metavar="DIR", required=True,
+                        help="run folder written by 02_steer.py and 03_monitor.py")
+    parser.add_argument("--force", action="store_true",
+                        help="allow overwriting files that already exist in the run folder")
+    args = parser.parse_args()
+    try:
+        args.concepts = resolve_concepts(args.concepts)
+    except ValueError as e:
+        parser.error(str(e))
+    return args
+
+
+def load_previous_phases(run_dir: str, concepts: list[str]) -> tuple[dict, dict]:
+    """Phase 7 AUROCs and Phase 6 success rates from the run folder; exit with a clear message
+    if a file, a concept or a cached probe is missing."""
+    rerun = (f"Run 03_monitor.py --run {run_dir} --concepts {' '.join(concepts)} first "
+             "(after 02_steer.py with the same --run and --concepts).")
+    mon_path = os.path.join(run_dir, "monitor_auroc.json")
+    if not os.path.exists(mon_path):
+        sys.exit(f"[04_baselines] {runs.display_path(mon_path)} not found. {rerun}")
+    with open(mon_path) as f:
+        rfm_monitor_auroc = json.load(f)
+    lacking = [c for c in concepts if c not in rfm_monitor_auroc]
+    if lacking:
+        sys.exit(f"[04_baselines] {runs.display_path(mon_path)} has no entry for "
+                 f"{', '.join(lacking)} (it has: {', '.join(rfm_monitor_auroc) or 'none'}). {rerun}")
+    missing = [f"eval6_{c}.json" for c in concepts
+               if not os.path.exists(os.path.join(run_dir, f"eval6_{c}.json"))]
+    missing += [f"data/cache/{c}_probe.pkl" for c in concepts
+                if not os.path.exists(os.path.join(CACHE_DIR, f"{c}_probe.pkl"))]
+    if missing:
+        sys.exit(f"[04_baselines] missing for this run: {', '.join(missing)}. {rerun}")
+
+    rfm_steer_success: dict[str, float] = {}
+    for concept in concepts:
+        with open(os.path.join(run_dir, f"eval6_{concept}.json")) as f:
+            rfm_steer_success[concept] = json.load(f)["best_success_rate"]
+    return rfm_monitor_auroc, rfm_steer_success
+
+
 def main():
-    os.makedirs(RESULTS_DIR, exist_ok=True)
+    args = parse_args()
+    concepts, run_dir, force = args.concepts, args.run, args.force
+
+    # Refuse before any work: inputs must be in the run folder, outputs must not be.
+    rfm_monitor_auroc, rfm_steer_success = load_previous_phases(run_dir, concepts)
+    for name in ("baselines_monitoring.json", "baselines_steering.json",
+                 "baselines_comparison.md"):
+        runs.out_path(run_dir, name, force)
+    run_dir = runs.open_run(run_dir, __file__, concepts, params={
+        "force": force, "methods": METHODS, "r_values": R_VALUES, "probe_prompts": PROBE_PROMPTS,
+        "max_new_tokens": MAX_NEW_TOKENS, "temperature": TEMPERATURE, "top_k": TOP_K,
+        "seed": SEED})
 
     print("=" * 68)
     print("Phase 8 — Baseline Comparison (PCA / DiffMeans / LogReg vs RFM)")
     print("=" * 68)
-
-    # Load RFM monitoring results from Phase 7
-    with open(os.path.join(RESULTS_DIR, "monitor_auroc.json")) as f:
-        rfm_monitor_auroc = json.load(f)
-
-    # Load Phase 6 RFM steering-success rates
-    rfm_steer_success: dict[str, float] = {}
-    for concept in CONCEPTS:
-        p = os.path.join(RESULTS_DIR, f"eval6_{concept}.json")
-        with open(p) as f:
-            d = json.load(f)
-        rfm_steer_success[concept] = d["best_success_rate"]
+    print(f"[run] {runs.display_path(run_dir)}")
+    print(f"[concepts] {', '.join(concepts)}")
 
     # ── Part A: Extract baseline vectors + monitoring AUROC ────────────────────
     print("\n[A] Extracting baseline vectors and evaluating monitoring AUROC ...\n")
 
-    monitoring_results: dict[str, dict] = {c: {} for c in CONCEPTS}
+    monitoring_results: dict[str, dict] = {c: {} for c in concepts}
     concept_baseline_vecs: dict[str, dict] = {}
 
-    for concept in CONCEPTS:
+    for concept in concepts:
         print(f"  Concept: {concept.upper()}")
 
         acts_train = load_activations(concept, "train")
@@ -399,10 +462,10 @@ def main():
         )
 
     # Save monitoring results
-    mon_path = os.path.join(RESULTS_DIR, "baselines_monitoring.json")
+    mon_path = runs.out_path(run_dir, "baselines_monitoring.json", force)
     with open(mon_path, "w") as f:
         json.dump(monitoring_results, f, indent=2)
-    print(f"\n  Monitoring results → {os.path.relpath(mon_path, ROOT)}")
+    print(f"\n  Monitoring results → {runs.display_path(mon_path)}")
 
     # ── Part B: Steering with baseline vectors ─────────────────────────────────
     print("\n[B] Steering sweep with baseline vectors ...\n")
@@ -414,9 +477,9 @@ def main():
     for i, n in enumerate(block_norms):
         print(f"      Block {i}: {n:.2f}")
 
-    steering_results: dict[str, dict] = {c: {} for c in CONCEPTS}
+    steering_results: dict[str, dict] = {c: {} for c in concepts}
 
-    for concept in CONCEPTS:
+    for concept in concepts:
         print(f"\n  Concept: {concept.upper()}")
         probe_pkg = load_probe(concept)
         rfm_vecs  = load_rfm_vectors(concept)
@@ -443,10 +506,10 @@ def main():
                   f"at r={steer_result['best_r_pos']:+.2f}  ({dt:.1f}s)")
 
     # Save steering results
-    steer_path = os.path.join(RESULTS_DIR, "baselines_steering.json")
+    steer_path = runs.out_path(run_dir, "baselines_steering.json", force)
     with open(steer_path, "w") as f:
         json.dump(steering_results, f, indent=2)
-    print(f"\n  Steering results → {os.path.relpath(steer_path, ROOT)}")
+    print(f"\n  Steering results → {runs.display_path(steer_path)}")
 
     # ── Comparison tables ──────────────────────────────────────────────────────
     print("\n" + "=" * 68)
@@ -454,11 +517,12 @@ def main():
     print("=" * 68)
     methods_all = ["pca", "diffmeans", "logreg", "rfm"]
     method_labels = {"pca": "PCA", "diffmeans": "DiffMeans", "logreg": "LogReg", "rfm": "RFM"}
-    print(f"  {'Method':12s}  {'food':>8}  {'valence':>8}  {'env_social':>10}  {'Overall':>8}")
+    col_heads = "  ".join(f"{c:>{max(8, len(c))}}" for c in concepts)
+    print(f"  {'Method':12s}  {col_heads}  {'Overall':>8}")
     print(f"  {'─'*52}")
     for method in methods_all:
         vals = []
-        for concept in CONCEPTS:
+        for concept in concepts:
             auroc = monitoring_results[concept][method]["test_auroc"]
             vals.append(auroc)
         overall = float(np.mean(vals))
@@ -469,11 +533,11 @@ def main():
     print("\n" + "=" * 68)
     print("STEERING SUCCESS TABLE (best positive r, probe>0.5 OR lexicon)")
     print("=" * 68)
-    print(f"  {'Method':12s}  {'food':>8}  {'valence':>8}  {'env_social':>10}  {'Overall':>8}")
+    print(f"  {'Method':12s}  {col_heads}  {'Overall':>8}")
     print(f"  {'─'*52}")
     for method in methods_all:
         vals = []
-        for concept in CONCEPTS:
+        for concept in concepts:
             if method == "rfm":
                 val = rfm_steer_success[concept]
             else:
@@ -489,7 +553,7 @@ def main():
     best_mon_method = max(
         methods_all,
         key=lambda m: float(np.mean([
-            monitoring_results[c][m]["test_auroc"] for c in CONCEPTS
+            monitoring_results[c][m]["test_auroc"] for c in concepts
         ])),
     )
     print(f"  → {method_labels[best_mon_method]}")
@@ -499,7 +563,7 @@ def main():
     all_steer_overall = {}
     for method in methods_all:
         vals = []
-        for concept in CONCEPTS:
+        for concept in concepts:
             if method == "rfm":
                 vals.append(rfm_steer_success[concept])
             else:
@@ -510,11 +574,11 @@ def main():
 
     # ── Markdown report ────────────────────────────────────────────────────────
     md_lines = ["# Phase 8 — Baseline Comparison", ""]
-    md_lines.append(_val_rho_table_md(concept_baseline_vecs))
+    md_lines.append(_val_rho_table_md(concept_baseline_vecs, concepts))
     md_lines.append("")
-    md_lines.append(_monitoring_table_md(monitoring_results))
+    md_lines.append(_monitoring_table_md(monitoring_results, concepts))
     md_lines.append("")
-    md_lines.append(_steering_table_md(steering_results, rfm_steer_success))
+    md_lines.append(_steering_table_md(steering_results, rfm_steer_success, concepts))
     md_lines.append("")
     md_lines.append("### Winner summary")
     md_lines.append("")
@@ -528,12 +592,12 @@ def main():
     md_lines.append("*All methods evaluated on identical splits, identical ε sweeps, "
                     "identical probe threshold (0.5).*")
 
-    md_path = os.path.join(RESULTS_DIR, "baselines_comparison.md")
+    md_path = runs.out_path(run_dir, "baselines_comparison.md", force)
     with open(md_path, "w") as f:
         f.write("\n".join(md_lines) + "\n")
-    print(f"\n  Markdown comparison → {os.path.relpath(md_path, ROOT)}")
+    print(f"\n  Markdown comparison → {runs.display_path(md_path)}")
 
-    print("\n[Phase 8] Complete.\n")
+    print(f"\n[Phase 8] Complete. Run folder: {runs.display_path(run_dir)}\n")
 
 
 if __name__ == "__main__":

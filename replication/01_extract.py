@@ -1,16 +1,23 @@
 #!/usr/bin/env python3
-"""Phase 4 — Extract and store RFM concept vectors for all three concepts.
+"""Phase 4 — Extract and store RFM concept vectors.
 
-For each concept (food, valence, env_social):
-  1. Extract per-block activations for train / val / test splits (cached as .npy).
+For each selected concept (default: every concept in rfm_guppy.concepts, i.e. food, valence,
+env_social):
+  1. Extract per-block activations for train / val / test splits (cached as
+     data/cache/<concept>_<split>_activations.npy; reused if present).
   2. Run RFM HP sweep per block → oriented unit concept vector v_ℓ.
   3. Retain top-3 AGOP eigenvectors per block (for Phase 7 monitoring).
-  4. Save to cache/<concept>_vectors.npz.
+  4. Save to data/cache/<concept>_vectors.npz (overwritten).
   5. Print per-concept × per-block summary table.
 
+Reads data/cache/concept_<concept>.json (built by `python -m rfm_guppy.concepts`). Writes only to
+data/cache/; with --run DIR it also records a step in DIR/run.json and writes nothing else there.
+
 Usage (from project root):
-    PYTHONPATH=. python replication/01_extract.py
+    .venv/bin/python replication/01_extract.py [--concepts NAME ...] [--run DIR]
 """
+
+import argparse
 
 import json
 import os
@@ -32,7 +39,8 @@ sys.path.insert(0, paths.GUPPYLM_DIR)
 
 from guppylm import GuppyLM, GuppyConfig  # noqa: E402
 from rfm_guppy.activations import extract_activations  # noqa: E402
-from rfm_guppy.concepts import load_concept_dataset, CONCEPTS  # noqa: E402
+from rfm_guppy.concepts import load_concept_dataset, resolve_concepts, CONCEPT_NAMES  # noqa: E402
+from rfm_guppy import runs  # noqa: E402
 from rfm_guppy.rfm import extract_concept_vector, rfm_synthetic_test  # noqa: E402
 
 CACHE_DIR   = paths.CACHE_DIR
@@ -220,10 +228,34 @@ def verify_npz(concept_name: str):
 
 # ── main ──────────────────────────────────────────────────────────────────────
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Phase 4: RFM concept vectors per block. Writes data/cache/<c>_vectors.npz "
+                    "(and <c>_<split>_activations.npy if missing).")
+    parser.add_argument("--concepts", nargs="+", metavar="NAME",
+                        help=f"concepts to process (default: all, {' '.join(CONCEPT_NAMES)})")
+    parser.add_argument("--run", metavar="DIR",
+                        help="run folder in which to record this step in run.json "
+                             "(no files are written there)")
+    args = parser.parse_args()
+    try:
+        args.concepts = resolve_concepts(args.concepts)
+    except ValueError as e:
+        parser.error(str(e))
+    return args
+
+
 def main():
+    args = parse_args()
+    concepts = args.concepts
+
     print("=" * 60)
     print("Phase 4 — RFM Concept Vector Extraction")
     print("=" * 60)
+    print(f"[concepts] {', '.join(concepts)}")
+    if args.run:
+        run_dir = runs.open_run(args.run, __file__, concepts)
+        print(f"[run] step recorded in {runs.display_path(run_dir)}/run.json")
 
     # Gate: synthetic RFM recovery test must pass
     print("\n[gate] Synthetic RFM recovery test ...")
@@ -237,7 +269,7 @@ def main():
 
     concept_results = {}
 
-    for concept_name in CONCEPTS:
+    for concept_name in concepts:
         print(f"\n{'─'*60}")
         print(f"Concept: {concept_name.upper()}")
         print(f"{'─'*60}")
@@ -278,7 +310,7 @@ def main():
 
     # 5. Verify .npz acceptance criteria
     print("[verify] Checking .npz files ...")
-    for concept_name in CONCEPTS:
+    for concept_name in concepts:
         verify_npz(concept_name)
 
     print("\n[Phase 4] Complete. All concept vectors extracted and verified.\n")

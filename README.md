@@ -109,11 +109,15 @@ pip install -r requirements.txt
 hf download arman-bd/guppylm-9M --local-dir data/checkpoints/guppylm-9M
 
 # run the pipeline in order — every stage caches, so re-runs skip inference
-python replication/01_extract.py     # concept datasets + RFM concept vectors
-python replication/02_steer.py       # steering sweep
-python replication/03_monitor.py     # monitoring probes + steering evaluation
-python replication/04_baselines.py   # PCA / DiffMeans / LogReg comparison
+RUN=replication/runs/$(date +%F)                   # new run folder; replication/runs/2026-08-27 is read-only
+python -m rfm_guppy.concepts                       # concept datasets
+python replication/01_extract.py --run $RUN        # RFM concept vectors
+python replication/02_steer.py --run $RUN          # steering sweep
+python replication/03_monitor.py --run $RUN        # monitoring probes + steering evaluation
+python replication/04_baselines.py --run $RUN      # PCA / DiffMeans / LogReg comparison
 ```
+
+Every step takes `--concepts NAME [NAME ...]` (default: all concepts in `rfm_guppy/concepts.py`). Run folders are append-only and carry a `run.json` provenance record; see [`replication/README.md`](replication/README.md#how-to-rerun).
 
 To rerun the limitation checks I–IV, see [`rfm_checks/README.md`](rfm_checks/README.md#rerunning-a-check).
 

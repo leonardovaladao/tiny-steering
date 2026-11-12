@@ -1,25 +1,33 @@
 #!/usr/bin/env python3
 """Phase 7 + Phase 6 — Monitoring probes and steering evaluation.
 
+Runs on the selected concepts (default: every concept in rfm_guppy.concepts, i.e. food, valence,
+env_social). --run DIR is required: it is the run folder that 02_steer.py wrote to.
+
 Phase 7 (monitoring):
   1. Load cached activations (train/val/test) and binary labels per concept.
   2. Build probe features: project each block's last-token activation onto
-     the top-3 AGOP eigenvectors stored in cache/<concept>_vectors.npz.
+     the top-3 AGOP eigenvectors stored in data/cache/<concept>_vectors.npz.
   3. Train per-block and aggregate logistic-regression probes (C swept on val).
   4. Evaluate on test split by AUROC.
-  5. Print AUROC table; save probe packages to cache/<concept>_probe.pkl.
+  5. Print AUROC table; save probe packages to data/cache/<concept>_probe.pkl (overwritten)
+     and the AUROC summary to monitor_auroc.json in the run folder.
 
 Phase 6 (steering evaluation):
-  6. Load Phase 5 steer results (replication/runs/2026-08-27/steer_<concept>.json).
+  6. Load Phase 5 steer results (steer_<concept>.json in the run folder).
   7. Feed (prompt, steered_text) exchanges back through GuppyLM.
   8. Score with the aggregate probe; also compute lexicon hit rate.
   9. Report probe-score and steering-success rate vs. ε sweep.
-  10. Save Phase 6 eval to replication/runs/2026-08-27/eval6_<concept>.json and .md.
+  10. Save Phase 6 eval to eval6_<concept>.json and .md in the run folder.
+
+Existing files in the run folder are never overwritten unless --force is given; run.json in it
+records this step.
 
 Usage (from project root):
-    source .venv/bin/activate && PYTHONPATH=. python replication/03_monitor.py
+    .venv/bin/python replication/03_monitor.py --run DIR [--concepts NAME ...] [--force]
 """
 
+import argparse
 import json
 import os
 import pickle
@@ -42,8 +50,11 @@ sys.path.insert(0, paths.GUPPYLM_DIR)
 from guppylm import GuppyLM, GuppyConfig          # noqa: E402
 from rfm_guppy.concepts import (                   # noqa: E402
     load_concept_dataset,
+    resolve_concepts,
     CONCEPT_LEXICONS,
+    CONCEPT_NAMES,
 )
+from rfm_guppy import runs                         # noqa: E402
 from rfm_guppy.monitoring import (                 # noqa: E402
     build_probe_features,
     train_probes,
@@ -52,12 +63,10 @@ from rfm_guppy.monitoring import (                 # noqa: E402
 from rfm_guppy.evaluate import evaluate_steering, eval_to_markdown  # noqa: E402
 
 CACHE_DIR   = paths.CACHE_DIR
-RESULTS_DIR = paths.RESULTS_DIR
 CHECKPOINT  = os.path.join(paths.CKPT_DIR, "pytorch_model.bin")
 TOKENIZER   = os.path.join(paths.CKPT_DIR, "tokenizer.json")
 CFG_JSON    = os.path.join(paths.CKPT_DIR, "config.json")
 
-CONCEPTS  = ["food", "valence", "env_social"]
 N_BLOCKS  = 6
 P         = 3
 
@@ -197,13 +206,14 @@ def run_phase7_concept(concept: str) -> tuple[dict, dict]:
 
 # ── Phase 6 ───────────────────────────────────────────────────────────────────
 
-def run_phase6_concept(concept: str, probe_pkg: dict, model, tokenizer):
+def run_phase6_concept(concept: str, probe_pkg: dict, model, tokenizer,
+                       run_dir: str, force: bool = False):
     """Evaluate steering results with probe-score and lexicon metrics."""
     print(f"\n{'─'*60}")
     print(f"[Phase 6] Concept: {concept.upper()}")
     print(f"{'─'*60}")
 
-    steer_json = os.path.join(RESULTS_DIR, f"steer_{concept}.json")
+    steer_json = os.path.join(run_dir, f"steer_{concept}.json")
     if not os.path.exists(steer_json):
         print(f"  [SKIP] {steer_json} not found — run 02_steer.py first")
         return None
@@ -232,17 +242,17 @@ def run_phase6_concept(concept: str, probe_pkg: dict, model, tokenizer):
           f"at r={eval_result['best_r_pos']:+.2f}")
 
     # Save JSON
-    json_path = os.path.join(RESULTS_DIR, f"eval6_{concept}.json")
+    json_path = runs.out_path(run_dir, f"eval6_{concept}.json", force)
     with open(json_path, "w") as f:
         json.dump(eval_result, f, indent=2)
 
     # Save Markdown
-    md_path = os.path.join(RESULTS_DIR, f"eval6_{concept}.md")
+    md_path = runs.out_path(run_dir, f"eval6_{concept}.md", force)
     with open(md_path, "w") as f:
         f.write(eval_to_markdown(eval_result))
 
-    print(f"  Saved: {os.path.relpath(json_path, ROOT)}")
-    print(f"         {os.path.relpath(md_path,   ROOT)}")
+    print(f"  Saved: {runs.display_path(json_path)}")
+    print(f"         {runs.display_path(md_path)}")
     return eval_result
 
 
@@ -285,8 +295,9 @@ def print_phase6_summary(phase6_results: dict[str, dict]):
     print(sep)
 
 
-def save_phase7_json(phase7_results: dict[str, tuple[dict, dict]]):
-    """Serialise AUROC results (no sklearn objects) to replication/runs/2026-08-27/monitor_auroc.json."""
+def save_phase7_json(phase7_results: dict[str, tuple[dict, dict]], run_dir: str,
+                     force: bool = False):
+    """Serialise AUROC results (no sklearn objects) to monitor_auroc.json in the run folder."""
     summary = {}
     for concept, (probe_pkg, test_eval) in phase7_results.items():
         summary[concept] = {
@@ -297,37 +308,72 @@ def save_phase7_json(phase7_results: dict[str, tuple[dict, dict]]):
             "aggregate_test_auroc":  test_eval["aggregate_test_auroc"],
             "per_block_val_auroc":   probe_pkg["per_block_val_auroc"],
         }
-    path = os.path.join(RESULTS_DIR, "monitor_auroc.json")
+    path = runs.out_path(run_dir, "monitor_auroc.json", force)
     with open(path, "w") as f:
         json.dump(summary, f, indent=2)
-    print(f"\n[Phase 7] AUROC summary → {os.path.relpath(path, ROOT)}")
+    print(f"\n[Phase 7] AUROC summary → {runs.display_path(path)}")
     return path
 
 
 # ── main ──────────────────────────────────────────────────────────────────────
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Phases 7 + 6: monitoring probes and steering evaluation. Reads "
+                    "steer_<c>.json from the run folder; writes eval6_<c>.json, eval6_<c>.md and "
+                    "monitor_auroc.json there, and data/cache/<c>_probe.pkl.")
+    parser.add_argument("--concepts", nargs="+", metavar="NAME",
+                        help=f"concepts to process (default: all, {' '.join(CONCEPT_NAMES)})")
+    parser.add_argument("--run", metavar="DIR", required=True,
+                        help="run folder written by 02_steer.py (holds steer_<c>.json)")
+    parser.add_argument("--force", action="store_true",
+                        help="allow overwriting files that already exist in the run folder")
+    args = parser.parse_args()
+    try:
+        args.concepts = resolve_concepts(args.concepts)
+    except ValueError as e:
+        parser.error(str(e))
+    return args
+
+
 def main():
-    os.makedirs(RESULTS_DIR, exist_ok=True)
+    args = parse_args()
+    concepts, run_dir, force = args.concepts, args.run, args.force
+
+    # Refuse before any work: Phase 5 inputs must be in the run folder, outputs must not be.
+    missing = [f"steer_{c}.json" for c in concepts
+               if not os.path.exists(os.path.join(run_dir, f"steer_{c}.json"))]
+    if missing:
+        sys.exit(f"[03_monitor] {runs.display_path(run_dir)} lacks {', '.join(missing)}. "
+                 f"Run 02_steer.py --run {run_dir} --concepts {' '.join(concepts)} first.")
+    runs.out_path(run_dir, "monitor_auroc.json", force)
+    for c in concepts:
+        for ext in ("json", "md"):
+            runs.out_path(run_dir, f"eval6_{c}.{ext}", force)
+    run_dir = runs.open_run(run_dir, __file__, concepts,
+                            params={"force": force, "probe_threshold": 0.5})
 
     print("=" * 60)
     print("Phases 7 + 6 — Monitoring and Steering Evaluation")
     print("=" * 60)
+    print(f"[run] {runs.display_path(run_dir)}")
+    print(f"[concepts] {', '.join(concepts)}")
 
     # ── Phase 7: train / evaluate probes ──────────────────────────────────────
     print("\n[PHASE 7] Training and evaluating concept probes ...")
     phase7_results: dict[str, tuple[dict, dict]] = {}
 
-    for concept in CONCEPTS:
+    for concept in concepts:
         probe_pkg, test_eval = run_phase7_concept(concept)
         phase7_results[concept] = (probe_pkg, test_eval)
         path = save_probe(concept, probe_pkg)
         print(f"  Probe saved → {os.path.relpath(path, ROOT)}")
 
     print_phase7_summary(phase7_results)
-    save_phase7_json(phase7_results)
+    save_phase7_json(phase7_results, run_dir, force)
 
-    # Acceptance check: AUROC > 0.5 for at least the concrete concepts
-    for concept in ["food", "env_social"]:
+    # Acceptance check: AUROC > 0.5 (printed only; the original run checked food and env_social)
+    for concept in concepts:
         _, test_eval = phase7_results[concept]
         agg_auroc = test_eval["aggregate_test_auroc"]
         status = "PASS ✓" if agg_auroc > 0.5 else "FAIL ✗ (check model/features)"
@@ -339,9 +385,9 @@ def main():
 
     phase6_results: dict[str, dict | None] = {}
 
-    for concept in CONCEPTS:
+    for concept in concepts:
         probe_pkg, _ = phase7_results[concept]
-        result = run_phase6_concept(concept, probe_pkg, model, tokenizer)
+        result = run_phase6_concept(concept, probe_pkg, model, tokenizer, run_dir, force)
         phase6_results[concept] = result
 
     print_phase6_summary(phase6_results)
@@ -358,7 +404,7 @@ def main():
     if not any_success:
         print("[check] WARNING: no concept showed >20% improvement over baseline")
 
-    print("\n[Phases 7 + 6] Complete.\n")
+    print(f"\n[Phases 7 + 6] Complete. Run folder: {runs.display_path(run_dir)}\n")
 
 
 if __name__ == "__main__":

@@ -1,20 +1,26 @@
 #!/usr/bin/env python3
 """Phase 5 — Additive activation steering sweep.
 
-For each concept (food, valence, env_social):
-  1. Load the concept vectors from cache/<concept>_vectors.npz.
-  2. Measure per-block activation norms for ε calibration.
+For each selected concept (default: every concept in rfm_guppy.concepts, i.e. food, valence,
+env_social):
+  1. Load the concept vectors from data/cache/<concept>_vectors.npz.
+  2. Measure per-block activation norms for ε calibration. The median is taken over every
+     data/cache/*_activations.npy file, not only the selected concepts' files.
   3. Sweep relative coefficient r ∈ {-4, -2, -1, -0.5, -0.25, 0, +0.25, +0.5, +1, +2, +4, +8}
      with per-block ε_ℓ = r × median_norm_ℓ.
   4. Generate responses to 7 neutral probe prompts at each r.
   5. Report lexicon-hit rates per r.
   6. Identify the coherence-collapse threshold.
-  7. Save side-by-side table to replication/runs/2026-08-27/steer_<concept>.json and replication/runs/2026-08-27/steer_<concept>.md.
+  7. Save side-by-side table to steer_<concept>.json and steer_<concept>.md in the run folder.
+
+The run folder is --run DIR (default: a new replication/runs/<today>/). Existing files there are
+never overwritten unless --force is given; run.json in it records this step.
 
 Usage (from project root):
-    PYTHONPATH=. python replication/02_steer.py
+    .venv/bin/python replication/02_steer.py [--concepts NAME ...] [--run DIR] [--force]
 """
 
+import argparse
 import json
 import os
 import sys
@@ -39,15 +45,13 @@ from rfm_guppy.steering import (            # noqa: E402
     measure_activation_norms,
     lexicon_hit_rate,
 )
-from rfm_guppy.concepts import CONCEPT_LEXICONS  # noqa: E402
+from rfm_guppy.concepts import CONCEPT_LEXICONS, CONCEPT_NAMES, resolve_concepts  # noqa: E402
+from rfm_guppy import runs  # noqa: E402
 
 CACHE_DIR   = paths.CACHE_DIR
-RESULTS_DIR = paths.RESULTS_DIR
 CHECKPOINT  = os.path.join(paths.CKPT_DIR, "pytorch_model.bin")
 TOKENIZER   = os.path.join(paths.CKPT_DIR, "tokenizer.json")
 CFG_JSON    = os.path.join(paths.CKPT_DIR, "config.json")
-
-CONCEPTS = ["food", "valence", "env_social"]
 
 # Neutral probe prompts that don't favour any concept
 PROBE_PROMPTS = [
@@ -162,12 +166,44 @@ def _md_table(concept: str, results_per_r: dict, lexicon: list[str],
 
 # ── main ──────────────────────────────────────────────────────────────────────
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Phase 5: steering sweep. Writes steer_<c>.json and steer_<c>.md to the "
+                    "run folder.")
+    parser.add_argument("--concepts", nargs="+", metavar="NAME",
+                        help=f"concepts to steer (default: all, {' '.join(CONCEPT_NAMES)})")
+    parser.add_argument("--run", metavar="DIR",
+                        help="run folder to write to (default: a new replication/runs/<today>/)")
+    parser.add_argument("--force", action="store_true",
+                        help="allow overwriting files that already exist in the run folder")
+    args = parser.parse_args()
+    try:
+        args.concepts = resolve_concepts(args.concepts)
+    except ValueError as e:
+        parser.error(str(e))
+    if args.run is None:
+        args.run = runs.default_run_dir(paths.REPLICATION_DIR)
+    return args
+
+
 def main():
-    os.makedirs(RESULTS_DIR, exist_ok=True)
+    args = parse_args()
+    concepts, run_dir, force = args.concepts, args.run, args.force
+
+    # Refuse before any work if an output already exists (append-only run folder).
+    for concept in concepts:
+        for ext in ("json", "md"):
+            runs.out_path(run_dir, f"steer_{concept}.{ext}", force)
+    run_dir = runs.open_run(run_dir, __file__, concepts, params={
+        "force": force, "r_values": R_VALUES, "probe_prompts": PROBE_PROMPTS,
+        "max_new_tokens": MAX_NEW_TOKENS, "temperature": TEMPERATURE, "top_k": TOP_K,
+        "seed": SEED})
 
     print("=" * 60)
     print("Phase 5 — Steering Sweep")
     print("=" * 60)
+    print(f"[run] {runs.display_path(run_dir)}")
+    print(f"[concepts] {', '.join(concepts)}")
 
     model, tokenizer = load_model()
 
@@ -179,7 +215,7 @@ def main():
 
     all_summaries = {}
 
-    for concept in CONCEPTS:
+    for concept in concepts:
         print(f"\n{'─'*60}")
         print(f"Concept: {concept.upper()}")
         print(f"{'─'*60}")
@@ -273,17 +309,17 @@ def main():
         }
 
         # Save JSON
-        json_path = os.path.join(RESULTS_DIR, f"steer_{concept}.json")
+        json_path = runs.out_path(run_dir, f"steer_{concept}.json", force)
         with open(json_path, "w") as f:
             json.dump(concept_summary, f, indent=2)
-        print(f"  Saved JSON → {os.path.relpath(json_path, paths.ROOT)}")
+        print(f"  Saved JSON → {runs.display_path(json_path)}")
 
         # Save Markdown
         md = _md_table(concept, results_per_r, lexicon, block_norms)
-        md_path = os.path.join(RESULTS_DIR, f"steer_{concept}.md")
+        md_path = runs.out_path(run_dir, f"steer_{concept}.md", force)
         with open(md_path, "w") as f:
             f.write(md)
-        print(f"  Saved MD  → {os.path.relpath(md_path, paths.ROOT)}")
+        print(f"  Saved MD  → {runs.display_path(md_path)}")
 
         all_summaries[concept] = concept_summary
 
@@ -346,7 +382,7 @@ def main():
     else:
         print("  ~ AC3: No collapse detected within the r sweep range (r ≤ 8)")
 
-    print(f"\n[Phase 5] Complete.\n")
+    print(f"\n[Phase 5] Complete. Run folder: {runs.display_path(run_dir)}\n")
 
 
 if __name__ == "__main__":

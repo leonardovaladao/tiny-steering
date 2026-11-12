@@ -73,6 +73,30 @@ CONCEPT_LEXICONS = {
                    "clean", "cloudy", "algae", "hello", "hi", "friend", "bye"],
 }
 
+# Registry order. Scripts that take `--concepts` default to this list, in this order.
+CONCEPT_NAMES = list(CONCEPTS)
+
+
+def resolve_concepts(names: list[str] | None = None) -> list[str]:
+    """Return the concept names a script should run on.
+
+    `names=None` gives every registered concept, in registry order (`CONCEPT_NAMES`).
+    Otherwise every name must be a key of both `CONCEPTS` (the dataset spec) and
+    `CONCEPT_LEXICONS` (needed by the steering evaluation); the caller's order is kept and
+    duplicates are dropped. Raises ValueError naming the unknown concepts and the valid ones.
+    """
+    if names is None:
+        return list(CONCEPT_NAMES)
+    out = list(dict.fromkeys(names))
+    if not out:
+        raise ValueError(f"no concepts given; valid concepts: {', '.join(CONCEPT_NAMES)}")
+    valid = [c for c in CONCEPT_NAMES if c in CONCEPT_LEXICONS]
+    unknown = [c for c in out if c not in valid]
+    if unknown:
+        raise ValueError(f"unknown concept(s): {', '.join(unknown)}; "
+                         f"valid concepts: {', '.join(valid)}")
+    return out
+
 _CHATML_TEMPLATE = (
     "<|im_start|>user\n{inp}<|im_end|>\n"
     "<|im_start|>assistant\n{out}<|im_end|>"
@@ -257,13 +281,20 @@ def load_concept_dataset(name: str) -> dict:
         return json.load(f)
 
 
-def build_all_concepts(seed: int = 42) -> dict[str, dict]:
-    """Build and cache all three concept datasets. Returns {name: dataset}."""
+def build_all_concepts(seed: int = 42, names: list[str] | None = None) -> dict[str, dict]:
+    """Build and cache concept datasets. Returns {name: dataset}.
+
+    `names=None` builds every concept in `CONCEPTS`; otherwise only `names` (checked by
+    `resolve_concepts`). Each dataset draws from its own `random.Random(seed)`, so building a
+    subset gives the same splits as building all of them.
+    """
+    names = resolve_concepts(names)
     rows = load_raw_dataset()
     print_category_inventory(rows)
 
     datasets = {}
-    for name, spec in CONCEPTS.items():
+    for name in names:
+        spec = CONCEPTS[name]
         ds = build_concept_dataset(
             name=name,
             pos_categories=spec["pos"],
@@ -280,7 +311,18 @@ def build_all_concepts(seed: int = 42) -> dict[str, dict]:
 
 
 if __name__ == "__main__":
-    datasets = build_all_concepts()
+    import argparse
+    parser = argparse.ArgumentParser(
+        description="Phase 2: build the concept datasets and write data/cache/concept_<c>.json "
+                    "(overwrites the files of the concepts it builds).")
+    parser.add_argument("--concepts", nargs="+", metavar="NAME",
+                        help=f"concepts to build (default: all, {' '.join(CONCEPT_NAMES)})")
+    args = parser.parse_args()
+    try:
+        selected = resolve_concepts(args.concepts)
+    except ValueError as e:
+        parser.error(str(e))
+    datasets = build_all_concepts(names=selected)
 
     print("\n[concepts] All concept datasets built and saved.")
     print(f"\n{'Concept':12s}  {'N/class':>8}  {'train':>6}  {'val':>5}  {'test':>5}")
