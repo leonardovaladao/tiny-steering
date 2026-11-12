@@ -9,10 +9,10 @@ For each concept (food, valence, env_social):
   4. Generate responses to 7 neutral probe prompts at each r.
   5. Report lexicon-hit rates per r.
   6. Identify the coherence-collapse threshold.
-  7. Save side-by-side table to results/steer_<concept>.json and results/steer_<concept>.md.
+  7. Save side-by-side table to replication/runs/2026-08-27/steer_<concept>.json and replication/runs/2026-08-27/steer_<concept>.md.
 
 Usage (from project root):
-    PYTHONPATH=. python experiments/02_steer.py
+    PYTHONPATH=. python replication/02_steer.py
 """
 
 import json
@@ -276,14 +276,14 @@ def main():
         json_path = os.path.join(RESULTS_DIR, f"steer_{concept}.json")
         with open(json_path, "w") as f:
             json.dump(concept_summary, f, indent=2)
-        print(f"  Saved JSON → results/steer_{concept}.json")
+        print(f"  Saved JSON → {os.path.relpath(json_path, paths.ROOT)}")
 
         # Save Markdown
         md = _md_table(concept, results_per_r, lexicon, block_norms)
         md_path = os.path.join(RESULTS_DIR, f"steer_{concept}.md")
         with open(md_path, "w") as f:
             f.write(md)
-        print(f"  Saved MD  → results/steer_{concept}.md")
+        print(f"  Saved MD  → {os.path.relpath(md_path, paths.ROOT)}")
 
         all_summaries[concept] = concept_summary
 

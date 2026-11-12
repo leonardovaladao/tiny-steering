@@ -69,10 +69,10 @@ The project was executed phase by phase against **pre-declared acceptance criter
 
 That commitment is on the record rather than asserted after the fact, and the two halves of it are kept deliberately separate:
 
-- **[`plans/GUPPYLM_GUIDE.md`](plans/GUPPYLM_GUIDE.md)** — the **pre-registered plan**: the full method derivation, the nine phases, and the acceptance criteria each one had to meet. Written before a line of code, and frozen since.
-- **[`plans/phase_plans/`](plans/phase_plans/)** — the **execution notes**, one file per phase: what was actually built, which criteria passed and with what evidence, and every decision taken under uncertainty — including the ones that were wrong and had to be reversed.
+- **[`replication/plans/GUPPYLM_GUIDE.md`](replication/plans/GUPPYLM_GUIDE.md)** — the **pre-registered plan**: the full method derivation, the nine phases, and the acceptance criteria each one had to meet. Written before a line of code, and frozen since.
+- **[`replication/plans/phase_plans/`](replication/plans/phase_plans/)** — the **execution notes**, one file per phase: what was actually built, which criteria passed and with what evidence, and every decision taken under uncertainty — including the ones that were wrong and had to be reversed.
 
-Reading them side by side shows what was intended versus what happened. The condensed version of the second is [`WORK_LOG.md`](WORK_LOG.md); the scientific write-up is [`results/REPORT.md`](results/REPORT.md).
+Reading them side by side shows what was intended versus what happened. The condensed version of the second is [`WORK_LOG.md`](WORK_LOG.md); the scientific write-up is [`replication/runs/2026-08-27/REPORT.md`](replication/runs/2026-08-27/REPORT.md).
 
 ---
 
@@ -91,32 +91,32 @@ pip install -r requirements.txt
 hf download arman-bd/guppylm-9M --local-dir checkpoints/guppylm-9M
 
 # run the pipeline in order — every stage caches, so re-runs skip inference
-python experiments/01_extract.py     # concept datasets + RFM concept vectors
-python experiments/02_steer.py       # steering sweep
-python experiments/03_monitor.py     # monitoring probes + steering evaluation
-python experiments/04_baselines.py   # PCA / DiffMeans / LogReg comparison
+python replication/01_extract.py     # concept datasets + RFM concept vectors
+python replication/02_steer.py       # steering sweep
+python replication/03_monitor.py     # monitoring probes + steering evaluation
+python replication/04_baselines.py   # PCA / DiffMeans / LogReg comparison
 ```
 
 ### Reading it rather than running it
 
-Every experiment also exists as an executed notebook in [`notebooks/`](notebooks/), with the plots,
+Every experiment also exists as an executed notebook in [`replication/notebooks/`](replication/notebooks/), with the plots,
 tables and generated text already rendered — so the whole replication can be read end to end
 without installing anything or downloading the checkpoint:
 
 | Notebook | Phases | What it shows |
 |---|---|---|
-| [`01_extract.ipynb`](notebooks/01_extract.ipynb) | 1–4 | the synthetic gate, AGOP convergence, activation-norm growth, val `\|ρ\|` per block, AGOP eigenvalue spectra |
-| [`02_steer.ipynb`](notebooks/02_steer.ipynb) | 5 | ε calibration, the steering hook itself, hit-rate and collapse curves, side-by-side generations |
-| [`03_monitor.ipynb`](notebooks/03_monitor.ipynb) | 6–7 | AGOP-projection scatter, per-block AUROC, ROC curves, probe-scored steering |
-| [`04_baselines.ipynb`](notebooks/04_baselines.ipynb) | 8 | four-way `\|ρ\|` comparison, direction agreement, monitoring AUROC, a like-for-like feature-count control |
+| [`01_extract.ipynb`](replication/notebooks/01_extract.ipynb) | 1–4 | the synthetic gate, AGOP convergence, activation-norm growth, val `\|ρ\|` per block, AGOP eigenvalue spectra |
+| [`02_steer.ipynb`](replication/notebooks/02_steer.ipynb) | 5 | ε calibration, the steering hook itself, hit-rate and collapse curves, side-by-side generations |
+| [`03_monitor.ipynb`](replication/notebooks/03_monitor.ipynb) | 6–7 | AGOP-projection scatter, per-block AUROC, ROC curves, probe-scored steering |
+| [`04_baselines.ipynb`](replication/notebooks/04_baselines.ipynb) | 8 | four-way `\|ρ\|` comparison, direction agreement, monitoring AUROC, a like-for-like feature-count control |
 
 The scripts and the notebooks are two views of the same pipeline, not two pipelines: the notebooks
 import the same `rfm_guppy` modules, recompute what is cheap (RFM, probes, baseline vectors) and
 assert that the results match the committed artifacts, and load the expensive parts (the steering
-sweeps) from `results/`. None of them writes to `rfm_guppy/cache/`, so opening one can never
-change the numbers the report is built on. Keep `experiments/*.py` for headless or scripted runs.
+sweeps) from `replication/runs/2026-08-27/`. None of them writes to `rfm_guppy/cache/`, so opening one can never
+change the numbers the report is built on. Keep `replication/0*.py` for headless or scripted runs.
 
-Every experiment script imports the model definition with `from guppylm import GuppyLM, GuppyConfig`, so the submodule is required, not optional. It is pinned at upstream commit [`a30df30`](https://github.com/arman-bd/guppylm/commit/a30df3091cff73a259ce581dd8439271084bca40) — the exact revision every number in [`results/`](results/) was produced against. Neither the downloaded checkpoint (`checkpoints/`) nor the cached activations and vectors (`rfm_guppy/cache/`) are tracked here; both are regenerated by the commands above.
+Every experiment script imports the model definition with `from guppylm import GuppyLM, GuppyConfig`, so the submodule is required, not optional. It is pinned at upstream commit [`a30df30`](https://github.com/arman-bd/guppylm/commit/a30df3091cff73a259ce581dd8439271084bca40) — the exact revision every number in [`replication/runs/2026-08-27/`](replication/runs/2026-08-27/) was produced against. Neither the downloaded checkpoint (`checkpoints/`) nor the cached activations and vectors (`rfm_guppy/cache/`) are tracked here; both are regenerated by the commands above.
 
 **Everything runs on CPU — no GPU is required.** GuppyLM is small enough (8.7M parameters, sequences ≤128 tokens) that the largest activation-extraction split takes well under a second, and a full 6-block RFM hyperparameter sweep takes seconds per concept.
 
@@ -134,7 +134,7 @@ Every experiment script imports the model definition with `from guppylm import G
 | `datasets` | loads `arman-bd/guppylm-60k-generic` to build the concept sets |
 | `huggingface_hub` | downloads the `arman-bd/guppylm-9M` checkpoint |
 
-`matplotlib`, `pandas` and the Jupyter packages are needed only by [`notebooks/`](notebooks/) — nothing in `experiments/` or `rfm_guppy/` imports them.
+`matplotlib`, `pandas` and the Jupyter packages are needed only by [`replication/notebooks/`](replication/notebooks/) — nothing in `replication/0*.py` or `rfm_guppy/` imports them.
 
 The environment this was developed and run on: Python 3.14, torch 2.12, numpy 2.5, scipy 1.18, scikit-learn 1.9, tokenizers 0.23, datasets 5.0, on macOS.
 

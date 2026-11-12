@@ -9,13 +9,13 @@ For each concept × method:
       {0, ±0.25, ±0.5, ±1, ±2} × median_norms, score with the existing
       Phase-7 RFM probe (same scoring function as Phase 6) plus lexicon hit.
 
-Outputs (saved to results/):
+Outputs (saved to replication/runs/2026-08-27/):
   baselines_monitoring.json   — AUROC table: {method × concept}
   baselines_steering.json     — success-rate table: {method × concept}
   baselines_comparison.md     — human-readable comparison tables
 
 Usage:
-    source .venv/bin/activate && PYTHONPATH=. python experiments/04_baselines.py
+    source .venv/bin/activate && PYTHONPATH=. python replication/04_baselines.py
 """
 
 import json

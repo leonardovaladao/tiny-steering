@@ -83,7 +83,7 @@ def load_vectors(concept: str) -> dict:
 
 
 def load_result(name: str) -> dict:
-    """Load a committed JSON file from results/."""
+    """Load a committed JSON file from paths.RESULTS_DIR."""
     with open(os.path.join(RESULTS_DIR, name)) as f:
         return json.load(f)
 

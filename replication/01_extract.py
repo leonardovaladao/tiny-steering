@@ -9,7 +9,7 @@ For each concept (food, valence, env_social):
   5. Print per-concept × per-block summary table.
 
 Usage (from project root):
-    PYTHONPATH=. python experiments/01_extract.py
+    PYTHONPATH=. python replication/01_extract.py
 """
 
 import json

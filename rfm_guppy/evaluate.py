@@ -47,7 +47,7 @@ def evaluate_steering(
     the probe sees the same format as the concept-labelled training data.
 
     Args:
-        steer_json_path:  path to results/steer_<concept>.json (Phase 5 output)
+        steer_json_path:  path to <paths.RESULTS_DIR>/steer_<concept>.json (Phase 5 output)
         probe_pkg:        trained probe dict from monitoring.train_probes()
         eigvecs_top3:     [L, P, k] AGOP eigenvectors
         input_mean:       [L, k] per-block training mean

@@ -10,14 +10,14 @@ Phase 7 (monitoring):
   5. Print AUROC table; save probe packages to cache/<concept>_probe.pkl.
 
 Phase 6 (steering evaluation):
-  6. Load Phase 5 steer results (results/steer_<concept>.json).
+  6. Load Phase 5 steer results (replication/runs/2026-08-27/steer_<concept>.json).
   7. Feed (prompt, steered_text) exchanges back through GuppyLM.
   8. Score with the aggregate probe; also compute lexicon hit rate.
   9. Report probe-score and steering-success rate vs. ε sweep.
-  10. Save Phase 6 eval to results/eval6_<concept>.json and .md.
+  10. Save Phase 6 eval to replication/runs/2026-08-27/eval6_<concept>.json and .md.
 
 Usage (from project root):
-    source .venv/bin/activate && PYTHONPATH=. python experiments/03_monitor.py
+    source .venv/bin/activate && PYTHONPATH=. python replication/03_monitor.py
 """
 
 import json
@@ -286,7 +286,7 @@ def print_phase6_summary(phase6_results: dict[str, dict]):
 
 
 def save_phase7_json(phase7_results: dict[str, tuple[dict, dict]]):
-    """Serialise AUROC results (no sklearn objects) to results/monitor_auroc.json."""
+    """Serialise AUROC results (no sklearn objects) to replication/runs/2026-08-27/monitor_auroc.json."""
     summary = {}
     for concept, (probe_pkg, test_eval) in phase7_results.items():
         summary[concept] = {
