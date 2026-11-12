@@ -300,7 +300,7 @@ métodos.
 as células indistinguíveis do nulo no Check Ia (que foram valence b0, b2, b5 e env_social b1).
 **Análise secundária:** todos os 6 blocos, com os mesmos critérios, reportados sem seleção.
 
-Nenhuma inferência nova: tudo usa `rfm_guppy/cache/{conceito}_{train,test}_activations.npy`.
+Nenhuma inferência nova: tudo usa `data/cache/{conceito}_{train,test}_activations.npy`.
 
 ### 3.2 Amostragem
 

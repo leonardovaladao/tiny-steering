@@ -3,7 +3,7 @@
 Run from the project root:   HF_DATASETS_OFFLINE=1 .venv/bin/python demo-ui-guppy-steer/freeze_prompts.py
 
 Writes demo-ui-guppy-steer/prompts_frozen.json with
-  exploration   the 7 Check III prompts (from results/steer_food.json, r = 0)
+  exploration   the 7 Check III prompts (from replication/runs/2026-08-27/steer_food.json, r = 0)
   calibration   the 100 Check III calibration prompts, re-drawn exactly as in III-steering-metric
                 (rng = default_rng(0) on the sorted held-out pool); used only for q95 / q05
   confirmation  20 prompts drawn with default_rng(CONFIRM_SEED) from the held-out pool, minus

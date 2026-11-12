@@ -86,7 +86,7 @@ def random_directions(seed: int, L: int = 6, k: int = 384) -> np.ndarray:
 def concept_vectors(c: str, m: str) -> tuple[np.ndarray, np.ndarray]:
     """(V [L, k] unit, oriented to label 1; μ [L, k] training mean) for concept c, source m.
 
-    rfm     leading AGOP eigenvector, as stored by the pipeline (rfm_guppy/cache)
+    rfm     leading AGOP eigenvector, as stored by the pipeline (data/cache)
     dm      rfm_guppy.baselines.diffmeans_vector per block on the cached train/val activations
     random  u = random_directions(U_SEED), independent of c; μ is the concept's training mean
     """

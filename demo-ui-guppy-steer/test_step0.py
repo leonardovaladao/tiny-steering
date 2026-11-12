@@ -5,7 +5,7 @@ Run from the project root:   .venv/bin/python demo-ui-guppy-steer/test_step0.py
 Checks
   A1  P = P_all: steer_ref.generate == rfm_guppy.steering.generate_steered, character for
       character, on the 7 Check III prompts × 12 stored r × 3 concepts.
-  A2  P = P_all: steer_ref.generate == stored texts in results/steer_<c>.json (same cells).
+  A2  P = P_all: steer_ref.generate == stored texts in replication/runs/2026-08-27/steer_<c>.json (same cells).
   A3  r = 0, every P: text equals the unhooked model (G3 of Check III).
   A4  P_prompt and P_gen partition the positions: steering block 5 only, the deltas at its output
       are disjoint in t and add up to the P_all delta.

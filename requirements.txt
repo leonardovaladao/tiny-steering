@@ -15,7 +15,7 @@ scikit-learn>=1.3.0         # LogisticRegression probes, StandardScaler, AUROC (
 
 # --- Data: concept datasets and the pretrained checkpoint ---
 datasets>=2.14.0            # loads arman-bd/guppylm-60k-generic (Phase 2)
-huggingface_hub>=0.20.0     # downloads arman-bd/guppylm-9M into checkpoints/
+huggingface_hub>=0.20.0     # downloads arman-bd/guppylm-9M into data/checkpoints/
 tqdm>=4.65.0                # progress bars (also required by the vendored guppylm/ code)
 
 # --- Notebooks (replication/notebooks/*.ipynb) ---
