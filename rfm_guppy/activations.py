@@ -4,6 +4,8 @@ import os
 import numpy as np
 import torch
 
+from .paths import CACHE_DIR
+
 
 def extract_activations(prompts: list[str], model, tokenizer,
                         batch_size: int = 64, format_chatml: bool = True) -> np.ndarray:
@@ -77,7 +79,7 @@ def extract_activations(prompts: list[str], model, tokenizer,
 
 
 def save_activations(acts: np.ndarray, name: str,
-                     cache_dir: str = "rfm_guppy/cache") -> str:
+                     cache_dir: str = CACHE_DIR) -> str:
     os.makedirs(cache_dir, exist_ok=True)
     path = os.path.join(cache_dir, f"{name}_activations.npy")
     np.save(path, acts)
@@ -85,6 +87,6 @@ def save_activations(acts: np.ndarray, name: str,
 
 
 def load_activations(name: str,
-                     cache_dir: str = "rfm_guppy/cache") -> np.ndarray:
+                     cache_dir: str = CACHE_DIR) -> np.ndarray:
     path = os.path.join(cache_dir, f"{name}_activations.npy")
     return np.load(path)

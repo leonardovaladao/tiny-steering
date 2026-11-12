@@ -7,9 +7,8 @@
 __pycache__/
 *.pyc
 
-# --- downloaded / generated artifacts (regenerable — see README) ---
-checkpoints/
-rfm_guppy/cache/
+# --- model checkpoint, activation cache, reference PDFs (regenerable — see README) ---
+data/
 
 # --- source paper ---
 *.pdf

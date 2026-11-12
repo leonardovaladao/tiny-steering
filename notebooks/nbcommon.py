@@ -38,7 +38,7 @@ def load_guppy(verbose: bool = True):
         raise FileNotFoundError(
             f"Checkpoint not found at {ckpt_bin}\n"
             "Fetch it first:  hf download arman-bd/guppylm-9M "
-            "--local-dir checkpoints/guppylm-9M"
+            "--local-dir data/checkpoints/guppylm-9M"
         )
 
     tokenizer = Tokenizer.from_file(os.path.join(CKPT_DIR, "tokenizer.json"))
