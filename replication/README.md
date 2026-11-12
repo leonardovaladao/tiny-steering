@@ -49,7 +49,7 @@ RUN=replication/runs/$(date +%F)                         # a new run folder
 .venv/bin/python replication/04_baselines.py --run $RUN  # Phase 8
 ```
 
-Each command takes `--concepts NAME [NAME ...]` to run on a subset of the registered concepts (default: all of them, in registry order); an unknown name stops the script with the list of valid ones. With the defaults the scripts reproduce `runs/2026-08-27/` byte for byte (checked on 2026-11-12 against an unchanged `data/cache/`). `--help` on each script lists its options.
+Each command takes `--concepts NAME [NAME ...]` to run on a subset of the registered concepts (default: all of them, in registry order); an unknown name stops the script with the list of valid ones. `02_steer.py` and `04_baselines.py` also take `--norms` (see [Steering step size](#steering-step-size---norms)). With the default concepts and `--norms pooled-legacy` on 02 and 04, the scripts reproduce `runs/2026-08-27/` byte for byte (checked on 2026-11-12 against an unchanged `data/cache/`); the default `--norms per-concept` does not, because it changes ε. `--help` on each script lists its options.
 
 - The `hf download` command is the one printed by `notebooks/nbcommon.py` when the checkpoint is missing.
 - The scripts find the repo root themselves, so `PYTHONPATH=.` is not needed.
@@ -65,7 +65,19 @@ Each command takes `--concepts NAME [NAME ...]` to run on a subset of the regist
 - `runs/2026-08-27/` (`RESULTS_DIR` in [`../rfm_guppy/paths.py`](../rfm_guppy/paths.py)) and every existing folder under `rfm_checks/runs/` are refused as run folders, even with `--force`.
 - Each invocation appends a step to `run.json` in the run folder: script, argv, start time, concepts, parameters, git commit, whether the working tree was dirty, Python and numpy/torch/scikit-learn versions.
 - `monitor_auroc.json` and the three `baselines_*` files cover all the concepts of one invocation. Run 03 and 04 once per run folder with the full concept list, or use a new run folder for another subset.
-- The ε calibration in `02_steer.py` and `04_baselines.py` takes the median over every `data/cache/*_activations.npy`, not only the concepts passed with `--concepts`. Adding a concept to the cache therefore changes ε for all concepts.
+
+### Steering step size (`--norms`)
+
+`02_steer.py` and `04_baselines.py` steer concept `c` at block `ℓ` with step size `ε_{c,ℓ} = r · m_{c,ℓ}`, where `r` is the swept relative coefficient. The option `--norms` picks how `m_{c,ℓ}` is computed:
+
+| `--norms` | `m_{c,ℓ}` | Used by |
+|---|---|---|
+| `per-concept` (default) | `m_{c,ℓ} = median_i ‖a^{(c,train)}_{i,ℓ}‖₂`, the median over the samples `i` of `data/cache/<c>_train_activations.npy` (`concept_activation_norms` in [`../rfm_guppy/steering.py`](../rfm_guppy/steering.py)) | new runs |
+| `pooled-legacy` | one `m_ℓ` for all concepts: the median of `‖a_{i,ℓ}‖₂` over every `data/cache/*_activations.npy`, i.e. all concepts and the train, val and test splits (`measure_activation_norms`) | the pinned run `runs/2026-08-27/` and the demo |
+
+The per-concept rule has two reasons. First, `m_{c,ℓ}` depends only on concept `c`'s own file, so adding a concept to the cache does not change ε for the others. Second, it reads the train split only, so no val or test activation enters a hyperparameter. With `pooled-legacy`, adding a concept to the cache changes ε for every concept, and test activations enter ε.
+
+`runs/2026-08-27/` was made with the pooled rule; `--norms pooled-legacy` exists only to reproduce it. In per-concept mode each `steer_<c>.json` and each entry of `baselines_steering.json` carries `"norms": "per-concept-train"`, and `block_norms` in `steer_<c>.json` holds `m_{c,ℓ}`. In pooled-legacy mode that field is not written, so the files stay byte-identical to the pinned run. `run.json` records the rule of every step as `params.norms`.
 
 ### Warning: a rerun overwrites `data/cache/`
 

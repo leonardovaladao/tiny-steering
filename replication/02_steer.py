@@ -4,10 +4,12 @@
 For each selected concept (default: every concept in rfm_guppy.concepts, i.e. food, valence,
 env_social):
   1. Load the concept vectors from data/cache/<concept>_vectors.npz.
-  2. Measure per-block activation norms for ε calibration. The median is taken over every
-     data/cache/*_activations.npy file, not only the selected concepts' files.
+  2. Measure per-block activation norms for ε calibration. With --norms per-concept (default)
+     m_{c,ℓ} = median_i ‖a_{i,ℓ}‖₂ over data/cache/<concept>_train_activations.npy only. With
+     --norms pooled-legacy the median is taken over every data/cache/*_activations.npy (all
+     concepts, all splits); this exists only to reproduce the pinned 2026-08-27 run.
   3. Sweep relative coefficient r ∈ {-4, -2, -1, -0.5, -0.25, 0, +0.25, +0.5, +1, +2, +4, +8}
-     with per-block ε_ℓ = r × median_norm_ℓ.
+     with per-block ε_{c,ℓ} = r × m_{c,ℓ}.
   4. Generate responses to 7 neutral probe prompts at each r.
   5. Report lexicon-hit rates per r.
   6. Identify the coherence-collapse threshold.
@@ -18,6 +20,7 @@ never overwritten unless --force is given; run.json in it records this step.
 
 Usage (from project root):
     .venv/bin/python replication/02_steer.py [--concepts NAME ...] [--run DIR] [--force]
+        [--norms {per-concept,pooled-legacy}]
 """
 
 import argparse
@@ -41,6 +44,7 @@ sys.path.insert(0, paths.GUPPYLM_DIR)
 
 from guppylm import GuppyLM, GuppyConfig   # noqa: E402
 from rfm_guppy.steering import (            # noqa: E402
+    concept_activation_norms,
     generate_steered,
     measure_activation_norms,
     lexicon_hit_rate,
@@ -64,13 +68,19 @@ PROBE_PROMPTS = [
     "What would you like to do?",
 ]
 
-# Relative-coefficient sweep (ε_ℓ = r × median_norm_ℓ)
+# Relative-coefficient sweep (ε_{c,ℓ} = r × m_{c,ℓ})
 R_VALUES = [-4.0, -2.0, -1.0, -0.5, -0.25, 0.0, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0]
 
 MAX_NEW_TOKENS = 60
 TEMPERATURE    = 0.7
 TOP_K          = 50
 SEED           = 42
+
+# ε calibration rules (--norms). "per-concept": median ‖a_ℓ‖ over the concept's train split.
+# "pooled-legacy": median over every cached activation file (all concepts, all splits), the
+# rule of the pinned 2026-08-27 run.
+NORMS_RULES = ("per-concept", "pooled-legacy")
+NORMS_FIELD = "per-concept-train"   # value of the "norms" field written in per-concept mode
 
 
 # ── model loading ─────────────────────────────────────────────────────────────
@@ -126,11 +136,11 @@ def _r_label(r: float) -> str:
 # ── markdown table ────────────────────────────────────────────────────────────
 
 def _md_table(concept: str, results_per_r: dict, lexicon: list[str],
-              block_norms: np.ndarray) -> str:
+              block_norms: np.ndarray, norms_note: str = "") -> str:
     lines = [
         f"# Steering results — {concept}",
         "",
-        "Per-block median activation norms used for ε calibration:",
+        f"Per-block median activation norms used for ε calibration{norms_note}:",
         "| " + " | ".join(f"Blk{i}" for i in range(len(block_norms))) + " |",
         "| " + " | ".join("-" * 6 for _ in block_norms) + " |",
         "| " + " | ".join(f"{n:.1f}" for n in block_norms) + " |",
@@ -176,6 +186,10 @@ def parse_args():
                         help="run folder to write to (default: a new replication/runs/<today>/)")
     parser.add_argument("--force", action="store_true",
                         help="allow overwriting files that already exist in the run folder")
+    parser.add_argument("--norms", choices=NORMS_RULES, default="per-concept",
+                        help="ε calibration: per-concept = median ‖a_ℓ‖ over the concept's train "
+                             "split (default); pooled-legacy = median over every cached "
+                             "activation file, only to reproduce the 2026-08-27 run")
     args = parser.parse_args()
     try:
         args.concepts = resolve_concepts(args.concepts)
@@ -188,7 +202,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    concepts, run_dir, force = args.concepts, args.run, args.force
+    concepts, run_dir, force, norms_rule = args.concepts, args.run, args.force, args.norms
 
     # Refuse before any work if an output already exists (append-only run folder).
     for concept in concepts:
@@ -197,7 +211,7 @@ def main():
     run_dir = runs.open_run(run_dir, __file__, concepts, params={
         "force": force, "r_values": R_VALUES, "probe_prompts": PROBE_PROMPTS,
         "max_new_tokens": MAX_NEW_TOKENS, "temperature": TEMPERATURE, "top_k": TOP_K,
-        "seed": SEED})
+        "seed": SEED, "norms": norms_rule})
 
     print("=" * 60)
     print("Phase 5 — Steering Sweep")
@@ -207,11 +221,12 @@ def main():
 
     model, tokenizer = load_model()
 
-    # Measure per-block activation norms from cached concept activations
-    block_norms = measure_activation_norms(CACHE_DIR)  # [L]
-    print("\n[norms] Per-block median activation norms:")
-    for i, n in enumerate(block_norms):
-        print(f"  Block {i}: {n:.2f}")
+    if norms_rule == "pooled-legacy":
+        # One pooled m_ℓ for all concepts (all concepts and splits in data/cache)
+        block_norms = measure_activation_norms(CACHE_DIR)  # [L]
+        print("\n[norms] Per-block median activation norms (pooled-legacy):")
+        for i, n in enumerate(block_norms):
+            print(f"  Block {i}: {n:.2f}")
 
     all_summaries = {}
 
@@ -230,6 +245,12 @@ def main():
         print(f"  Loaded vectors, best block={best_blk}, "
               f"val|ρ|_max={val_abs_rho[best_blk]:.3f}")
         print(f"  Lexicon: {CONCEPT_LEXICONS[concept]}")
+
+        if norms_rule == "per-concept":
+            # m_{c,ℓ} from this concept's train activations only
+            block_norms = concept_activation_norms(CACHE_DIR, concept, "train")  # [L]
+            print("  [norms] Per-block median activation norms (per-concept, train split): "
+                  + " ".join(f"{n:.2f}" for n in block_norms))
 
         lexicon = CONCEPT_LEXICONS[concept]
         results_per_r: dict[float, dict] = {}
@@ -301,12 +322,18 @@ def main():
             "best_block":             best_blk,
             "val_abs_rho_per_block":  val_abs_rho.tolist(),
             "block_norms":            block_norms.tolist(),
+        }
+        # The "norms" field is written only in per-concept mode: pooled-legacy output must stay
+        # byte-identical to the pinned 2026-08-27 run, whose files have no such field.
+        if norms_rule == "per-concept":
+            concept_summary["norms"] = NORMS_FIELD
+        concept_summary.update({
             "collapse_threshold_r":   collapse_r,
             "best_r_no_collapse":     best_r,
             "lexicon":                lexicon,
             "r_values":               R_VALUES,
             "results_per_r":          results_per_r,
-        }
+        })
 
         # Save JSON
         json_path = runs.out_path(run_dir, f"steer_{concept}.json", force)
@@ -315,7 +342,9 @@ def main():
         print(f"  Saved JSON → {runs.display_path(json_path)}")
 
         # Save Markdown
-        md = _md_table(concept, results_per_r, lexicon, block_norms)
+        # pooled-legacy: no note, so the .md stays byte-identical to the pinned run
+        note = f" ({concept} train split)" if norms_rule == "per-concept" else ""
+        md = _md_table(concept, results_per_r, lexicon, block_norms, note)
         md_path = runs.out_path(run_dir, f"steer_{concept}.md", force)
         with open(md_path, "w") as f:
             f.write(md)

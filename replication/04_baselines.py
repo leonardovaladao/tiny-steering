@@ -7,8 +7,12 @@ food, valence, env_social; the "Overall" columns average over the selected conce
   (b) Monitoring: project test activations onto those vectors, train an LR
       probe, evaluate AUROC. Compare to RFM's Phase-7 AUROC.
   (c) Steering: steer with baseline vectors over a reduced ε sweep
-      {0, ±0.25, ±0.5, ±1, ±2} × median_norms, score with the existing
+      ε_{c,ℓ} = r × m_{c,ℓ}, r ∈ {0, ±0.25, ±0.5, ±1, ±2}, score with the existing
       Phase-7 RFM probe (same scoring function as Phase 6) plus lexicon hit.
+      m_{c,ℓ}: --norms per-concept (default) = median_i ‖a_{i,ℓ}‖₂ over
+      data/cache/<concept>_train_activations.npy; --norms pooled-legacy = median over every
+      data/cache/*_activations.npy (all concepts, all splits), only to reproduce the pinned
+      2026-08-27 run.
 
 Inputs: monitor_auroc.json and eval6_<concept>.json from the run folder (--run DIR, required;
 written by 03_monitor.py), and data/cache/<concept>_{split}_activations.npy, _vectors.npz,
@@ -21,6 +25,7 @@ Outputs (saved to the run folder; never overwritten unless --force is given):
 
 Usage (from project root):
     .venv/bin/python replication/04_baselines.py --run DIR [--concepts NAME ...] [--force]
+        [--norms {per-concept,pooled-legacy}]
 """
 
 import argparse
@@ -57,6 +62,7 @@ from rfm_guppy.concepts import (                   # noqa: E402
 )
 from rfm_guppy import runs                          # noqa: E402
 from rfm_guppy.steering import (                    # noqa: E402
+    concept_activation_norms,
     generate_steered,
     measure_activation_norms,
 )
@@ -79,13 +85,17 @@ PROBE_PROMPTS = [
     "What would you like to do?",
 ]
 
-# Reduced ε sweep (relative coefficients; ε_ℓ = r × median_norm_ℓ)
+# Reduced ε sweep (relative coefficients; ε_{c,ℓ} = r × m_{c,ℓ})
 R_VALUES = [-2.0, -1.0, -0.5, -0.25, 0.0, 0.25, 0.5, 1.0, 2.0]
 
 MAX_NEW_TOKENS = 60
 TEMPERATURE    = 0.7
 TOP_K          = 50
 SEED           = 42
+
+# ε calibration rules (--norms); same meaning as in 02_steer.py.
+NORMS_RULES = ("per-concept", "pooled-legacy")
+NORMS_FIELD = "per-concept-train"   # value of the "norms" field written in per-concept mode
 
 
 # ── model loading ──────────────────────────────────────────────────────────────
@@ -366,6 +376,10 @@ def parse_args():
                         help="run folder written by 02_steer.py and 03_monitor.py")
     parser.add_argument("--force", action="store_true",
                         help="allow overwriting files that already exist in the run folder")
+    parser.add_argument("--norms", choices=NORMS_RULES, default="per-concept",
+                        help="ε calibration: per-concept = median ‖a_ℓ‖ over the concept's train "
+                             "split (default); pooled-legacy = median over every cached "
+                             "activation file, only to reproduce the 2026-08-27 run")
     args = parser.parse_args()
     try:
         args.concepts = resolve_concepts(args.concepts)
@@ -404,7 +418,7 @@ def load_previous_phases(run_dir: str, concepts: list[str]) -> tuple[dict, dict]
 
 def main():
     args = parse_args()
-    concepts, run_dir, force = args.concepts, args.run, args.force
+    concepts, run_dir, force, norms_rule = args.concepts, args.run, args.force, args.norms
 
     # Refuse before any work: inputs must be in the run folder, outputs must not be.
     rfm_monitor_auroc, rfm_steer_success = load_previous_phases(run_dir, concepts)
@@ -414,7 +428,7 @@ def main():
     run_dir = runs.open_run(run_dir, __file__, concepts, params={
         "force": force, "methods": METHODS, "r_values": R_VALUES, "probe_prompts": PROBE_PROMPTS,
         "max_new_tokens": MAX_NEW_TOKENS, "temperature": TEMPERATURE, "top_k": TOP_K,
-        "seed": SEED})
+        "seed": SEED, "norms": norms_rule})
 
     print("=" * 68)
     print("Phase 8 — Baseline Comparison (PCA / DiffMeans / LogReg vs RFM)")
@@ -472,10 +486,12 @@ def main():
     print("    Loading model ...")
     model, tokenizer = load_model()
 
-    block_norms = measure_activation_norms(CACHE_DIR)
-    print("    Per-block median activation norms:")
-    for i, n in enumerate(block_norms):
-        print(f"      Block {i}: {n:.2f}")
+    if norms_rule == "pooled-legacy":
+        # One pooled m_ℓ for all concepts (all concepts and splits in data/cache)
+        block_norms = measure_activation_norms(CACHE_DIR)
+        print("    Per-block median activation norms (pooled-legacy):")
+        for i, n in enumerate(block_norms):
+            print(f"      Block {i}: {n:.2f}")
 
     steering_results: dict[str, dict] = {c: {} for c in concepts}
 
@@ -484,6 +500,11 @@ def main():
         probe_pkg = load_probe(concept)
         rfm_vecs  = load_rfm_vectors(concept)
         lexicon   = CONCEPT_LEXICONS[concept]
+        if norms_rule == "per-concept":
+            # m_{c,ℓ} from this concept's train activations only
+            block_norms = concept_activation_norms(CACHE_DIR, concept, "train")
+            print("    Per-block median activation norms (per-concept, train split): "
+                  + " ".join(f"{n:.2f}" for n in block_norms))
 
         for method in METHODS:
             print(f"    [{method}] steering sweep r ∈ {R_VALUES} ...")
@@ -500,6 +521,10 @@ def main():
                 tokenizer=tokenizer,
                 lexicon=lexicon,
             )
+            # "norms" only in per-concept mode: pooled-legacy output must stay byte-identical
+            # to the pinned 2026-08-27 run, whose entries have no such field.
+            if norms_rule == "per-concept":
+                steer_result["norms"] = NORMS_FIELD
             steering_results[concept][method] = steer_result
             dt = time.time() - t0
             print(f"      → best success {steer_result['best_success_rate']:.1%} "

@@ -6,9 +6,11 @@ Each transformer block's output is modified in-place during the forward pass:
 where v_ℓ ∈ R^{384} is the oriented concept vector for block ℓ (unit norm, positive
 direction = label-1 class) and ε_ℓ is the per-block steering coefficient.
 
-The caller typically sets  ε_ℓ = r · median_norm_ℓ  where r is a relative coefficient
-swept over {0.25, 0.5, 1, 2, 4, 8} and median_norm_ℓ is the median ‖a_ℓ‖ over the
-concept dataset, computed by measure_activation_norms().
+The caller sets  ε_{c,ℓ} = r · m_{c,ℓ}  where r is a relative coefficient (the scripts sweep
+r over a grid such as {-4, ..., 8}) and m_{c,ℓ} = median_i ‖a^{(c,train)}_{i,ℓ}‖₂ is the median
+per-sample norm of block ℓ's activations over concept c's train split, computed by
+concept_activation_norms(). measure_activation_norms() is the legacy pooled rule (all concepts,
+all splits in the cache), kept for the 2026-08-27 run and the demo.
 """
 
 import contextlib
@@ -24,10 +26,14 @@ import torch
 # ─────────────────────────────────────────────────────────────────────────────
 
 def measure_activation_norms(cache_dir: str) -> np.ndarray:
-    """Per-block median activation norm from all cached training activations.
+    """Legacy pooled norms: per-block median of ‖a_ℓ‖₂ over every activation file in the cache.
 
-    Loads every cached *_train_activations.npy in cache_dir and returns the
-    per-block median of the per-sample ‖a_ℓ‖.
+    Loads every *_activations.npy in cache_dir, i.e. ALL concepts and ALL splits (train, val
+    and test), stacks the per-sample norms and returns their per-block median. The result
+    therefore changes whenever a concept is added to the cache, and it reads test activations.
+    Used by the pinned 2026-08-27 run (reproduced with --norms pooled-legacy) and by the demo
+    (demo-ui-guppy-steer/), whose test_step0.py checks it against the stored block_norms.
+    New runs use concept_activation_norms().
 
     Returns: [L] float array
     """
@@ -41,6 +47,26 @@ def measure_activation_norms(cache_dir: str) -> np.ndarray:
         raise FileNotFoundError(f"No *_activations.npy files found in {cache_dir}")
     combined = np.concatenate(all_norms, axis=0)   # [N, L]
     return np.median(combined, axis=0)              # [L]
+
+
+def concept_activation_norms(cache_dir: str, concept: str, split: str = "train") -> np.ndarray:
+    """Per-block median activation norm of one concept on one split.
+
+    m_{c,ℓ} = median_i ‖a^{(c,split)}_{i,ℓ}‖₂, read from <concept>_<split>_activations.npy
+    in cache_dir (shape [n, L, k]). It depends only on that file, so adding another concept to
+    the cache leaves it unchanged, and with the default split="train" no val/test activation
+    enters the steering step size.
+
+    Returns: [L] float array
+    """
+    path = os.path.join(cache_dir, f"{concept}_{split}_activations.npy")
+    if not os.path.isfile(path):
+        raise FileNotFoundError(
+            f"{path} not found: the per-concept norms of '{concept}' need its {split} "
+            f"activations. Run replication/01_extract.py --concepts {concept} first.")
+    acts = np.load(path)                       # [n, L, k]
+    norms = np.linalg.norm(acts, axis=2)       # [n, L]
+    return np.median(norms, axis=0)            # [L]
 
 
 # ─────────────────────────────────────────────────────────────────────────────
