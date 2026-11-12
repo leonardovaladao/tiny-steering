@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The replication in [`../replication/`](../replication/) made four claims about RFM on GuppyLM: the AGOP matrix concentrates on one eigenvalue (top-eigenvalue share near 1), RFM beats PCA by a wide margin, steering succeeds 100% of the time, and RFM is useful with few labelled examples. Each check here tests one of those claims against a control, with a refutation criterion fixed before the run. Setting for every check: GuppyLM (8.73M), cached last-token residual activations in R^384, blocks 0 to 5, concepts `food`, `valence`, `env_social`.
+The replication in [`../replication/`](../replication/) made four claims about RFM on GuppyLM: the AGOP matrix concentrates on one eigenvalue (top-eigenvalue share near 1), RFM beats PCA by a wide margin, steering succeeds 100% of the time, and RFM is useful with few labelled examples. Each check here tests one of those claims against a control, with a refutation criterion fixed before the run. Setting for every check: GuppyLM (8.73M), cached last-token residual activations in R^384, blocks 0 to 5, concepts `food`, `valence`, `env_social` (the default; a new run sets its concepts in its `run.json`, see [Recipe](#recipe)).
 
 The full results are in [`runs/2026-10-09/SUMMARY_OF_TESTS.md`](runs/2026-10-09/SUMMARY_OF_TESTS.md). Where that summary disagrees with the CSVs, this README uses the corrected numbers from the report page (see [Caveats](#caveats), item b).
 
@@ -16,6 +16,7 @@ rfm_checks/
 ├── III-steering-metric.ipynb         Check III notebook (with stored outputs)
 ├── IV-small-n.ipynb                  Check IV notebook (no stored outputs)
 ├── IV-small-n_design.md              Check IV pre-registered design, in Portuguese, with Amendment 1
+├── checkrun.py                       creates a check run (run.json with its config); loaded by every notebook
 ├── kappa_side_run.py                 side run on the AGOP eigenvalue trajectory (caveat c)
 ├── runs/
 │   ├── 2026-10-02/                   first run of I, Ia, II, III, with one .md report per check
@@ -25,7 +26,7 @@ rfm_checks/
     └── checks_I-Ia_ptbr/             private web page on Checks I and Ia (pt-BR)
 ```
 
-The top-level notebooks are the ones to copy for a new run. Their code differs from the executed copies in `runs/2026-10-09/` only in the path setup: they import from `rfm_guppy/paths.py`, while the run copies build paths by hand. Their markdown and one code comment (III) also name the current paths. Older documents call this folder `revision_20261002/` and the second run `run_20261009/` (renamed in commit `b1ac054`).
+The top-level notebooks are templates. `checkrun.py new` copies them, with outputs cleared, into a new run folder, and the copies are executed there; started in `rfm_checks/` itself they refuse to run. Their code differs from the executed copies in `runs/2026-10-09/` in the setup cell (paths from `rfm_guppy/paths.py` instead of hand-built paths; run folder, concepts and replication run from `run.json`), in the lines that read the replication run (II, III) or write an output (every write goes into the run folder through `out_file`), and in the figure grids of I, Ia and IV, whose size follows the concept list. Their markdown and one code comment (III) also name the current paths. Older documents call this folder `revision_20261002/` and the second run `run_20261009/` (renamed in commit `b1ac054`).
 
 ## The checks
 
@@ -77,11 +78,11 @@ The top-level notebooks are the ones to copy for a new run. Their code differs f
 7. Check IV, "loses to LogReg at every n <= 32" and "to uncentred PCA at n <= 4" hold at block 3 only, with a tie on `food` at n=32.
 8. One-line table, Check IV: "worse than DM at n <= 16" is exact at block 3; across blocks n=16 includes ties, and at n=1 the methods coincide by construction.
 
-**(c) The κ side run.** [`kappa_side_run.py`](kappa_side_run.py) recomputes, on the 18 stored cells (3 concepts × 6 blocks, at the stored σ and normalize), the AGOP eigenvalue trajectory for T=1..10, for the real labels and 20 permutations (seed 20261002, drawn in the same order as Check Ia). Per (cell, label set, t) it records λ1, λ2, λ3, the trace, s, and the top-2, top-3 and top-5 shares. It also reports the largest difference between its s and the stored Ia values in `runs/2026-10-09/Ia-shuffle-label-on-blocks_sT.npz`. It tested the toy model on the report page (section `id="check-1a"`), where each eigenvalue obeys λ ↦ cλ², so κ = λ1/λ2 becomes κ² per iteration and κ^(2^t) after t iterations. The script does not compute κ or the ratio below itself; both follow from the λ1 and λ2 columns.
+**(c) The κ side run.** [`kappa_side_run.py`](kappa_side_run.py) recomputes, on the stored cells (each concept of the run × 6 blocks, at the stored σ and normalize; 18 cells for the 3 default concepts), the AGOP eigenvalue trajectory for T=1..10, for the real labels and 20 permutations (seed 20261002, drawn in the same order as Check Ia). Per (cell, label set, t) it records λ1, λ2, λ3, the trace, s, and the top-2, top-3 and top-5 shares. It also reports the largest difference between its s and the stored Ia values in `Ia-shuffle-label-on-blocks_sT.npz` of `--source-run` (default `runs/2026-10-09/`, read only). It tested the toy model on the report page (section `id="check-1a"`), where each eigenvalue obeys λ ↦ cλ², so κ = λ1/λ2 becomes κ² per iteration and κ^(2^t) after t iterations. The script does not compute κ or the ratio below itself; both follow from the λ1 and λ2 columns.
 
 Result, recorded in the owner's notes and not in any file in the repo: log κ_{t+1} / log κ_t pools to 1.01 on shuffled labels (κ ≈ 2.2, stable, while the top-5 share goes to 1) and to 1.26 on real labels. The κ^(2^t) claim fails and should not be repeated.
 
-Its output `kappa.csv` has not been written to disk. Rerunning the script (`.venv/bin/python rfm_checks/kappa_side_run.py` from the repo root) writes it to `runs/2026-10-09/`, which adds a file to a dated run folder.
+No `kappa.csv` is stored in the repo. The script writes it into a check run of its own, never into `runs/2026-10-09/` (pinned): `.venv/bin/python rfm_checks/kappa_side_run.py --run <run> [--source-run <run>]`, from the repo root, where `<run>` was made by `checkrun new` and supplies the concepts. It refuses an existing `kappa.csv` unless `RFM_FORCE=1` and appends a step to the run's `run.json`. With concepts other than the default three, `--source-run` must be a run whose Check Ia covered them in the same order, usually the same run after Ia; otherwise the script stops before computing. In the recipe test below (default concepts, gate against `runs/2026-10-09/`), it wrote 3 780 rows (18 cells × 21 label sets × 10 iterations) in 59 s, with gate max |s − stored| = 4.8e-15.
 
 **(d) Check IV's failed first run and the C0 gate.** The first execution of Check IV stopped at the C0 gate: `C0 FAILED (residual): valence b3 n=1 r=0 RFM resid=1.00e+00`. The log is `runs/2026-10-09/IV-small-n_run_failedC0.log`. It is git-ignored (root `.gitignore` pattern `*.log`), so it exists only on the machine that ran it. Amendment 1 of [`IV-small-n_design.md`](IV-small-n_design.md) gives the cause: with n=1 the scale of M_t shrinks each iteration, the Mahalanobis distance fell below the absolute 1e-12 cut, all weights became 0, M_t became the zero matrix, and `eigh` returned an arbitrary basis vector outside the data span. The fix is the relative mask in caveat (a). No H3a, H-artigo or H3b result had been computed before the amendment. The final run passes C0: at n=1 RFM, DM, PCA and LogReg coincide (gap <= 1e-15), and every direction lies in the data span (residual <= 3e-12).
 
@@ -89,45 +90,80 @@ Its output `kappa.csv` has not been written to disk. Rerunning the script (`.ven
 
 ### What each notebook reads and writes
 
-All five notebooks find the repo root by walking up from the current directory until they see `rfm_guppy/paths.py`. Inside the repo no `PYTHONPATH` is needed. Outside it, set `PYTHONPATH` to the repo root.
+Every notebook calls `load_check_run` (in [`checkrun.py`](checkrun.py)) in its setup cell. The run folder is `$RFM_RUN` if that is set, else the current directory; `nbconvert` runs a notebook in the folder that holds it. The folder must contain a `run.json` with a `config` block, written by `checkrun new`. Refused: `rfm_checks/` itself and the pinned runs in `PINNED_RUNS` (`rfm_guppy/paths.py`): `runs/2026-10-02/`, `runs/2026-10-09/` and `replication/runs/2026-08-27/`. Before computing anything, `load_check_run` checks that none of the notebook's outputs exist in the run folder, then appends one step to `run.json`: the notebook path, its concepts, the constants of its setup cell (such as `B`, `TMAX`, `LAM`, `SEED`, `FORCE`) and `RFM_FORCE`. The step is appended when the notebook starts, so a run that fails later also leaves a step. Every write goes through `out_file`, which refuses to overwrite an existing file unless `RFM_FORCE=1`.
+
+The notebooks find the repo root by walking up from the current directory until they see `rfm_guppy/paths.py`. Inside the repo no `PYTHONPATH` is needed. Outside it, set `PYTHONPATH` to the repo root.
 
 | Notebook | Reads | Writes | Cached results it can reload | Needs checkpoint |
 |---|---|---|---|---|
-| I | `CACHE_DIR`: `concept_<c>.json`, `<c>_{train,val}_activations.npy`, `<c>_vectors.npz` | Current directory: `I-shuffled-label-control_results.npz`, `_resultsB.npz`, `_resultsC.npz`, `_regimeA.csv`, `_regimeB.csv`, `_rho_baselines.csv`, `_share_vs_T.png` | `FORCE = True` (cell 1) recomputes. With `FORCE = False`, cells 5, 8 and 10 reload the three `.npz` files from the current directory if they exist. | No |
-| Ia | `CACHE_DIR`: `concept_<c>.json` (train), `<c>_train_activations.npy`, `<c>_vectors.npz`. Cell 15 reads `I-shuffled-label-control_resultsC.npz` from the current directory for the Regime C cross-check; if absent it prints "skipped". | Current directory: `Ia-shuffle-label-on-blocks_sT.npz`, `_H0_tests.csv`, `_per_cell.csv`, `_stored_hp.csv`, `_share_vs_T.png` | `FORCE = True` (cell 1) recomputes. With `FORCE = False`, cell 3 reloads `_sT.npz` if it exists. | No |
-| II | `CACHE_DIR`: `concept_<c>.json`, `<c>_{train,val,test}_activations.npy`, `<c>_vectors.npz`. `RESULTS_DIR` (`replication/runs/2026-08-27/`): `baselines_monitoring.json`. | Current directory: `II-PCA-baseline_perblock.csv`, `_headline.csv`, `_verdict.csv`, `_bootstrap.csv` | None | No |
-| III | `RESULTS_DIR`: `steer_<c>.json`, `eval6_<c>.json`. `CKPT_DIR`: `tokenizer.json`, `config.json`, `pytorch_model.bin`. `GUPPYLM_DIR` (submodule). HF dataset `arman-bd/guppylm-60k-generic`, loaded with `HF_DATASETS_OFFLINE=1`, so it must already be in the local Hugging Face cache. | `CHECKS_DIR` (`rfm_checks/` top, whatever the current directory): `III-steering-metric_judge_validity.csv`, `_calibration.csv`, `_generations.csv`, `_per_r.csv`, `_H1.csv`, `_H2.csv`, `_H3.csv`, `_old_vs_new.csv`, `_duplication.csv` | None | Yes: gate G3 regenerates the 7 r=0 texts, the 100 calibration generations need the model, and perplexities are computed under it |
-| IV | `CACHE_DIR`: `concept_<c>.json` (train, val, test), `<c>_{train,val,test}_activations.npy`, `<c>_vectors.npz` | Current directory: `IV-small-n_hp.csv`, `_draws.csv`, `_summary.csv`, `_T_sensitivity.csv`, `_verdicts.csv`, `_curves.png`, `_T_curves.png` | None | No |
+| I | `CACHE_DIR`: `concept_<c>.json`, `<c>_{train,val}_activations.npy`, `<c>_vectors.npz` | Run folder: `I-shuffled-label-control_results.npz`, `_resultsB.npz`, `_resultsC.npz`, `_regimeA.csv`, `_regimeB.csv`, `_rho_baselines.csv`, `_share_vs_T.png` | `FORCE = True` (cell 1) recomputes. With `FORCE = False`, cells 5, 8 and 10 reload the three `.npz` files from the run folder if they exist. | No |
+| Ia | `CACHE_DIR`: `concept_<c>.json` (train), `<c>_train_activations.npy`, `<c>_vectors.npz`. Cell 15 reads `I-shuffled-label-control_resultsC.npz` from the run folder for the Regime C cross-check; if absent it prints "skipped". | Run folder: `Ia-shuffle-label-on-blocks_sT.npz`, `_H0_tests.csv`, `_per_cell.csv`, `_stored_hp.csv`, `_share_vs_T.png` | `FORCE = True` (cell 1) recomputes. With `FORCE = False`, cell 3 reloads `_sT.npz` from the run folder if it exists. | No |
+| II | `CACHE_DIR`: `concept_<c>.json`, `<c>_{train,val,test}_activations.npy`, `<c>_vectors.npz`. `config.replication_run` (default `replication/runs/2026-08-27/`): `baselines_monitoring.json`. | Run folder: `II-PCA-baseline_perblock.csv`, `_headline.csv`, `_verdict.csv`, `_bootstrap.csv` | None | No |
+| III | `config.replication_run`: `steer_<c>.json`, `eval6_<c>.json`. `CKPT_DIR`: `tokenizer.json`, `config.json`, `pytorch_model.bin`. `GUPPYLM_DIR` (submodule). HF dataset `arman-bd/guppylm-60k-generic`, loaded with `HF_DATASETS_OFFLINE=1`, so it must already be in the local Hugging Face cache. | Run folder: `III-steering-metric_judge_validity.csv`, `_calibration.csv`, `_generations.csv`, `_per_r.csv`, `_H1.csv`, `_H2.csv`, `_H3.csv`, `_old_vs_new.csv`, `_duplication.csv` | None | Yes: gate G3 regenerates the 7 r=0 texts, the 100 calibration generations need the model, and perplexities are computed under it |
+| IV | `CACHE_DIR`: `concept_<c>.json` (train, val, test), `<c>_{train,val,test}_activations.npy`, `<c>_vectors.npz` | Run folder: `IV-small-n_hp.csv`, `_draws.csv`, `_summary.csv`, `_T_sensitivity.csv`, `_verdicts.csv`, `_curves.png`, `_T_curves.png` | None | No |
 
-Order: the only cross-notebook read is Ia reading Check I's `_resultsC.npz` from its own current directory. To get the cross-check, run I before Ia in the same run folder. No other order is required. Runtime: the notebooks record ≈12 min for the Ia sweep and ≈45 min for IV with all 6 blocks (≈7 min with `RUN_SECONDARY = False`), both on a laptop CPU. Check II took about 5 s in the test below. Runtime for I and III is not recorded.
+Order: the only cross-notebook read is Ia reading Check I's `_resultsC.npz` from the run folder. To get the cross-check, run I before Ia in the same run folder. No other order is required. Runtime: the notebooks record ≈12 min for the Ia sweep and ≈45 min for IV with all 6 blocks (≈7 min with `RUN_SECONDARY = False`), both on a laptop CPU. In the recipe test below, on a laptop CPU (10 cores): I 532 s, Ia 344 s, II 5 s, III 11 s, IV 2 149 s with all 6 blocks, κ 59 s.
 
 ### Recipe
 
-Run every check in a new dated folder. Never execute in an existing run folder: the notebooks overwrite files with the same names, which destroys evidence.
+Every run starts with `checkrun new`, which creates the run folder, writes `run.json` with the run's configuration and copies the five notebooks into it (outputs cleared). Then each copy is executed in place in that folder. Nothing is copied or moved by hand.
 
 ```bash
-cd rfm_checks
-RUN=runs/$(date +%F)                     # e.g. runs/2026-11-20
-mkdir "$RUN"                             # no -p: fails if the folder already exists
-cp I-shuffled-label-control.ipynb Ia-shuffle-label-on-blocks.ipynb "$RUN"/
+# from the repo root
+.venv/bin/python -m rfm_checks.checkrun new            # default: rfm_checks/runs/<today>/ (or <today>_2, ...)
+RUN=rfm_checks/runs/2026-11-20                         # the folder it printed
 cd "$RUN"
 ../../../.venv/bin/jupyter nbconvert --to notebook --execute --inplace I-shuffled-label-control.ipynb
 ../../../.venv/bin/jupyter nbconvert --to notebook --execute --inplace Ia-shuffle-label-on-blocks.ipynb
-```
-
-The same two lines (`cp`, then `nbconvert`) work for II and IV. For III, the CSVs land in `rfm_checks/` and must be moved into the run folder afterwards:
-
-```bash
-cp ../../III-steering-metric.ipynb .
+../../../.venv/bin/jupyter nbconvert --to notebook --execute --inplace II-PCA-baseline.ipynb
 ../../../.venv/bin/jupyter nbconvert --to notebook --execute --inplace III-steering-metric.ipynb
-mv ../../III-steering-metric_*.csv .
+../../../.venv/bin/jupyter nbconvert --to notebook --execute --inplace IV-small-n.ipynb
+cd ../../..
+.venv/bin/python rfm_checks/kappa_side_run.py --run "$RUN"
 ```
 
-`nbconvert` in this environment (nbclient 0.11.0) has no per-cell timeout by default. If a gate fails (an `assert` in the notebook, such as C0 in IV), `nbconvert` exits with the traceback and does not save the executed notebook. Capture the output with `2>&1 | tee <name>.log` if you want a record like `IV-small-n_run_failedC0.log`.
+`checkrun new` refuses a folder that exists and is not empty, and the pinned runs. Its options:
 
-Inputs: all checks need `data/cache/` (see [`../replication/README.md`](../replication/README.md) for how it is built). Check II also needs `replication/runs/2026-08-27/baselines_monitoring.json`. Check III also needs the GuppyLM checkpoint in `data/checkpoints/guppylm-9M`, the files `steer_<c>.json` and `eval6_<c>.json` in `replication/runs/2026-08-27/`, and the Hugging Face dataset in the local cache.
+- `--run DIR`: the run folder. It may be outside the repo; then set `PYTHONPATH` to the repo root for `nbconvert`.
+- `--concepts NAME ...`: the concepts (default `food valence env_social`). Each name must be registered in `rfm_guppy/concepts.py` (in `CONCEPTS` and `CONCEPT_LEXICONS`), and `new` refuses a concept whose files are missing from `data/cache/` or from the replication run.
+- `--replication-run DIR`: the replication run that II (`baselines_monitoring.json`) and III (`steer_<c>.json`, `eval6_<c>.json`) read; default `replication/runs/2026-08-27/`. It is stored repo-relative in `run.json`.
+- `--iv-main NAME NAME`: Check IV's MAIN set (see below).
 
-**Recipe test (Check II).** The notebook was copied to a scratch folder outside the repo and executed with `PYTHONPATH=<repo> .venv/bin/jupyter nbconvert --to notebook --execute --inplace II-PCA-baseline.ipynb` (5.3 s wall time). All 4 CSVs were byte-identical to `runs/2026-10-09/II-PCA-baseline_*.csv` (`cmp`, 4/4).
+`run.json` then has the form
+
+```json
+{"study": "rfm_checks", "created": "...",
+ "config": {"concepts": ["food", "valence", "env_social"],
+            "replication_run": "replication/runs/2026-08-27",
+            "IV": {"concepts": ["valence", "env_social", "food"]}},
+ "steps": []}
+```
+
+and each notebook, and `kappa_side_run.py`, appends one step to `steps`.
+
+Environment variables:
+
+- `RFM_RUN=<folder>` runs a notebook against that run folder instead of its current directory.
+- `RFM_FORCE=1` allows a notebook (or `kappa_side_run.py`) to overwrite outputs that already exist in the run folder. Without it, rerunning a notebook in the same folder stops before computing, with `FileExistsError`. The pinned runs are refused even with `RFM_FORCE=1`. This is separate from the `FORCE` constant in I and Ia, which chooses between recomputing and reloading their cached `.npz` files.
+
+**Adding a concept.** Register it in `rfm_guppy/concepts.py`, build its dataset and vectors (`python -m rfm_guppy.concepts --concepts NAME`, `replication/01_extract.py`), and produce its `steer_<c>.json`, `eval6_<c>.json` and `baselines_monitoring.json` entry in a replication run (`02_steer.py`, `03_monitor.py`, `04_baselines.py`; see [`../replication/README.md`](../replication/README.md)). Then `checkrun new --concepts food valence env_social NAME --replication-run <that run>`. Concept order fixes the seeds: Check Ia and κ draw permutations concept by concept, and Checks I and IV seed with the concept's index. So every check keeps its historical order for the default concepts (`food, valence, env_social`; for IV `valence, env_social, food`) and appends new concepts in the order given. The default three keep their 2026-10-09 seeds as long as all three are in the list; leaving one out shifts the seeds of those after it.
+
+Places that refuse a new concept until something is added by hand:
+
+- Check II, cell 3: gate (a) compares with the published best-block val |ρ| of the centred PCA in `PUB_RHO`, which holds only the three default concepts. Add the value from the `baselines_comparison.md` of the replication run.
+- Check III, setup cell: gate G3 and the r=0 coherence count use `food`'s stored r=0 generations, so a run without `food` is refused.
+- Check IV, setup cell: MAIN, below.
+- `kappa_side_run.py`: `--source-run` must contain Check Ia cells for every concept.
+
+Check III also changes for the old concepts when a concept is added: its calibration prompts come from the dataset categories that no concept of the run uses, so a new concept can change the held-out categories and therefore the coherence thresholds.
+
+**Check IV MAIN.** H3a, H-artigo and H3b are about the MAIN concepts, pre-registered in [`IV-small-n_design.md`](IV-small-n_design.md) as `valence` and `env_social` for the concept list `valence, env_social, food`. That default applies only when IV's concept list is exactly this one. For any other list, `run.json` must contain `config.IV.main`, written by `checkrun new --iv-main NAME NAME`; otherwise the IV notebook stops in its setup cell, before computing anything, and `new` prints a note saying so. Choosing a new MAIN is a design amendment: record it in `IV-small-n_design.md` before the run. MAIN must name 2 concepts of IV's list, because the Holm family k = 10 = 2 concepts × 5 values of n is fixed in cells 13 and 15.
+
+`nbconvert` in this environment (nbclient 0.11.0) has no per-cell timeout by default. If a gate fails (an `assert` in the notebook, such as C0 in IV), `nbconvert` exits with the traceback and does not save the executed notebook. Files written before the failure stay in the run folder, so a rerun there needs `RFM_FORCE=1`, or use a new run. Capture the output with `2>&1 | tee <name>.log` if you want a record like `IV-small-n_run_failedC0.log`.
+
+Inputs: all checks need `data/cache/` (see [`../replication/README.md`](../replication/README.md) for how it is built). Check II also needs `baselines_monitoring.json` in the configured replication run (default `replication/runs/2026-08-27/`). Check III also needs the GuppyLM checkpoint in `data/checkpoints/guppylm-9M`, the files `steer_<c>.json` and `eval6_<c>.json` in the configured replication run, and the Hugging Face dataset in the local cache.
+
+**Recipe test (default configuration, 2026-11-12).** `checkrun new --run <scratch folder outside the repo>`, then the five notebooks executed in order I, Ia, II, III, IV with `PYTHONPATH=<repo> .venv/bin/jupyter nbconvert --to notebook --execute --inplace`, then `kappa_side_run.py --run <scratch folder>`. All 24 CSVs were byte-identical to `runs/2026-10-09/` (`cmp`, 24/24); the four `.npz` files had equal arrays under every key; the five PNGs were byte-identical too. Gates passed as in the pinned run (Ia's Regime C cross-check: real curves differ by 0; III: G2 36/36, G3 7/7). `run.json` kept its `config` block and gained one step per notebook plus one for κ. The scratch folder is not in the repo.
 
 ### Rebuilding a report page
 
@@ -151,4 +187,4 @@ node build.js <katex-dir>                  # writes index.html here
 | [`runs/2026-10-02/`](runs/2026-10-02/) | Checks I, Ia, II, III | First run (commit `0aba57f`). One `.md` report per check. Absolute AGOP mask. No executed notebooks stored. |
 | [`runs/2026-10-09/`](runs/2026-10-09/) | Checks I, II, III rerun; Check IV; Check Ia rerun | I–III rerun before the mask change (commit `e4d1385`). IV after it (commit `4a75c5d`), only in this run. Ia rerun added later into this folder (commit `a9b198c`, 2026-10-16), together with `SUMMARY_OF_TESTS.md`. Executed notebook copies for all five checks. All 19 CSV names shared with 2026-10-02 are byte-identical to the 2026-10-02 files (19/19, `cmp`); the two shared PNGs are identical too. |
 
-Two things read from the pinned run rather than from a run folder of their own: `kappa_side_run.py` reads `runs/2026-10-09/Ia-shuffle-label-on-blocks_sT.npz` (and writes `kappa.csv` there), and both pages' `build_data.py` read `runs/2026-10-09/` through `CHECKS_RUN_2026_10_09`.
+Two things read from the pinned run: `kappa_side_run.py` gates against `runs/2026-10-09/Ia-shuffle-label-on-blocks_sT.npz` by default (`--source-run`) and writes `kappa.csv` only into its own `--run`, and both pages' `build_data.py` read `runs/2026-10-09/` through `CHECKS_RUN_2026_10_09`. The pinned runs (`PINNED_RUNS` in `rfm_guppy/paths.py`) cannot be used as a run folder; new runs under `runs/` are protected by the append-only rule.

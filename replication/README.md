@@ -62,7 +62,7 @@ Each command takes `--concepts NAME [NAME ...]` to run on a subset of the regist
 `02_steer.py`, `03_monitor.py` and `04_baselines.py` write to the run folder given by `--run DIR`. `02_steer.py` defaults to a new `replication/runs/<today>/` (or `<today>_2`, `_3`, ... if that folder is already in use); `03_monitor.py` and `04_baselines.py` require `--run`, because they read the previous phase's outputs from that folder (`steer_<c>.json` for 03; `monitor_auroc.json` and `eval6_<c>.json` for 04). `01_extract.py` writes only to `data/cache/`; its optional `--run` only records the step.
 
 - A script never overwrites a file that already exists in the run folder. It checks before doing any work and stops with a `FileExistsError`; `--force` allows the overwrite.
-- `runs/2026-08-27/` (`RESULTS_DIR` in [`../rfm_guppy/paths.py`](../rfm_guppy/paths.py)) and every existing folder under `rfm_checks/runs/` are refused as run folders, even with `--force`.
+- The pinned runs in `PINNED_RUNS` ([`../rfm_guppy/paths.py`](../rfm_guppy/paths.py)) are refused as run folders, even with `--force`, together with any folder inside or containing one of them: `runs/2026-08-27/` (`RESULTS_DIR`) and the check runs `rfm_checks/runs/2026-10-02/` and `rfm_checks/runs/2026-10-09/`. Other run folders, including new check runs, are protected only by the append-only rule.
 - Each invocation appends a step to `run.json` in the run folder: script, argv, start time, concepts, parameters, git commit, whether the working tree was dirty, Python and numpy/torch/scikit-learn versions.
 - `monitor_auroc.json` and the three `baselines_*` files cover all the concepts of one invocation. Run 03 and 04 once per run folder with the full concept list, or use a new run folder for another subset.
 

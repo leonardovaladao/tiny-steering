@@ -19,5 +19,11 @@ REPLICATION_DIR = os.path.join(ROOT, "replication")         # study folder: scri
 RESULTS_DIR   = os.path.join(REPLICATION_DIR, "runs", "2026-08-27")
 CHECKS_DIR    = os.path.join(ROOT, "rfm_checks")             # RFM/AGOP limitation checks I–IV
 
-# Pinned run (not "latest"): the demo was calibrated on it and the report pages chart it.
+# Pinned check runs. 2026-10-02: first run of I, Ia, II, III. 2026-10-09: the run the demo was
+# calibrated on and the report pages chart (not "latest").
+CHECKS_RUN_2026_10_02 = os.path.join(CHECKS_DIR, "runs", "2026-10-02")
 CHECKS_RUN_2026_10_09 = os.path.join(CHECKS_DIR, "runs", "2026-10-09")
+
+# Read-only evidence: rfm_guppy/runs.py refuses these (and anything inside them) as run folders,
+# even with --force. New run folders are protected by the append-only rule instead.
+PINNED_RUNS = (RESULTS_DIR, CHECKS_RUN_2026_10_02, CHECKS_RUN_2026_10_09)

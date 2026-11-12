@@ -4,9 +4,11 @@ A run folder is `<study>/runs/<name>/` (for example `replication/runs/2026-11-12
 
   * Append-only. A script never overwrites a file that already exists in the run folder unless
     it was started with `--force`. Every write goes through `out_path`.
-  * Pinned evidence is read-only. `paths.RESULTS_DIR` (the replication run of 2026-08-27) and
-    every existing folder under `rfm_checks/runs/` are refused as a run folder, even with
-    `--force`.
+  * Pinned evidence is read-only. The folders in `paths.PINNED_RUNS` (the replication run
+    `paths.RESULTS_DIR` of 2026-08-27 and the check runs 2026-10-02 and 2026-10-09), and any
+    folder inside or containing one of them, are refused as a run folder, even with `--force`.
+    Any other run folder, including a new check run under `rfm_checks/runs/`, is writable and
+    protected by the append-only rule.
   * Provenance. `open_run` keeps `run.json` in the run folder:
 
         {"study": "replication", "created": "<ISO time>",
@@ -42,19 +44,14 @@ def _is_within(path: str, folder: str) -> bool:
 
 
 def check_writable(run_dir: str) -> None:
-    """Raise PermissionError if `run_dir` is (inside) a pinned evidence folder."""
-    if _is_within(run_dir, paths.RESULTS_DIR):
-        raise PermissionError(
-            f"refusing to write to {display_path(run_dir)}: the pinned run paths.RESULTS_DIR is "
-            "read-only evidence. Pass a new run folder (--run DIR).")
-    checks_runs = os.path.join(paths.CHECKS_DIR, "runs")
-    if _is_within(run_dir, checks_runs):
-        rel = os.path.relpath(os.path.realpath(run_dir), os.path.realpath(checks_runs))
-        top = os.path.join(checks_runs, rel.split(os.sep)[0]) if rel != "." else checks_runs
-        if os.path.exists(top):
+    """Raise PermissionError if `run_dir` is a pinned evidence folder (`paths.PINNED_RUNS`), lies
+    inside one, or contains one (e.g. `rfm_checks/runs/` itself)."""
+    for pinned in paths.PINNED_RUNS:
+        if _is_within(run_dir, pinned) or _is_within(pinned, run_dir):
             raise PermissionError(
-                f"refusing to write to {display_path(run_dir)}: the existing check run "
-                f"{display_path(top)} is read-only evidence. Pass a new run folder (--run DIR).")
+                f"refusing to write to {display_path(run_dir)}: the pinned run "
+                f"{display_path(pinned)} is read-only evidence (paths.PINNED_RUNS). Pass a new "
+                "run folder (--run DIR).")
 
 
 def display_path(path: str) -> str:
