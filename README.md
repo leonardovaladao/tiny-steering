@@ -72,7 +72,7 @@ That commitment is on the record rather than asserted after the fact, and the tw
 - **[`replication/plans/GUPPYLM_GUIDE.md`](replication/plans/GUPPYLM_GUIDE.md)** — the **pre-registered plan**: the full method derivation, the nine phases, and the acceptance criteria each one had to meet. Written before a line of code, and frozen since.
 - **[`replication/plans/phase_plans/`](replication/plans/phase_plans/)** — the **execution notes**, one file per phase: what was actually built, which criteria passed and with what evidence, and every decision taken under uncertainty — including the ones that were wrong and had to be reversed.
 
-Reading them side by side shows what was intended versus what happened. The condensed version of the second is [`WORK_LOG.md`](WORK_LOG.md); the scientific write-up is [`replication/runs/2026-08-27/REPORT.md`](replication/runs/2026-08-27/REPORT.md).
+Reading them side by side shows what was intended versus what happened. The condensed version of the second is [`notes/WORK_LOG.md`](notes/WORK_LOG.md); the scientific write-up is [`replication/runs/2026-08-27/REPORT.md`](replication/runs/2026-08-27/REPORT.md).
 
 ---
 
